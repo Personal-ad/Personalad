@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login & Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #fff; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1, h2 { margin-bottom: 20px; color: #38bdf8; }
+        .card { background: #1e293b; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 4px; }
+        button { background: #38bdf8; color: #000; font-weight: bold; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0ea5e9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 14px; }
+        th { background: #334155; }
+        .del-btn { background: #ef4444; color: #fff; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; border: none; }
+        .del-btn:hover { background: #dc2626; }
+        .edit-btn { background: #10b981; color: #fff; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; border: none; margin-right: 5px; }
+        .edit-btn:hover { background: #059669; }
+        #adminDashboard { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Admin Login Card -->
+        <div class="card" id="adminLoginCard" style="max-width: 400px; margin: 50px auto;">
+            <h2><i class="fa-solid fa-lock"></i> ඇඩ්මින් ලොගින් (Admin Login)</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="adminUser" required placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPass" required placeholder="1234">
+                </div>
+                <button type="submit" style="width: 100%;">LOGIN</button>
+            </form>
+        </div>
+
+        <!-- Admin Dashboard Content -->
+        <div id="adminDashboard">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1><i class="fa-solid fa-gauge"></i> Admin Dashboard</h1>
+                <button onclick="adminLogout()" class="del-btn" style="padding: 10px 15px;">Logout</button>
+            </div>
+
+            <!-- Admin Post Ad Section -->
+            <div class="card">
+                <h2>නව දැන්වීමක් එක් කිරීම (Admin Post Ad with Photo)</h2>
+                <form id="adminAdForm">
+                    <div class="form-group"><label>ශීර්ෂය (Title)</label><input type="text" id="admTitle" required placeholder="Admin Ad Title"></div>
+                    <div class="form-group"><label>විස්තරය (Description)</label><textarea id="admDesc" rows="3" required placeholder="Description..."></textarea></div>
+                    <div class="form-group"><label>ප්‍රවර්ගය (Category)</label>
+                        <select id="admCategory"><option value="Boys">Boys</option><option value="Girls">Girls</option><option value="Shemale">Shemale</option><option value="Personal">Personal</option></select>
+                    </div>
+                    <div class="form-group"><label>ස්ථානය (Location)</label><input type="text" id="admLocation" required placeholder="Colombo"></div>
+                    <div class="form-group"><label>මිල (Rs)</label><input type="number" id="admPrice" required value="0"></div>
+                    <div class="form-group"><label>ඡායාරූපය උඩුගත කරන්න</label><input type="file" id="admImageFile" accept="image/*" required></div>
+                    <div class="form-group"><label>දුරකථන අංකය (ඉලක්කම් 10)</label><input type="text" id="admContact" required maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" placeholder="0712345678"></div>
+                    <button type="submit">දැන්වීම ප්‍රකාශ කරන්න (Post)</button>
+                </form>
+            </div>
+
+            <!-- Users Management Section -->
+            <div class="card">
+                <h2>ලියාපදිංචි පරිශීලකයින් (Registered Users)</h2>
+                <table>
+                    <thead><tr><th>පරිශීලක නම (Username)</th><th>ක්‍රියාව (Action)</th></tr></thead>
+                    <tbody id="usersTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- All Ads Management -->
+            <div class="card">
+                <h2>සියලු දැන්වීම් කළමනාකරණය (All Ads)</h2>
+                <table>
+                    <thead><tr><th>ශීර්ෂය</th><th>පළ කළේ</th><th>මිල</th><th>Views</th><th>ක්‍රියාව</th></tr></thead>
+                    <tbody id="adsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let ads = JSON.parse(localStorage.getItem('personal_ads_list')) || [];
+        let users = JSON.parse(localStorage.getItem('personal_users_list')) || [];
+        let isAdminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
+
+        function checkAdminSession() {
+            if (isAdminLoggedIn) {
+                document.getElementById('adminLoginCard').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadAdminData();
+            } else {
+                document.getElementById('adminLoginCard').style.display = 'block';
+                document.getElementById('adminDashboard').style.display = 'none';
+            }
+        }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const u = document.getElementById('adminUser').value.trim();
+            const p = document.getElementById('adminPass').value.trim();
+
+            if (u === 'admin' && p === '1234') {
+                isAdminLoggedIn = true;
+                localStorage.setItem('admin_logged_in', 'true');
+                checkAdminSession();
+            } else {
+                alert('වැරදි Username හෝ Password එකක්!');
+            }
+        });
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            localStorage.removeItem('admin_logged_in');
+            checkAdminSession();
+        }
+
+        function loadAdminData() {
+            const userBody = document.getElementById('usersTableBody');
+            userBody.innerHTML = '';
+            if (users.length === 0) {
+                userBody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#94a3b8;">පරිශීලකයින් නොමැත</td></tr>`;
+            } else {
+                users.forEach(user => {
+                    userBody.innerHTML += `<tr><td>${user}</td><td><button class="del-btn" onclick="deleteUser('${user}')">User මකන්න</button></td></tr>`;
+                });
+            }
+
+            const adsBody = document.getElementById('adsTableBody');
+            adsBody.innerHTML = '';
+            if (ads.length === 0) {
+                adsBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">දැන්වීම් නොමැත</td></tr>`;
+            } else {
+                ads.forEach(ad => {
+                    if(ad.views === undefined) ad.views = 0;
+                    adsBody.innerHTML += `<tr>
+                        <td>${ad.title}</td>
+                        <td>${ad.poster}</td>
+                        <td>Rs ${ad.price}</td>
+                        <td>${ad.views}</td>
+                        <td>
+                            <button class="edit-btn" onclick="editViews(${ad.id})">Views වෙනස් කරන්න</button>
+                            <button class="del-btn" onclick="deleteAd(${ad.id})">මකන්න</button>
+                        </td>
+                    </tr>`;
+                });
+            }
+        }
+
+        document.getElementById('adminAdForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const contact = document.getElementById('admContact').value.trim();
+            if(contact.length !== 10) { alert('ඉලක්කම් 10ක නිවැරදි අංකයක් දෙන්න!'); return; }
+
+            const imageInput = document.getElementById('admImageFile');
+            if (!imageInput.files || !imageInput.files[0]) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න!'); return; }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const newAd = {
+                    id: Date.now(),
+                    title: document.getElementById('admTitle').value,
+                    description: document.getElementById('admDesc').value,
+                    category: document.getElementById('admCategory').value,
+                    sub: `${document.getElementById('admLocation').value}, ${document.getElementById('admCategory').value}`,
+                    price: Number(document.getElementById('admPrice').value).toLocaleString(),
+                    imageUrl: event.target.result,
+                    contact: contact,
+                    poster: "Admin",
+                    views: 0
+                };
+
+                ads.unshift(newAd);
+                localStorage.setItem('personal_ads_list', JSON.stringify(ads));
+                
+                if(!users.includes('Admin')) {
+                    users.push('Admin');
+                    localStorage.setItem('personal_users_list', JSON.stringify(users));
+                }
+
+                document.getElementById('adminAdForm').reset();
+                loadAdminData();
+                alert('ඇඩ්මින් දැන්වීම ඡායාරූපය සමඟ සාර්ථකව එකතු කරන ලදී!');
+            };
+            reader.readAsDataURL(imageInput.files[0]);
+        });
+
+        function editViews(id) {
+            const ad = ads.find(item => item.id === id);
+            if (!ad) return;
+            const newViews = prompt(`"${ad.title}" සඳහා නව Views ගණන ඇතුළත් කරන්න:`, ad.views || 0);
+            if (newViews !== null) {
+                const parsedViews = parseInt(newViews);
+                if (!isNaN(parsedViews) && parsedViews >= 0) {
+                    ad.views = parsedViews;
+                    localStorage.setItem('personal_ads_list', JSON.stringify(ads));
+                    loadAdminData();
+                    alert('Views ගණන සාර්ථකව යාවත්කාලීන කරන ලදී!');
+                } else {
+                    alert('කරුණාකර වලංගු අංකයක් ඇතුළත් කරන්න!');
+                }
+            }
+        }
+
+        function deleteAd(id) {
+            if(confirm('මෙම දැන්වීම මකා දැමීමට අවශ්‍යද?')) {
+                ads = ads.filter(ad => ad.id !== id);
+                localStorage.setItem('personal_ads_list', JSON.stringify(ads));
+                loadAdminData();
+            }
+        }
+
+        function deleteUser(username) {
+            if(confirm(`"${username}" පරිශීලකයා සහ ඔහු/ඇය විසින් දමන ලද සියලු දැන්වීම් මකා දැමීමට අවශ්‍යද?`)) {
+                users = users.filter(u => u !== username);
+                localStorage.setItem('personal_users_list', JSON.stringify(users));
+
+                ads = ads.filter(ad => ad.poster !== username);
+                localStorage.setItem('personal_ads_list', JSON.stringify(ads));
+
+                loadAdminData();
+                alert('පරිශීලකයා සහ ඔහුගේ දැන්වීම් සාර්ථකව ඉවත් කරන ලදී!');
+            }
+        }
+
+        checkAdminSession();
+    </script>
+</body>
+</html>
