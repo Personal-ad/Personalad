@@ -71,8 +71,6 @@
         .detail-meta { font-size: 15px; color: #475569; margin-bottom: 15px; font-weight: 600; }
         .detail-desc { font-size: 15px; color: #334155; line-height: 1.6; background: #f8fafc; padding: 15px; border-radius: 4px; margin-bottom: 15px; white-space: pre-wrap; }
         .detail-price { font-size: 24px; color: #00aaf0; font-weight: bold; margin-bottom: 15px; }
-        .detail-contact-box { background: #f8fafc; border-left: 4px solid #00aaf0; padding: 12px; margin-bottom: 15px; font-size: 16px; }
-        .delete-btn { background: #ff4d4d; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -167,7 +165,7 @@
         </div>
 
         <div class="detail-view" id="detailView">
-            <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> ආපසු යන්න</button>
+            <button class="back-btn" onclick="backToList()"><i class="fa-solid fa-arrow-left"></i> ආපසු යන්න</button>
             <div class="detail-img-container" id="detailImgContainer"></div>
             <div class="detail-info-box">
                 <h2 id="detailTitle"></h2>
@@ -283,7 +281,7 @@
                 localStorage.setItem('personal_ads_list', JSON.stringify(ads));
                 registerUser(currentUser);
                 currentPage = 1;
-                goHome();
+                enterMainSite();
                 document.getElementById('adForm').reset();
                 closeModals();
                 alert('ඔබේ දැන්වීම සාර්ථකව පළ විය!');
@@ -341,7 +339,13 @@
             ad.views = (ad.views || 0) + 1;
             localStorage.setItem('personal_ads_list', JSON.stringify(ads));
 
-            closeModals(); landingView.style.display = 'none'; homeView.style.display = 'none'; searchSection.style.display = 'none'; categoryFilter.style.display = 'none'; detailView.style.display = 'block';
+            closeModals(); 
+            landingView.style.display = 'none'; 
+            homeView.style.display = 'none'; 
+            searchSection.style.display = 'none'; 
+            categoryFilter.style.display = 'none'; 
+            detailView.style.display = 'block';
+
             document.getElementById('detailImgContainer').innerHTML = ad.imageUrl ? `<img src="${ad.imageUrl}" class="detail-main-img">` : `<div style="color:white; padding:40px;">ඡායාරූපයක් නොමැත</div>`;
             document.getElementById('detailTitle').innerText = ad.title;
             document.getElementById('detailMeta').innerText = `ස්ථානය හා ප්‍රවර්ගය: ${ad.sub}`;
@@ -353,12 +357,24 @@
             window.scrollTo({top:0, behavior:'smooth'});
         }
 
+        // ආපසු යන්න ඔබන විට Landing Page එකට නොගොස් දැන්වීම් ලැයිස්තුවට යාමට
+        function backToList() {
+            detailView.style.display = 'none'; 
+            landingView.style.display = 'none';
+            searchSection.style.display = 'flex'; 
+            categoryFilter.style.display = 'flex'; 
+            homeView.style.display = 'block';
+            filterAds();
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+        // Logo එක එබූ විට මුල් Landing Page එකට යාමට අවශ්‍ය නම් මෙලෙස තැබිය හැක
         function goHome() {
             detailView.style.display = 'none'; 
-            landingView.style.display = 'block';
-            searchSection.style.display = 'none'; 
-            categoryFilter.style.display = 'none'; 
             homeView.style.display = 'none';
+            searchSection.style.display = 'none'; 
+            categoryFilter.style.display = 'none';
+            landingView.style.display = 'block';
             window.scrollTo({top:0, behavior:'smooth'});
         }
 
@@ -366,7 +382,7 @@
             if(confirm('මෙම දැන්වීම මකා දැමීමට අවශ්‍යද?')) {
                 ads = ads.filter(ad => ad.id !== id);
                 localStorage.setItem('personal_ads_list', JSON.stringify(ads));
-                goHome();
+                backToList();
             }
         }
 
