@@ -2,79 +2,56 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Sri Lanka Classifieds & Local Business Listings">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Ads | Sri Lanka Hela Ad</title>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f2f4f5; color: #000; }
-        
-        #landingView { display: block; }
         .hero-section { background: linear-gradient(135deg, #00aaf0, #0284c7); color: white; padding: 60px 20px; text-align: center; }
-        .hero-section h1 { font-size: 36px; margin-bottom: 15px; font-weight: 800; }
-        .hero-section p { font-size: 18px; margin-bottom: 25px; opacity: 0.9; max-width: 600px; margin: 0 auto 25px auto; }
+        .hero-section h1 { font-size: 32px; margin-bottom: 15px; font-weight: 800; }
+        .hero-section p { font-size: 16px; margin-bottom: 25px; opacity: 0.9; max-width: 600px; margin: 0 auto 25px auto; }
         .hero-btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .hero-btn { background: #ffc800; color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .hero-btn:hover { background: #e6b400; transform: translateY(-2px); }
+        .hero-btn { background: #ffc800; color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .hero-btn-outline { background: transparent; color: white; border: 2px solid white; }
-        .hero-btn-outline:hover { background: white; color: #00aaf0; }
-        
         .features-grid { max-width: 900px; margin: 40px auto; padding: 0 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .feature-card { background: white; padding: 25px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-bottom: 4px solid #00aaf0; }
         .feature-card i { font-size: 35px; color: #00aaf0; margin-bottom: 15px; }
         .feature-card h3 { font-size: 18px; margin-bottom: 10px; color: #0f172a; }
         .feature-card p { font-size: 14px; color: #64748b; line-height: 1.5; }
-
         .navbar { background-color: #00aaf0; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .logo { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .nav-right { display: flex; gap: 15px; font-size: 18px; align-items: center; }
-        .nav-right span { font-size: 14px; font-weight: bold; background: #0284c7; padding: 4px 10px; border-radius: 4px; }
+        .logo { font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .nav-right { display: flex; gap: 10px; font-size: 16px; align-items: center; }
+        .nav-right span { font-size: 13px; font-weight: bold; background: #0284c7; padding: 4px 8px; border-radius: 4px; }
         .logout-btn { background: #ef4444; border: none; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; }
-        
         .search-section { background-color: #00aaf0; padding: 0 20px 20px 20px; display: flex; justify-content: center; }
         .search-box { background: white; display: flex; align-items: center; width: 100%; max-width: 800px; border-radius: 4px; padding: 5px 10px; }
         .search-box input { flex: 1; border: none; padding: 10px; font-size: 16px; outline: none; }
         .search-btn { background: #ffc800; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        
         .category-filter { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; padding: 0 10px; }
-        .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 14px; color: #334155; transition: 0.2s; }
-        .cat-btn:hover, .cat-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
-        
+        .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 14px; color: #334155; }
+        .cat-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
         .main-container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
         .modal-box { background: white; padding: 20px; border-radius: 6px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; border-top: 4px solid #ffc800; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .modal-header h3 { color: #00aaf0; }
         .close-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: #777; }
-        
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        
         .action-btn { background: #ffc800; color: #000; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        .action-btn:hover { background: #e6b400; }
-        
-        .ad-card { background: white; display: flex; gap: 15px; padding: 12px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; transition: 0.2s; }
-        .ad-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.12); }
+        .ad-card { background: white; display: flex; gap: 15px; padding: 12px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; }
         .ad-img { width: 120px; height: 90px; background: #e2e8f0; border-radius: 4px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; flex-shrink: 0; }
         .ad-details { flex: 1; }
         .ad-title { font-size: 16px; font-weight: bold; color: #000; margin-bottom: 4px; }
         .ad-sub { font-size: 13px; color: #666; margin-bottom: 6px; }
-        .ad-views { font-size: 12px; color: #00aaf0; font-weight: 600; margin-top: 5px; display: inline-flex; align-items: center; gap: 4px; }
-        
+        .ad-views { font-size: 12px; color: #00aaf0; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
         .pagination { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
-        .page-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; color: #334155; }
+        .page-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
         .page-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
-        
         .detail-view { background: white; padding: 20px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
-        .back-btn { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 5px; }
+        .back-btn { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 15px; }
         .detail-img-container { width: 100%; max-height: 400px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 20px; }
         .detail-main-img { width: 100%; max-height: 400px; object-fit: contain; }
-        .detail-info-box h2 { font-size: 22px; color: #0f172a; margin-bottom: 10px; }
-        .detail-meta { font-size: 15px; color: #475569; margin-bottom: 15px; font-weight: 600; }
-        .detail-desc { font-size: 15px; color: #334155; line-height: 1.6; background: #f8fafc; padding: 15px; border-radius: 4px; margin-bottom: 15px; white-space: pre-wrap; }
-        .detail-price { font-size: 24px; color: #00aaf0; font-weight: bold; margin-bottom: 15px; }
         .delete-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
@@ -85,33 +62,19 @@
         <div class="nav-right" id="navRight"></div>
     </div>
 
-    <!-- Landing Page View -->
     <div id="landingView">
         <div class="hero-section">
             <h1>ඔබේ පෞද්ගලික දැන්වීම් පහසුවෙන් පළ කරන්න</h1>
-            <p>විශ්වාසනීය සහ වේගවත්ම Personal Ad වේදිකාව වෙත සාදරයෙන් පිළිගනිමු. අදම ඔබේ දැන්වීම එකතු කරන්න.</p>
+            <p>විශ්වාසනීය සහ වේගවත්ම Personal Ad වේදිකාව වෙත සාදරයෙන් පිළිගනිමු.</p>
             <div class="hero-btns">
-                <button class="hero-btn" id="browseAdsBtn">දැන්වීම් නරඹන්න (Browse Ads)</button>
-                <button class="hero-btn hero-btn-outline" id="postAdLandingBtn">දැන්වීමක් දමන්න (Post Ad)</button>
+                <button class="hero-btn" id="browseAdsBtn">දැන්වීම් නරඹන්න</button>
+                <button class="hero-btn hero-btn-outline" id="postAdLandingBtn">දැන්වීමක් දමන්න</button>
             </div>
         </div>
-
         <div class="features-grid">
-            <div class="feature-card">
-                <i class="fa-solid fa-bullhorn"></i>
-                <h3>පහසු දැන්වීම් පළ කිරීම</h3>
-                <p>විනාඩියෙන් ඔබේ දැන්වීම ඡායාරූප සමඟ අන්තර්ජාලයට එක් කරගන්න.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h3>ආරක්ෂිත සහ විශ්වාසනීය</h3>
-                <p>පරිශීලක පාලනය සහ පහසු කළමනාකරණ පහසුකම් සපයා ඇත.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fa-solid fa-bolt"></i>
-                <h3>ඉක්මන් ප්‍රතිචාර</h3>
-                <p>ඔබේ දැන්වීම් දහස් ගණනක් අතරට ක්ෂණිකව ගෙන යන්න.</p>
-            </div>
+            <div class="feature-card"><i class="fa-solid fa-bullhorn"></i><h3>පහසු දැන්වීම් පළ කිරීම</h3><p>විනාඩියෙන් ඔබේ දැන්වීම එකතු කරගන්න.</p></div>
+            <div class="feature-card"><i class="fa-solid fa-shield-halved"></i><h3>ආරක්ෂිත සහ විශ්වාසනීය</h3><p>පරිශීලක පාලන පහසුකම් ඇත.</p></div>
+            <div class="feature-card"><i class="fa-solid fa-bolt"></i><h3>ඉක්මන් ප්‍රතිචාර</h3><p>ක්ෂණිකව දහස් ගණනක් වෙත යන්න.</p></div>
         </div>
     </div>
 
@@ -123,7 +86,7 @@
     </div>
 
     <div class="category-filter" id="categoryFilter" style="display: none;">
-        <button class="cat-btn active" data-cat="All">සියල්ල (All)</button>
+        <button class="cat-btn active" data-cat="All">සියල්ල</button>
         <button class="cat-btn" data-cat="Boys">Boys</button>
         <button class="cat-btn" data-cat="Girls">Girls</button>
         <button class="cat-btn" data-cat="Shemale">Shemale</button>
@@ -131,69 +94,59 @@
     </div>
 
     <div class="main-container">
-        <!-- Login Modal -->
         <div class="modal-box" id="loginBox">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-right-to-bracket"></i> පද්ධතියට ඇතුළු වන්න (Login)</h3>
+                <h3><i class="fa-solid fa-right-to-bracket"></i> Login</h3>
                 <button class="close-btn" id="closeLoginBtn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="loginForm">
-                <div class="form-group">
-                    <label>ඔබේ නම (Username)</label>
-                    <input type="text" id="loginUsername" required placeholder="උදා: Nimal">
-                </div>
+                <div class="form-group"><label>ඔබේ නම (Username)</label><input type="text" id="loginUsername" required placeholder="Nimal"></div>
                 <button type="submit" class="action-btn">LOGIN</button>
             </form>
         </div>
 
-        <!-- Post Ad Modal -->
         <div class="modal-box" id="postAdBox">
             <div class="modal-header">
                 <h3><i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න</h3>
                 <button class="close-btn" id="closePostBtn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="adForm">
-                <div class="form-group"><label>ශීර්ෂය (Title)</label><input type="text" id="title" required placeholder="Looking for a friend"></div>
-                <div class="form-group"><label>දැන්වීම පිළිබඳ විස්තරය (Description)</label><textarea id="description" rows="4" required placeholder="විස්තර මෙහි ලියන්න..."></textarea></div>
-                <div class="form-group"><label>ප්‍රවර්ගය (Category)</label>
+                <div class="form-group"><label>ශීර්ෂය</label><input type="text" id="title" required></div>
+                <div class="form-group"><label>විස්තරය</label><textarea id="description" rows="4" required></textarea></div>
+                <div class="form-group"><label>ප්‍රවර්ගය</label>
                     <select id="category"><option value="Boys">Boys</option><option value="Girls">Girls</option><option value="Shemale">Shemale</option><option value="Personal">Personal</option></select>
                 </div>
-                <div class="form-group"><label>ස්ථානය (Location)</label><input type="text" id="location" required placeholder="Colombo"></div>
-                <div class="form-group"><label>මිල (Rs)</label><input type="number" id="price" required placeholder="0"></div>
-                <div class="form-group"><label>ඡායාරූපය උඩුගත කරන්න</label><input type="file" id="imageFile" accept="image/*" required></div>
-                <div class="form-group"><label>දුරකථන අංකය (ඉලක්කම් 10)</label><input type="text" id="contact" required placeholder="0712345678" maxlength="10"></div>
-                <button type="submit" class="action-btn" id="userPostSubmitBtn">POST YOUR AD</button>
+                <div class="form-group"><label>ස්ථානය</label><input type="text" id="location" required></div>
+                <div class="form-group"><label>මිල (Rs)</label><input type="text" id="price" required></div>
+                <div class="form-group"><label>ඡායාරූපය</label><input type="file" id="imageFile" accept="image/*" required></div>
+                <div class="form-group"><label>දුරකථන අංකය (10 digits)</label><input type="text" id="contact" required maxlength="10"></div>
+                <button type="submit" class="action-btn">POST YOUR AD</button>
             </form>
         </div>
 
-        <!-- Home View (Ads List) -->
         <div id="homeView" style="display: none;">
             <div id="adsList"></div>
             <div class="pagination" id="paginationContainer"></div>
         </div>
 
-        <!-- Ad Detail View -->
         <div class="detail-view" id="detailView">
-            <button class="back-btn" id="backToListBtn"><i class="fa-solid fa-arrow-left"></i> ආපසු යන්න</button>
+            <button class="back-btn" id="backToListBtn"><i class="fa-solid fa-arrow-left"></i> ආපසු</button>
             <div class="detail-img-container" id="detailImgContainer"></div>
             <div class="detail-info-box">
                 <h2 id="detailTitle"></h2>
-                <div class="detail-meta" id="detailMeta"></div>
-                <div class="detail-desc" id="detailDesc"></div>
-                <div class="detail-price" id="detailPrice"></div>
-                <div class="detail-contact-box"><i class="fa-solid fa-phone"></i> දුරකථන අංකය: <strong id="detailContact"></strong></div>
-                <div style="font-size: 14px; color: #555; margin: 10px 0;"><i class="fa-solid fa-eye"></i> Views: <span id="detailViewsCount" style="font-weight: bold; color: #00aaf0;"></span></div>
+                <div class="detail-meta" id="detailMeta" style="margin-bottom:10px; font-weight:600;"></div>
+                <div class="detail-desc" id="detailDesc" style="margin-bottom:10px; background:#f8fafc; padding:10px;"></div>
+                <div class="detail-price" id="detailPrice" style="font-size:20px; color:#00aaf0; font-weight:bold; margin-bottom:10px;"></div>
+                <div>දුරකථන: <strong id="detailContact"></strong></div>
+                <div style="margin: 10px 0;">Views: <span id="detailViewsCount" style="color:#00aaf0; font-weight:bold;"></span></div>
                 <div id="detailDeleteContainer"></div>
             </div>
         </div>
     </div>
 
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = 'https://yeikgoqgiltcepcruqro.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const db = window.supabase.createClient('https://yeikgoqgiltcepcruqro.supabase.co', 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL');
 
         let currentUser = localStorage.getItem('personal_current_user') || null;
         let ads = [];
@@ -201,142 +154,135 @@
         let currentPage = 1;
         const adsPerPage = 5;
 
-        const landingView = document.getElementById('landingView');
-        const searchSection = document.getElementById('searchSection');
-        const categoryFilter = document.getElementById('categoryFilter');
-        const homeView = document.getElementById('homeView');
-        const detailView = document.getElementById('detailView');
-        const loginBox = document.getElementById('loginBox');
-        const postAdBox = document.getElementById('postAdBox');
-        const navRight = document.getElementById('navRight');
-        const adsList = document.getElementById('adsList');
-        const paginationContainer = document.getElementById('paginationContainer');
-
-        async function registerUserInSupabase(username) {
+        async function registerUser(username) {
             try {
-                const { data: existingUsers, error: fetchErr } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('username', username);
-                
-                if (fetchErr) { console.error(fetchErr); return; }
-
-                if (!existingUsers || existingUsers.length === 0) {
-                    await supabase.from('users').insert([{ username: username }]);
+                const { data } = await db.from('users').select('*').eq('username', username);
+                if (!data || data.length === 0) {
+                    await db.from('users').insert([{ username }]);
                 }
             } catch(e) { console.error(e); }
         }
 
         async function fetchAds() {
             try {
-                const { data, error } = await supabase.from('ads').select('*');
-                if (error) throw error;
-                
-                ads = data.map(item => ({
-                    firebaseId: item.id, // Keeping variable name compatible with existing UI logic
-                    ...item
-                }));
+                const { data, error } = await db.from('ads').select('*');
+                if (error) { console.error("Load Error:", error); return; }
+                ads = (data || []).map(item => ({ firebaseId: item.id, imageUrl: item.imageurl, ...item }));
                 filterAds();
             } catch (e) { console.error(e); }
         }
 
         function updateNavbar() {
+            const navRight = document.getElementById('navRight');
             if (currentUser) {
-                navRight.innerHTML = `<span><i class="fa-solid fa-user"></i> ${currentUser}</span><button class="action-btn" id="navPostBtn" style="padding:4px 10px; font-size:13px; width:auto;">දැන්වීමක් දමන්න</button><button class="logout-btn" id="navLogoutBtn">Logout</button>`;
-                document.getElementById('navPostBtn').onclick = openPostAdModal;
-                document.getElementById('navLogoutBtn').onclick = logout;
+                navRight.innerHTML = `<span>${currentUser}</span><button class="action-btn" id="navPostBtn" style="padding:3px 8px; font-size:12px; width:auto;">දැන්වීමක්</button><button class="logout-btn" id="navLogoutBtn">Logout</button>`;
+                document.getElementById('navPostBtn').onclick = () => { closeModals(); document.getElementById('postAdBox').style.display = 'block'; };
+                document.getElementById('navLogoutBtn').onclick = () => { currentUser = null; localStorage.removeItem('personal_current_user'); updateNavbar(); filterAds(); };
             } else {
-                navRight.innerHTML = `<i class="fa-regular fa-user" id="navLoginIcon" title="Login" style="font-size: 20px; cursor: pointer;"></i>`;
-                document.getElementById('navLoginIcon').onclick = openLoginModal;
+                navRight.innerHTML = `<i class="fa-regular fa-user" id="navLoginIcon" style="font-size: 20px; cursor: pointer;"></i>`;
+                document.getElementById('navLoginIcon').onclick = () => { closeModals(); document.getElementById('loginBox').style.display = 'block'; };
             }
         }
 
-        function openLoginModal() { closeModals(); loginBox.style.display = 'block'; }
-        function openPostAdModal() { 
-            if (!currentUser) { alert('කරුණාකර මුලින්ම Login වන්න!'); openLoginModal(); return; }
-            closeModals(); 
-            postAdBox.style.display = 'block'; 
-        }
-        function closeModals() { loginBox.style.display = 'none'; postAdBox.style.display = 'none'; }
-
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('personal_current_user');
-            updateNavbar();
-            alert('සාර්ථකව Logout විය.');
-            filterAds();
+        function closeModals() {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('postAdBox').style.display = 'none';
         }
 
-        document.getElementById('logoBtn').onclick = goHome;
-        document.getElementById('browseAdsBtn').onclick = enterMainSite;
-        document.getElementById('postAdLandingBtn').onclick = () => {
-            if (!currentUser) { openLoginModal(); return; }
-            enterMainSite();
-            openPostAdModal();
+        document.getElementById('logoBtn').onclick = () => {
+            document.getElementById('detailView').style.display = 'none';
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'none';
+            document.getElementById('categoryFilter').style.display = 'none';
+            document.getElementById('landingView').style.display = 'block';
         };
+
+        document.getElementById('browseAdsBtn').onclick = () => {
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'flex';
+            document.getElementById('categoryFilter').style.display = 'flex';
+            document.getElementById('homeView').style.display = 'block';
+            filterAds();
+        };
+
+        document.getElementById('postAdLandingBtn').onclick = () => {
+            if (!currentUser) { document.getElementById('loginBox').style.display = 'block'; return; }
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'flex';
+            document.getElementById('categoryFilter').style.display = 'flex';
+            document.getElementById('homeView').style.display = 'block';
+            document.getElementById('postAdBox').style.display = 'block';
+        };
+
         document.getElementById('closeLoginBtn').onclick = closeModals;
         document.getElementById('closePostBtn').onclick = closeModals;
-        document.getElementById('backToListBtn').onclick = backToList;
+        document.getElementById('backToListBtn').onclick = () => {
+            document.getElementById('detailView').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'flex';
+            document.getElementById('categoryFilter').style.display = 'flex';
+            document.getElementById('homeView').style.display = 'block';
+            fetchAds();
+        };
 
-        document.getElementById('loginForm').onsubmit = async function(e) {
+        document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
-            const username = document.getElementById('loginUsername').value.trim();
-            if (username) {
-                currentUser = username;
-                localStorage.setItem('personal_current_user', currentUser);
-                await registerUserInSupabase(currentUser);
+            const u = document.getElementById('loginUsername').value.trim();
+            if (u) {
+                currentUser = u;
+                localStorage.setItem('personal_current_user', u);
+                await registerUser(u);
                 closeModals();
                 updateNavbar();
-                alert(`සාර්ථකව Login විය! සාදරයෙන් පිළිගනිමු, ${currentUser}`);
-                document.getElementById('loginUsername').value = '';
                 filterAds();
+                alert('සාර්ථකව Login විය!');
             }
         };
 
-        document.getElementById('adForm').onsubmit = function(e) {
-            e.preventDefault();
-            const contactVal = document.getElementById('contact').value.trim();
-            if (contactVal.length !== 10) { alert('කරුණාකර නිවැරදි ඉලක්කම් 10ක දුරකථන අංකයක් ඇතුළත් කරන්න!'); return; }
-            const imageInput = document.getElementById('imageFile');
-            if (!imageInput.files || !imageInput.files[0]) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න!'); return; }
-
-            const submitBtn = document.getElementById('userPostSubmitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'ප්‍රකාශ කරමින් පවතී...';
-
+        function compressImage(file, cb) {
             const reader = new FileReader();
-            reader.onload = async function(event) {
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    if (w > 350) { h *= 350 / w; w = 350; }
+                    canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    cb(canvas.toDataURL('image/jpeg', 0.35));
+                };
+            };
+        }
+
+        document.getElementById('adForm').onsubmit = (e) => {
+            e.preventDefault();
+            const contact = document.getElementById('contact').value.trim();
+            if (contact.length !== 10) { alert('අංකය වැරදියි!'); return; }
+            const file = document.getElementById('imageFile').files[0];
+            if (!file) { alert('ඡායාරූපයක් දෙන්න'); return; }
+
+            compressImage(file, async (imageurl) => {
                 const newAd = {
                     title: document.getElementById('title').value.trim(),
                     description: document.getElementById('description').value.trim(),
                     category: document.getElementById('category').value,
                     sub: `${document.getElementById('location').value.trim()}, ${document.getElementById('category').value}`,
-                    price: Number(document.getElementById('price').value).toLocaleString(),
-                    imageUrl: event.target.result,
-                    contact: contactVal,
+                    price: document.getElementById('price').value.trim(),
+                    imageurl: imageurl,
+                    contact: contact,
                     poster: currentUser,
                     views: 0
                 };
-                try {
-                    const { error } = await supabase.from('ads').insert([newAd]);
-                    if (error) throw error;
-
-                    await registerUserInSupabase(currentUser);
-                    await fetchAds();
-                    currentPage = 1;
-                    enterMainSite();
-                    document.getElementById('adForm').reset();
-                    closeModals();
-                    alert('ඔබේ දැන්වීම සාර්ථකව පළ විය!');
-                } catch(err) { 
-                    console.error(err); 
-                    alert('දැන්වීම් පළ කිරීමේදී දෝෂයක් සිදු විය.');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = 'POST YOUR AD';
-                }
-            };
-            reader.readAsDataURL(imageInput.files[0]);
+                const { error } = await db.from('ads').insert([newAd]);
+                if (error) { console.error("User Ad Insert Error:", error); alert('Error inserting ad'); return; }
+                await registerUser(currentUser);
+                await fetchAds();
+                document.getElementById('adForm').reset();
+                closeModals();
+                alert('දැන්වීම සාර්ථකයි!');
+            });
         };
 
         document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -349,44 +295,30 @@
             };
         });
 
-        const searchInputEl = document.getElementById('searchInput');
-        if(searchInputEl) {
-            searchInputEl.onkeyup = filterAds;
-        }
-
-        function enterMainSite() {
-            landingView.style.display = 'none';
-            searchSection.style.display = 'flex';
-            categoryFilter.style.display = 'flex';
-            homeView.style.display = 'block';
-            filterAds();
-        }
+        document.getElementById('searchInput').onkeyup = filterAds;
 
         function filterAds() {
-            const query = searchInputEl ? searchInputEl.value.toLowerCase() : '';
-            const filteredAds = ads.filter(ad => {
-                const matchesCategory = (selectedCategory === 'All' || ad.category === selectedCategory);
-                const matchesSearch = ad.title.toLowerCase().includes(query) || ad.sub.toLowerCase().includes(query);
-                return matchesCategory && matchesSearch;
-            });
-            displayAdsWithPagination(filteredAds);
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = ads.filter(ad => (selectedCategory === 'All' || ad.category === selectedCategory) && (ad.title.toLowerCase().includes(query) || ad.sub.toLowerCase().includes(query)));
+            displayAds(filtered);
         }
 
-        function displayAdsWithPagination(filteredAds) {
-            adsList.innerHTML = ''; paginationContainer.innerHTML = '';
-            if (filteredAds.length === 0) { adsList.innerHTML = '<p style="text-align:center; color:#777; padding:20px;">දැන්වීම් හමු නොවීය.</p>'; return; }
+        function displayAds(filtered) {
+            const list = document.getElementById('adsList');
+            const pag = document.getElementById('paginationContainer');
+            list.innerHTML = ''; pag.innerHTML = '';
+            if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center; padding:20px;">දැන්වීම් නැත.</p>'; return; }
             
-            const totalPages = Math.ceil(filteredAds.length / adsPerPage);
+            const totalPages = Math.ceil(filtered.length / adsPerPage);
             if (currentPage > totalPages) currentPage = totalPages;
-            const paginated = filteredAds.slice((currentPage - 1) * adsPerPage, currentPage * adsPerPage);
+            const paginated = filtered.slice((currentPage - 1) * adsPerPage, currentPage * adsPerPage);
 
             paginated.forEach(ad => {
-                if(ad.views === undefined) ad.views = 0;
                 const card = document.createElement('div');
                 card.className = 'ad-card';
-                card.onclick = () => showAdDetail(ad.firebaseId);
-                card.innerHTML = `${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img">` : `<div class="ad-img">No Image</div>`}<div class="ad-details"><div class="ad-title">${ad.title}</div><div class="ad-sub">${ad.sub}</div><div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views} Views</div></div>`;
-                adsList.appendChild(card);
+                card.onclick = () => showDetail(ad.firebaseId);
+                card.innerHTML = `${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img">` : `<div class="ad-img">No Image</div>`}<div class="ad-details"><div class="ad-title">${ad.title}</div><div class="ad-sub">${ad.sub}</div><div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0}</div></div>`;
+                list.appendChild(card);
             });
 
             if (totalPages > 1) {
@@ -394,71 +326,41 @@
                     const btn = document.createElement('button');
                     btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
                     btn.innerText = i;
-                    btn.onclick = () => { currentPage = i; displayAdsWithPagination(filteredAds); window.scrollTo({top:0, behavior:'smooth'}); };
-                    paginationContainer.appendChild(btn);
+                    btn.onclick = () => { currentPage = i; displayAds(filtered); };
+                    pag.appendChild(btn);
                 }
             }
         }
 
-        async function showAdDetail(firebaseId) {
-            const ad = ads.find(item => item.firebaseId === firebaseId);
+        async function showDetail(id) {
+            const ad = ads.find(a => a.firebaseId === id);
             if (!ad) return;
-
             ad.views = (ad.views || 0) + 1;
-            try { 
-                await supabase.from('ads').update({ views: ad.views }).eq('id', firebaseId); 
-            } catch(e) { console.error(e); }
+            await db.from('ads').update({ views: ad.views }).eq('id', id);
 
-            closeModals(); 
-            landingView.style.display = 'none'; 
-            homeView.style.display = 'none'; 
-            searchSection.style.display = 'none'; 
-            categoryFilter.style.display = 'none'; 
-            detailView.style.display = 'block';
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'none';
+            document.getElementById('categoryFilter').style.display = 'none';
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'block';
 
-            document.getElementById('detailImgContainer').innerHTML = ad.imageUrl ? `<img src="${ad.imageUrl}" class="detail-main-img">` : `<div style="color:white; padding:40px;">ඡායාරූපයක් නොමැත</div>`;
+            document.getElementById('detailImgContainer').innerHTML = `<img src="${ad.imageUrl}" class="detail-main-img">`;
             document.getElementById('detailTitle').innerText = ad.title;
-            document.getElementById('detailMeta').innerText = `ස්ථානය හා ප්‍රවර්ගය: ${ad.sub}`;
-            document.getElementById('detailDesc').innerText = ad.description || "විස්තරයක් නැත.";
+            document.getElementById('detailMeta').innerText = ad.sub;
+            document.getElementById('detailDesc').innerText = ad.description;
             document.getElementById('detailPrice').innerText = `Rs ${ad.price}`;
             document.getElementById('detailContact').innerText = ad.contact;
             document.getElementById('detailViewsCount').innerText = ad.views;
-            
-            const delContainer = document.getElementById('detailDeleteContainer');
-            delContainer.innerHTML = (currentUser && currentUser === ad.poster) ? `<button class="delete-btn" id="deleteThisAdBtn">මගේ දැන්වීම මකන්න</button>` : '';
-            if(currentUser && currentUser === ad.poster) {
-                document.getElementById('deleteThisAdBtn').onclick = () => deleteAd(ad.firebaseId);
-            }
-            window.scrollTo({top:0, behavior:'smooth'});
-        }
 
-        function backToList() {
-            detailView.style.display = 'none'; 
-            landingView.style.display = 'none';
-            searchSection.style.display = 'flex'; 
-            categoryFilter.style.display = 'flex'; 
-            homeView.style.display = 'block';
-            fetchAds();
-            window.scrollTo({top:0, behavior:'smooth'});
-        }
-
-        function goHome() {
-            detailView.style.display = 'none'; 
-            homeView.style.display = 'none';
-            searchSection.style.display = 'none'; 
-            categoryFilter.style.display = 'none';
-            landingView.style.display = 'block';
-            window.scrollTo({top:0, behavior:'smooth'});
-        }
-
-        async function deleteAd(firebaseId) {
-            if(confirm('මෙම දැන්වීම මකා දැමීමට අවශ්‍යද?')) {
-                try {
-                    const { error } = await supabase.from('ads').delete().eq('id', firebaseId);
-                    if (error) throw error;
-                    alert('දැන්වීම සාර්ථකව මකා දමන ලදී.');
-                    backToList();
-                } catch(e) { console.error(e); }
+            const del = document.getElementById('detailDeleteContainer');
+            del.innerHTML = (currentUser && currentUser === ad.poster) ? `<button class="delete-btn" id="delAdBtn">මකන්න</button>` : '';
+            if (currentUser && currentUser === ad.poster) {
+                document.getElementById('delAdBtn').onclick = async () => {
+                    if (confirm('මකා දමන්නද?')) {
+                        await db.from('ads').delete().eq('id', id);
+                        document.getElementById('backToListBtn').click();
+                    }
+                };
             }
         }
 
