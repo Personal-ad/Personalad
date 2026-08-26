@@ -256,21 +256,12 @@
             }
         };
 
-        function compressImage(file, cb) {
+        // පින්තූරයේ සම්පූර්ණ තත්වය (Original High Quality) එලෙසම ලබා දෙන Function එක
+        function getOriginalImage(file, cb) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let w = img.width, h = img.height;
-                    if (w > 350) { h *= 350 / w; w = 350; }
-                    canvas.width = w; canvas.height = h;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
-                    cb(canvas.toDataURL('image/jpeg', 0.35));
-                };
+                cb(e.target.result); // කිසිදු අඩුවක් නොකර මුල් ඡායාරූපය ලබා දේ
             };
         }
 
@@ -314,7 +305,7 @@
             };
 
             if (file) {
-                compressImage(file, processSave);
+                getOriginalImage(file, processSave);
             } else {
                 if (!editId) { alert('ඡායාරූපයක් දෙන්න'); return; }
                 processSave(null);
@@ -353,7 +344,8 @@
                 const card = document.createElement('div');
                 card.className = 'ad-card';
                 card.onclick = () => showDetail(ad.firebaseId);
-                card.innerHTML = `${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img">` : `<div class="ad-img">No Image</div>`}<div class="ad-details"><div class="ad-title">${ad.title}</div><div class="ad-sub">${ad.sub}</div><div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0}</div></div>`;
+                // loading="lazy" භාවිතයෙන් පින්තූර වේගයෙන් ලෝඩ් වීම සහ ඩේටා ඉතිරි වීම සිදුවේ
+                card.innerHTML = `${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img" loading="lazy">` : `<div class="ad-img">No Image</div>`}<div class="ad-details"><div class="ad-title">${ad.title}</div><div class="ad-sub">${ad.sub}</div><div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0}</div></div>`;
                 list.appendChild(card);
             });
 
