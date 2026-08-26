@@ -60,13 +60,18 @@
                     <div class="form-group"><label>ශීර්ෂය (Title)</label><input type="text" id="admTitle" required placeholder="Admin Ad Title"></div>
                     <div class="form-group"><label>විස්තරය (Description)</label><textarea id="admDesc" rows="3" required placeholder="Description..."></textarea></div>
                     <div class="form-group"><label>ප්‍රවර්ගය (Category)</label>
-                        <select id="admCategory"><option value="Boys">Boys</option><option value="Girls">Girls</option><option value="Shemale">Shemale</option><option value="Personal">Personal</option></select>
+                        <select id="admCategory">
+                            <option value="Boys">Boys</option>
+                            <option value="Girls">Girls</option>
+                            <option value="Shemale">Shemale</option>
+                            <option value="Personal">Personal</option>
+                        </select>
                     </div>
                     <div class="form-group"><label>ස්ථානය (Location)</label><input type="text" id="admLocation" required placeholder="Colombo"></div>
                     <div class="form-group"><label>මිල (Rs)</label><input type="number" id="admPrice" required value="0"></div>
                     <div class="form-group"><label>ඡායාරූපය උඩුගත කරන්න</label><input type="file" id="admImageFile" accept="image/*" required></div>
                     <div class="form-group"><label>දුරකථන අංකය (ඉලක්කම් 10)</label><input type="text" id="admContact" required maxlength="10" placeholder="0712345678"></div>
-                    <button type="submit">දැන්වීම ප්‍රකාශ කරන්න (Post)</button>
+                    <button type="submit" id="admSubmitBtn">දැන්වීම ප්‍රකාශ කරන්න (Post)</button>
                 </form>
             </div>
 
@@ -91,23 +96,12 @@
 
     </div>
 
-    <!-- Firebase Script for Admin -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyD0C_usDNZkwuZ_6PBuCP424OMIl3Qf6eE",
-          authDomain: "new-ad-9dc83.firebaseapp.com",
-          projectId: "new-ad-9dc83",
-          storageBucket: "new-ad-9dc83.firebasestorage.app",
-          messagingSenderId: "822078837777",
-          appId: "1:822078837777:web:a821551828a4f411330db0",
-          measurementId: "G-LYR2S99GLW"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://yeikgoqgiltcepcruqro.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let ads = [];
         let users = [];
@@ -117,7 +111,7 @@
             if (isAdminLoggedIn) {
                 document.getElementById('adminLoginCard').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
-                loadAdminDataFromFirebase();
+                loadAdminDataFromSupabase();
             } else {
                 document.getElementById('adminLoginCard').style.display = 'block';
                 document.getElementById('adminDashboard').style.display = 'none';
@@ -144,22 +138,18 @@
             checkAdminSession();
         };
 
-        async function loadAdminDataFromFirebase() {
+        async function loadAdminDataFromSupabase() {
             try {
-                const adsSnap = await getDocs(collection(db, "ads"));
-                ads = [];
-                adsSnap.forEach(docSnap => {
-                    ads.push({ firebaseId: docSnap.id, ...docSnap.data() });
-                });
+                const { data: adsData, error: adsErr } = await supabase.from('ads').select('*');
+                if (adsErr) throw adsErr;
+                ads = adsData.map(item => ({ firebaseId: item.id, ...item }));
 
-                const usersSnap = await getDocs(collection(db, "users"));
-                users = [];
-                usersSnap.forEach(docSnap => {
-                    users.push({ firebaseId: docSnap.id, ...docSnap.data() });
-                });
+                const { data: usersData, error: usersErr } = await supabase.from('users').select('*');
+                if (usersErr) throw usersErr;
+                users = usersData.map(item => ({ firebaseId: item.id, ...item }));
 
                 renderAdminTables();
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Load Error: ", e); }
         }
 
         function renderAdminTables() {
@@ -188,7 +178,7 @@
                 ads.forEach(ad => {
                     if(ad.views === undefined) ad.views = 0;
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${ad.title}</td><td>${ad.poster}</td><td>Rs ${ad.price}</td><td>${ad.views}</td><td></td>`;
+                    tr.innerHTML = `<td>${ad.title}</td><td>${ad.poster || 'Unknown'}</td><td>Rs ${ad.price}</td><td>${ad.views}</td><td></td>`;
                     
                     const editBtn = document.createElement('button');
                     editBtn.className = 'edit-btn';
@@ -215,13 +205,17 @@
             const imageInput = document.getElementById('admImageFile');
             if (!imageInput.files || !imageInput.files[0]) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න!'); return; }
 
+            const submitBtn = document.getElementById('admSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'උඩුගත කරමින් පවතී...';
+
             const reader = new FileReader();
             reader.onload = async function(event) {
                 const newAd = {
-                    title: document.getElementById('admTitle').value,
-                    description: document.getElementById('admDesc').value,
+                    title: document.getElementById('admTitle').value.trim(),
+                    description: document.getElementById('admDesc').value.trim(),
                     category: document.getElementById('admCategory').value,
-                    sub: `${document.getElementById('admLocation').value}, ${document.getElementById('admCategory').value}`,
+                    sub: `${document.getElementById('admLocation').value.trim()}, ${document.getElementById('admCategory').value}`,
                     price: Number(document.getElementById('admPrice').value).toLocaleString(),
                     imageUrl: event.target.result,
                     contact: contact,
@@ -230,12 +224,27 @@
                 };
 
                 try {
-                    await addDoc(collection(db, "ads"), newAd);
+                    const { error } = await supabase.from('ads').insert([newAd]);
+                    if (error) throw error;
+
                     document.getElementById('adminAdForm').reset();
-                    loadAdminDataFromFirebase();
+                    await loadAdminDataFromSupabase();
                     alert('ඇඩ්මින් දැන්වීම සාර්ථකව එකතු කරන ලදී!');
-                } catch(err) { console.error(err); }
+                } catch(err) { 
+                    console.error("Supabase Error: ", err); 
+                    alert('දැන්වීම එකතු කිරීමේදී දෝෂයක් සිදු විය.'); 
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'දැන්වීම ප්‍රකාශ කරන්න (Post)';
+                }
             };
+
+            reader.onerror = function() {
+                alert('රූපය කියවීමේ දෝෂයක් සිදු විය.');
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'දැන්වීම ප්‍රකාශ කරන්න (Post)';
+            };
+
             reader.readAsDataURL(imageInput.files[0]);
         };
 
@@ -245,8 +254,9 @@
                 const parsedViews = parseInt(newViews);
                 if (!isNaN(parsedViews) && parsedViews >= 0) {
                     try {
-                        await updateDoc(doc(db, "ads", firebaseId), { views: parsedViews });
-                        loadAdminDataFromFirebase();
+                        const { error } = await supabase.from('ads').update({ views: parsedViews }).eq('id', firebaseId);
+                        if (error) throw error;
+                        await loadAdminDataFromSupabase();
                         alert('Views ගණන සාර්ථකව යාවත්කාලීන කරන ලදී!');
                     } catch(e) { console.error(e); }
                 } else { alert('කරුණාකර වලංගු අංකයක් ඇතුළත් කරන්න!'); }
@@ -256,8 +266,10 @@
         window.deleteAd = async function(firebaseId) {
             if(confirm('මෙම දැන්වීම මකා දැමීමට අවශ්‍යද?')) {
                 try {
-                    await deleteDoc(doc(db, "ads", firebaseId));
-                    loadAdminDataFromFirebase();
+                    const { error } = await supabase.from('ads').delete().eq('id', firebaseId);
+                    if (error) throw error;
+                    await loadAdminDataFromSupabase();
+                    alert('දැන්වීම සාර්ථකව මකා දමන ලදී.');
                 } catch(e) { console.error(e); }
             }
         };
@@ -265,8 +277,9 @@
         window.deleteUser = async function(firebaseId, username) {
             if(confirm(`"${username}" පරිශීලකයා මකා දැමීමට අවශ්‍යද?`)) {
                 try {
-                    await deleteDoc(doc(db, "users", firebaseId));
-                    loadAdminDataFromFirebase();
+                    const { error } = await supabase.from('users').delete().eq('id', firebaseId);
+                    if (error) throw error;
+                    await loadAdminDataFromSupabase();
                     alert('පරිශීලකයා සාර්ථකව ඉවත් කරන ලදී!');
                 } catch(e) { console.error(e); }
             }
