@@ -2,11 +2,9 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Sri Lanka Classifieds & Local Business Listings Discover jobs, property, services, electronics, vehicles, and local business listings across Sri Lanka"> 
+    <meta name="description" content="Sri Lanka Classifieds & Local Business Listings">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="0FXFCJytz6qsnsFHNOr70sQmoaqCsx8UbkQYnPMoaMo" />
-    <link rel="icon" type="image/png" href="favicon.png">
-    <title>Personal Ad|sri lanka hela ad</title>
+    <title>Admin Dashboard | Sri Lanka Hela Ad</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -52,7 +50,7 @@
         <div id="adminDashboard">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h1><i class="fa-solid fa-gauge"></i> Admin Dashboard</h1>
-                <button onclick="adminLogout()" class="del-btn" style="padding: 10px 15px;">Logout</button>
+                <button id="adminLogoutBtn" class="del-btn" style="padding: 10px 15px;">Logout</button>
             </div>
 
             <!-- Admin Post Ad Section -->
@@ -67,7 +65,7 @@
                     <div class="form-group"><label>ස්ථානය (Location)</label><input type="text" id="admLocation" required placeholder="Colombo"></div>
                     <div class="form-group"><label>මිල (Rs)</label><input type="number" id="admPrice" required value="0"></div>
                     <div class="form-group"><label>ඡායාරූපය උඩුගත කරන්න</label><input type="file" id="admImageFile" accept="image/*" required></div>
-                    <div class="form-group"><label>දුරකථන අංකය (ඉලක්කම් 10)</label><input type="text" id="admContact" required maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" placeholder="0712345678"></div>
+                    <div class="form-group"><label>දුරකථන අංකය (ඉලක්කම් 10)</label><input type="text" id="admContact" required maxlength="10" placeholder="0712345678"></div>
                     <button type="submit">දැන්වීම ප්‍රකාශ කරන්න (Post)</button>
                 </form>
             </div>
@@ -93,23 +91,40 @@
 
     </div>
 
-    <script>
-        let ads = JSON.parse(localStorage.getItem('personal_ads_list')) || [];
-        let users = JSON.parse(localStorage.getItem('personal_users_list')) || [];
+    <!-- Firebase Script for Admin -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyD0C_usDNZkwuZ_6PBuCP424OMIl3Qf6eE",
+          authDomain: "new-ad-9dc83.firebaseapp.com",
+          projectId: "new-ad-9dc83",
+          storageBucket: "new-ad-9dc83.firebasestorage.app",
+          messagingSenderId: "822078837777",
+          appId: "1:822078837777:web:a821551828a4f411330db0",
+          measurementId: "G-LYR2S99GLW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let ads = [];
+        let users = [];
         let isAdminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
 
         function checkAdminSession() {
             if (isAdminLoggedIn) {
                 document.getElementById('adminLoginCard').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
-                loadAdminData();
+                loadAdminDataFromFirebase();
             } else {
                 document.getElementById('adminLoginCard').style.display = 'block';
                 document.getElementById('adminDashboard').style.display = 'none';
             }
         }
 
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+        document.getElementById('adminLoginForm').onsubmit = function(e) {
             e.preventDefault();
             const u = document.getElementById('adminUser').value.trim();
             const p = document.getElementById('adminPass').value.trim();
@@ -121,22 +136,47 @@
             } else {
                 alert('වැරදි Username හෝ Password එකක්!');
             }
-        });
+        };
 
-        function adminLogout() {
+        document.getElementById('adminLogoutBtn').onclick = function() {
             isAdminLoggedIn = false;
             localStorage.removeItem('admin_logged_in');
             checkAdminSession();
+        };
+
+        async function loadAdminDataFromFirebase() {
+            try {
+                const adsSnap = await getDocs(collection(db, "ads"));
+                ads = [];
+                adsSnap.forEach(docSnap => {
+                    ads.push({ firebaseId: docSnap.id, ...docSnap.data() });
+                });
+
+                const usersSnap = await getDocs(collection(db, "users"));
+                users = [];
+                usersSnap.forEach(docSnap => {
+                    users.push({ firebaseId: docSnap.id, ...docSnap.data() });
+                });
+
+                renderAdminTables();
+            } catch (e) { console.error(e); }
         }
 
-        function loadAdminData() {
+        function renderAdminTables() {
             const userBody = document.getElementById('usersTableBody');
             userBody.innerHTML = '';
             if (users.length === 0) {
                 userBody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#94a3b8;">පරිශීලකයින් නොමැත</td></tr>`;
             } else {
-                users.forEach(user => {
-                    userBody.innerHTML += `<tr><td>${user}</td><td><button class="del-btn" onclick="deleteUser('${user}')">User මකන්න</button></td></tr>`;
+                users.forEach(userObj => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${userObj.username}</td><td></td>`;
+                    const btn = document.createElement('button');
+                    btn.className = 'del-btn';
+                    btn.innerText = 'User මකන්න';
+                    btn.onclick = () => deleteUser(userObj.firebaseId, userObj.username);
+                    tr.cells[1].appendChild(btn);
+                    userBody.appendChild(tr);
                 });
             }
 
@@ -147,21 +187,27 @@
             } else {
                 ads.forEach(ad => {
                     if(ad.views === undefined) ad.views = 0;
-                    adsBody.innerHTML += `<tr>
-                        <td>${ad.title}</td>
-                        <td>${ad.poster}</td>
-                        <td>Rs ${ad.price}</td>
-                        <td>${ad.views}</td>
-                        <td>
-                            <button class="edit-btn" onclick="editViews(${ad.id})">Views වෙනස් කරන්න</button>
-                            <button class="del-btn" onclick="deleteAd(${ad.id})">මකන්න</button>
-                        </td>
-                    </tr>`;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${ad.title}</td><td>${ad.poster}</td><td>Rs ${ad.price}</td><td>${ad.views}</td><td></td>`;
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'edit-btn';
+                    editBtn.innerText = 'Views වෙනස් කරන්න';
+                    editBtn.onclick = () => editViews(ad.firebaseId, ad.views);
+
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'del-btn';
+                    delBtn.innerText = 'මකන්න';
+                    delBtn.onclick = () => deleteAd(ad.firebaseId);
+
+                    tr.cells[4].appendChild(editBtn);
+                    tr.cells[4].appendChild(delBtn);
+                    adsBody.appendChild(tr);
                 });
             }
         }
 
-        document.getElementById('adminAdForm').addEventListener('submit', function(e) {
+        document.getElementById('adminAdForm').onsubmit = function(e) {
             e.preventDefault();
             const contact = document.getElementById('admContact').value.trim();
             if(contact.length !== 10) { alert('ඉලක්කම් 10ක නිවැරදි අංකයක් දෙන්න!'); return; }
@@ -170,9 +216,8 @@
             if (!imageInput.files || !imageInput.files[0]) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න!'); return; }
 
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = async function(event) {
                 const newAd = {
-                    id: Date.now(),
                     title: document.getElementById('admTitle').value,
                     description: document.getElementById('admDesc').value,
                     category: document.getElementById('admCategory').value,
@@ -184,58 +229,48 @@
                     views: 0
                 };
 
-                ads.unshift(newAd);
-                localStorage.setItem('personal_ads_list', JSON.stringify(ads));
-                
-                if(!users.includes('Admin')) {
-                    users.push('Admin');
-                    localStorage.setItem('personal_users_list', JSON.stringify(users));
-                }
-
-                document.getElementById('adminAdForm').reset();
-                loadAdminData();
-                alert('ඇඩ්මින් දැන්වීම ඡායාරූපය සමඟ සාර්ථකව එකතු කරන ලදී!');
+                try {
+                    await addDoc(collection(db, "ads"), newAd);
+                    document.getElementById('adminAdForm').reset();
+                    loadAdminDataFromFirebase();
+                    alert('ඇඩ්මින් දැන්වීම සාර්ථකව එකතු කරන ලදී!');
+                } catch(err) { console.error(err); }
             };
             reader.readAsDataURL(imageInput.files[0]);
-        });
+        };
 
-        function editViews(id) {
-            const ad = ads.find(item => item.id === id);
-            if (!ad) return;
-            const newViews = prompt(`"${ad.title}" සඳහා නව Views ගණන ඇතුළත් කරන්න:`, ad.views || 0);
+        window.editViews = async function(firebaseId, currentViews) {
+            const newViews = prompt(`නව Views ගණන ඇතුළත් කරන්න:`, currentViews || 0);
             if (newViews !== null) {
                 const parsedViews = parseInt(newViews);
                 if (!isNaN(parsedViews) && parsedViews >= 0) {
-                    ad.views = parsedViews;
-                    localStorage.setItem('personal_ads_list', JSON.stringify(ads));
-                    loadAdminData();
-                    alert('Views ගණන සාර්ථකව යාවත්කාලීන කරන ලදී!');
-                } else {
-                    alert('කරුණාකර වලංගු අංකයක් ඇතුළත් කරන්න!');
-                }
+                    try {
+                        await updateDoc(doc(db, "ads", firebaseId), { views: parsedViews });
+                        loadAdminDataFromFirebase();
+                        alert('Views ගණන සාර්ථකව යාවත්කාලීන කරන ලදී!');
+                    } catch(e) { console.error(e); }
+                } else { alert('කරුණාකර වලංගු අංකයක් ඇතුළත් කරන්න!'); }
             }
-        }
+        };
 
-        function deleteAd(id) {
+        window.deleteAd = async function(firebaseId) {
             if(confirm('මෙම දැන්වීම මකා දැමීමට අවශ්‍යද?')) {
-                ads = ads.filter(ad => ad.id !== id);
-                localStorage.setItem('personal_ads_list', JSON.stringify(ads));
-                loadAdminData();
+                try {
+                    await deleteDoc(doc(db, "ads", firebaseId));
+                    loadAdminDataFromFirebase();
+                } catch(e) { console.error(e); }
             }
-        }
+        };
 
-        function deleteUser(username) {
-            if(confirm(`"${username}" පරිශීලකයා සහ ඔහු/ඇය විසින් දමන ලද සියලු දැන්වීම් මකා දැමීමට අවශ්‍යද?`)) {
-                users = users.filter(u => u !== username);
-                localStorage.setItem('personal_users_list', JSON.stringify(users));
-
-                ads = ads.filter(ad => ad.poster !== username);
-                localStorage.setItem('personal_ads_list', JSON.stringify(ads));
-
-                loadAdminData();
-                alert('පරිශීලකයා සහ ඔහුගේ දැන්වීම් සාර්ථකව ඉවත් කරන ලදී!');
+        window.deleteUser = async function(firebaseId, username) {
+            if(confirm(`"${username}" පරිශීලකයා මකා දැමීමට අවශ්‍යද?`)) {
+                try {
+                    await deleteDoc(doc(db, "users", firebaseId));
+                    loadAdminDataFromFirebase();
+                    alert('පරිශීලකයා සාර්ථකව ඉවත් කරන ලදී!');
+                } catch(e) { console.error(e); }
             }
-        }
+        };
 
         checkAdminSession();
     </script>
