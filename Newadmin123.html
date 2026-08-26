@@ -41,8 +41,9 @@
             </div>
 
             <div class="card">
-                <h2>Admin Post Ad</h2>
+                <h2 id="admFormHeading">Admin Post Ad</h2>
                 <form id="adminAdForm">
+                    <input type="hidden" id="admEditId">
                     <div class="form-group"><label>Title</label><input type="text" id="admTitle" required></div>
                     <div class="form-group"><label>Description</label><textarea id="admDesc" rows="3" required></textarea></div>
                     <div class="form-group"><label>Category</label>
@@ -50,9 +51,10 @@
                     </div>
                     <div class="form-group"><label>Location</label><input type="text" id="admLocation" required></div>
                     <div class="form-group"><label>Price (Rs)</label><input type="text" id="admPrice" required value="0"></div>
-                    <div class="form-group"><label>Photo</label><input type="file" id="admImageFile" accept="image/*" required></div>
+                    <div class="form-group"><label>Photo (වෙනස් නොකරන්නේ නම් හිස්ව තබන්න)</label><input type="file" id="admImageFile" accept="image/*"></div>
                     <div class="form-group"><label>Contact (10 digits)</label><input type="text" id="admContact" required maxlength="10"></div>
-                    <button type="submit">Post Ad</button>
+                    <button type="submit" id="admSubmitBtn">Post Ad</button>
+                    <button type="button" id="admCancelBtn" style="background:#64748b; color:#fff; display:none; margin-left:10px;" onclick="resetAdminForm()">Cancel</button>
                 </form>
             </div>
 
@@ -126,7 +128,7 @@
             userBody.innerHTML = users.length === 0 ? `<tr><td colspan="2">Empty</td></tr>` : users.map(u => `<tr><td>${u.username}</td><td><button class="del-btn" onclick="deleteUser('${u.firebaseId}')">Delete</button></td></tr>`).join('');
 
             const adsBody = document.getElementById('adsTableBody');
-            adsBody.innerHTML = ads.length === 0 ? `<tr><td colspan="5">Empty</td></tr>` : ads.map(a => `<tr><td>${a.title}</td><td>${a.poster || 'Admin'}</td><td>Rs ${a.price}</td><td>${a.views || 0}</td><td><button class="edit-btn" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button><button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button></td></tr>`).join('');
+            adsBody.innerHTML = ads.length === 0 ? `<tr><td colspan="5">Empty</td></tr>` : ads.map(a => `<tr><td>${a.title}</td><td>${a.poster || 'Admin'}</td><td>Rs ${a.price}</td><td>${a.views || 0}</td><td><button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button><button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button><button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button></td></tr>`).join('');
         }
 
         function compressImage(file, cb) {
@@ -151,33 +153,70 @@
             e.preventDefault();
             const contact = document.getElementById('admContact').value.trim();
             if (contact.length !== 10) { alert('දුරකථන අංකය වැරදියි!'); return; }
+            
+            const editId = document.getElementById('admEditId').value;
             const file = document.getElementById('admImageFile').files[0];
-            if (!file) { alert('ඡායාරූපයක් තෝරන්න'); return; }
 
-            compressImage(file, async (imageurl) => {
-                const newAd = {
+            const processAdminSave = async (imageurl) => {
+                const adData = {
                     title: document.getElementById('admTitle').value.trim(),
                     description: document.getElementById('admDesc').value.trim(),
                     category: document.getElementById('admCategory').value,
                     sub: `${document.getElementById('admLocation').value.trim()}, ${document.getElementById('admCategory').value}`,
                     price: document.getElementById('admPrice').value.trim(),
-                    imageurl: imageurl,
-                    contact: contact,
-                    poster: 'Admin',
-                    views: 0
+                    contact: contact
                 };
-                
-                const { data, error } = await db.from('ads').insert([newAd]).select();
-                if (error) {
-                    console.error("Detailed Insert Error:", error);
-                    alert('දැන්වීම එකතු කිරීමේ දෝෂයක් සිදු විය: ' + (error.message || JSON.stringify(error)));
-                    return;
+                if (imageurl) adData.imageurl = imageurl;
+
+                if (editId) {
+                    const { error } = await db.from('ads').update(adData).eq('id', editId);
+                    if (error) { alert('දෝෂයක් සිදු විය'); return; }
+                    alert('දැන්වීම සාර්ථකව යාවත්කාලීන විය!');
+                } else {
+                    adData.poster = 'Admin';
+                    adData.views = 0;
+                    if (!imageurl) { alert('ඡායාරූපයක් තෝරන්න'); return; }
+                    const { error } = await db.from('ads').insert([adData]);
+                    if (error) { alert('ದෝෂයක් සිදු විය'); return; }
+                    alert('දැන්වීම සාර්ථකව එකතු විය!');
                 }
                 
-                document.getElementById('adminAdForm').reset();
+                resetAdminForm();
                 await loadAdminData();
-                alert('දැන්වීම සාර්ථකව එකතු විය!');
-            });
+            };
+
+            if (file) {
+                compressImage(file, processAdminSave);
+            } else {
+                if (!editId) { alert('ඡායාරූපයක් තෝරන්න'); return; }
+                processAdminSave(null);
+            }
+        };
+
+        window.prepareEditAd = (id) => {
+            const ad = ads.find(a => a.firebaseId === id);
+            if (!ad) return;
+            document.getElementById('admEditId').value = ad.firebaseId;
+            document.getElementById('admTitle').value = ad.title;
+            document.getElementById('admDesc').value = ad.description;
+            document.getElementById('admCategory').value = ad.category;
+            const parts = ad.sub.split(',');
+            document.getElementById('admLocation').value = parts[0] ? parts[0].trim() : '';
+            document.getElementById('admPrice').value = ad.price;
+            document.getElementById('admContact').value = ad.contact;
+            document.getElementById('admImageFile').value = '';
+            document.getElementById('admFormHeading').innerText = 'Admin Edit Ad';
+            document.getElementById('admSubmitBtn').innerText = 'Update Ad';
+            document.getElementById('admCancelBtn').style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.resetAdminForm = () => {
+            document.getElementById('adminAdForm').reset();
+            document.getElementById('admEditId').value = '';
+            document.getElementById('admFormHeading').innerText = 'Admin Post Ad';
+            document.getElementById('admSubmitBtn').innerText = 'Post Ad';
+            document.getElementById('admCancelBtn').style.display = 'none';
         };
 
         window.editViews = async (id, currentViews) => {
