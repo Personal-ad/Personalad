@@ -52,7 +52,9 @@
         .back-btn { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 15px; }
         .detail-img-container { width: 100%; max-height: 400px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 20px; }
         .detail-main-img { width: 100%; max-height: 400px; object-fit: contain; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
         .delete-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .edit-btn-user { background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -107,10 +109,11 @@
 
         <div class="modal-box" id="postAdBox">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න</h3>
+                <h3 id="formModalTitle"><i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න</h3>
                 <button class="close-btn" id="closePostBtn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="adForm">
+                <input type="hidden" id="editAdId">
                 <div class="form-group"><label>ශීර්ෂය</label><input type="text" id="title" required></div>
                 <div class="form-group"><label>විස්තරය</label><textarea id="description" rows="4" required></textarea></div>
                 <div class="form-group"><label>ප්‍රවර්ගය</label>
@@ -118,9 +121,9 @@
                 </div>
                 <div class="form-group"><label>ස්ථානය</label><input type="text" id="location" required></div>
                 <div class="form-group"><label>මිල (Rs)</label><input type="text" id="price" required></div>
-                <div class="form-group"><label>ඡායාරූපය</label><input type="file" id="imageFile" accept="image/*" required></div>
+                <div class="form-group"><label>ඡායාරූපය (වෙනස් නොකරන්නේ නම් හිස්ව තබන්න)</label><input type="file" id="imageFile" accept="image/*"></div>
                 <div class="form-group"><label>දුරකථන අංකය (10 digits)</label><input type="text" id="contact" required maxlength="10"></div>
-                <button type="submit" class="action-btn">POST YOUR AD</button>
+                <button type="submit" class="action-btn" id="formSubmitBtn">POST YOUR AD</button>
             </form>
         </div>
 
@@ -139,7 +142,7 @@
                 <div class="detail-price" id="detailPrice" style="font-size:20px; color:#00aaf0; font-weight:bold; margin-bottom:10px;"></div>
                 <div>දුරකථන: <strong id="detailContact"></strong></div>
                 <div style="margin: 10px 0;">Views: <span id="detailViewsCount" style="color:#00aaf0; font-weight:bold;"></span></div>
-                <div id="detailDeleteContainer"></div>
+                <div class="btn-group" id="detailActionContainer"></div>
             </div>
         </div>
     </div>
@@ -176,7 +179,14 @@
             const navRight = document.getElementById('navRight');
             if (currentUser) {
                 navRight.innerHTML = `<span>${currentUser}</span><button class="action-btn" id="navPostBtn" style="padding:3px 8px; font-size:12px; width:auto;">දැන්වීමක්</button><button class="logout-btn" id="navLogoutBtn">Logout</button>`;
-                document.getElementById('navPostBtn').onclick = () => { closeModals(); document.getElementById('postAdBox').style.display = 'block'; };
+                document.getElementById('navPostBtn').onclick = () => { 
+                    closeModals(); 
+                    document.getElementById('editAdId').value = '';
+                    document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න`;
+                    document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
+                    document.getElementById('adForm').reset();
+                    document.getElementById('postAdBox').style.display = 'block'; 
+                };
                 document.getElementById('navLogoutBtn').onclick = () => { currentUser = null; localStorage.removeItem('personal_current_user'); updateNavbar(); filterAds(); };
             } else {
                 navRight.innerHTML = `<i class="fa-regular fa-user" id="navLoginIcon" style="font-size: 20px; cursor: pointer;"></i>`;
@@ -190,6 +200,7 @@
         }
 
         document.getElementById('logoBtn').onclick = () => {
+            localStorage.setItem('app_view', 'landing');
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'none';
@@ -198,6 +209,7 @@
         };
 
         document.getElementById('browseAdsBtn').onclick = () => {
+            localStorage.setItem('app_view', 'browse');
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'flex';
             document.getElementById('categoryFilter').style.display = 'flex';
@@ -207,16 +219,22 @@
 
         document.getElementById('postAdLandingBtn').onclick = () => {
             if (!currentUser) { document.getElementById('loginBox').style.display = 'block'; return; }
+            localStorage.setItem('app_view', 'browse');
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'flex';
             document.getElementById('categoryFilter').style.display = 'flex';
             document.getElementById('homeView').style.display = 'block';
+            document.getElementById('editAdId').value = '';
+            document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න`;
+            document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
+            document.getElementById('adForm').reset();
             document.getElementById('postAdBox').style.display = 'block';
         };
 
         document.getElementById('closeLoginBtn').onclick = closeModals;
         document.getElementById('closePostBtn').onclick = closeModals;
         document.getElementById('backToListBtn').onclick = () => {
+            localStorage.setItem('app_view', 'browse');
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'flex';
             document.getElementById('categoryFilter').style.display = 'flex';
@@ -260,29 +278,47 @@
             e.preventDefault();
             const contact = document.getElementById('contact').value.trim();
             if (contact.length !== 10) { alert('අංකය වැරදියි!'); return; }
+            
+            const editId = document.getElementById('editAdId').value;
             const file = document.getElementById('imageFile').files[0];
-            if (!file) { alert('ඡායාරූපයක් දෙන්න'); return; }
 
-            compressImage(file, async (imageurl) => {
-                const newAd = {
+            const processSave = async (imageurl) => {
+                const adData = {
                     title: document.getElementById('title').value.trim(),
                     description: document.getElementById('description').value.trim(),
                     category: document.getElementById('category').value,
                     sub: `${document.getElementById('location').value.trim()}, ${document.getElementById('category').value}`,
                     price: document.getElementById('price').value.trim(),
-                    imageurl: imageurl,
-                    contact: contact,
-                    poster: currentUser,
-                    views: 0
+                    contact: contact
                 };
-                const { error } = await db.from('ads').insert([newAd]);
-                if (error) { console.error("User Ad Insert Error:", error); alert('Error inserting ad'); return; }
-                await registerUser(currentUser);
+                if (imageurl) adData.imageurl = imageurl;
+
+                if (editId) {
+                    const { error } = await db.from('ads').update(adData).eq('id', editId);
+                    if (error) { alert('යාවත්කාලීන කිරීමේ දෝෂයක් සිදු විය'); return; }
+                    alert('දැන්වීම සාර්ථකව යාවත්කාලීන විය!');
+                } else {
+                    adData.poster = currentUser;
+                    adData.views = 0;
+                    if (!imageurl) { alert('ඡායාරූපයක් දෙන්න'); return; }
+                    const { error } = await db.from('ads').insert([adData]);
+                    if (error) { alert('Error inserting ad'); return; }
+                    await registerUser(currentUser);
+                    alert('දැන්වීම සාර්ථකයි!');
+                }
+
                 await fetchAds();
                 document.getElementById('adForm').reset();
                 closeModals();
-                alert('දැන්වීම සාර්ථකයි!');
-            });
+                if (editId) showDetail(editId);
+            };
+
+            if (file) {
+                compressImage(file, processSave);
+            } else {
+                if (!editId) { alert('ඡායාරූපයක් දෙන්න'); return; }
+                processSave(null);
+            }
         };
 
         document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -338,6 +374,9 @@
             ad.views = (ad.views || 0) + 1;
             await db.from('ads').update({ views: ad.views }).eq('id', id);
 
+            localStorage.setItem('app_view', 'detail');
+            localStorage.setItem('current_ad_id', id);
+
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'none';
             document.getElementById('categoryFilter').style.display = 'none';
@@ -352,9 +391,27 @@
             document.getElementById('detailContact').innerText = ad.contact;
             document.getElementById('detailViewsCount').innerText = ad.views;
 
-            const del = document.getElementById('detailDeleteContainer');
-            del.innerHTML = (currentUser && currentUser === ad.poster) ? `<button class="delete-btn" id="delAdBtn">මකන්න</button>` : '';
+            const actionContainer = document.getElementById('detailActionContainer');
+            actionContainer.innerHTML = (currentUser && currentUser === ad.poster) ? `<button class="edit-btn-user" id="editAdBtn">සංස්කරණය</button><button class="delete-btn" id="delAdBtn">මකන්න</button>` : '';
+            
             if (currentUser && currentUser === ad.poster) {
+                document.getElementById('editAdBtn').onclick = () => {
+                    document.getElementById('editAdId').value = ad.firebaseId;
+                    document.getElementById('title').value = ad.title;
+                    document.getElementById('description').value = ad.description;
+                    document.getElementById('category').value = ad.category;
+                    const parts = ad.sub.split(',');
+                    document.getElementById('location').value = parts[0] ? parts[0].trim() : '';
+                    document.getElementById('price').value = ad.price;
+                    document.getElementById('contact').value = ad.contact;
+                    document.getElementById('imageFile').value = '';
+                    document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> දැන්වීම සංස්කරණය කරන්න`;
+                    document.getElementById('formSubmitBtn').innerText = 'UPDATE AD';
+                    
+                    document.getElementById('detailView').style.display = 'none';
+                    document.getElementById('postAdBox').style.display = 'block';
+                };
+
                 document.getElementById('delAdBtn').onclick = async () => {
                     if (confirm('මකා දමන්නද?')) {
                         await db.from('ads').delete().eq('id', id);
@@ -364,8 +421,32 @@
             }
         }
 
-        fetchAds();
-        updateNavbar();
+        async function initApp() {
+            await fetchAds();
+            updateNavbar();
+            
+            const savedView = localStorage.getItem('app_view') || 'landing';
+            if (savedView === 'browse') {
+                document.getElementById('landingView').style.display = 'none';
+                document.getElementById('searchSection').style.display = 'flex';
+                document.getElementById('categoryFilter').style.display = 'flex';
+                document.getElementById('homeView').style.display = 'block';
+            } else if (savedView === 'detail') {
+                const savedAdId = localStorage.getItem('current_ad_id');
+                if (savedAdId && ads.some(a => a.firebaseId === savedAdId)) {
+                    showDetail(savedAdId);
+                } else {
+                    document.getElementById('landingView').style.display = 'none';
+                    document.getElementById('searchSection').style.display = 'flex';
+                    document.getElementById('categoryFilter').style.display = 'flex';
+                    document.getElementById('homeView').style.display = 'block';
+                }
+            } else {
+                document.getElementById('landingView').style.display = 'block';
+            }
+        }
+
+        initApp();
     </script>
 </body>
 </html>
