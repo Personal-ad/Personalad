@@ -131,21 +131,12 @@
             adsBody.innerHTML = ads.length === 0 ? `<tr><td colspan="5">Empty</td></tr>` : ads.map(a => `<tr><td>${a.title}</td><td>${a.poster || 'Admin'}</td><td>Rs ${a.price}</td><td>${a.views || 0}</td><td><button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button><button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button><button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button></td></tr>`).join('');
         }
 
-        function compressImage(file, cb) {
+        // මුල් තත්වයේ (High Quality) ඡායාරූප පමණක් ලබා දෙන Function එක
+        function getOriginalImage(file, cb) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let w = img.width, h = img.height;
-                    if (w > 250) { h *= 250 / w; w = 250; }
-                    canvas.width = w; canvas.height = h;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
-                    cb(canvas.toDataURL('image/jpeg', 0.25));
-                };
+                cb(e.target.result);
             };
         }
 
@@ -177,7 +168,7 @@
                     adData.views = 0;
                     if (!imageurl) { alert('ඡායාරූපයක් තෝරන්න'); return; }
                     const { error } = await db.from('ads').insert([adData]);
-                    if (error) { alert('ದෝෂයක් සිදු විය'); return; }
+                    if (error) { alert('දෝෂයක් සිදු විය'); return; }
                     alert('දැන්වීම සාර්ථකව එකතු විය!');
                 }
                 
@@ -186,7 +177,7 @@
             };
 
             if (file) {
-                compressImage(file, processAdminSave);
+                getOriginalImage(file, processAdminSave);
             } else {
                 if (!editId) { alert('ඡායාරූපයක් තෝරන්න'); return; }
                 processAdminSave(null);
