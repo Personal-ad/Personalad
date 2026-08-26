@@ -11,7 +11,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f2f4f5; color: #000; }
         
-        /* Landing Page Styles */
         #landingView { display: block; }
         .hero-section { background: linear-gradient(135deg, #00aaf0, #0284c7); color: white; padding: 60px 20px; text-align: center; }
         .hero-section h1 { font-size: 36px; margin-bottom: 15px; font-weight: 800; }
@@ -28,12 +27,10 @@
         .feature-card h3 { font-size: 18px; margin-bottom: 10px; color: #0f172a; }
         .feature-card p { font-size: 14px; color: #64748b; line-height: 1.5; }
 
-        /* Main Site Styles */
         .navbar { background-color: #00aaf0; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .logo { font-size: 24px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .nav-right { display: flex; gap: 15px; font-size: 18px; align-items: center; }
         .nav-right span { font-size: 14px; font-weight: bold; background: #0284c7; padding: 4px 10px; border-radius: 4px; }
-        .nav-right i, .logout-btn { cursor: pointer; }
         .logout-btn { background: #ef4444; border: none; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; }
         
         .search-section { background-color: #00aaf0; padding: 0 20px 20px 20px; display: flex; justify-content: center; }
@@ -165,7 +162,7 @@
                 <div class="form-group"><label>මිල (Rs)</label><input type="number" id="price" required placeholder="0"></div>
                 <div class="form-group"><label>ඡායාරූපය උඩුගත කරන්න</label><input type="file" id="imageFile" accept="image/*" required></div>
                 <div class="form-group"><label>දුරකථන අංකය (ඉලක්කම් 10)</label><input type="text" id="contact" required placeholder="0712345678" maxlength="10"></div>
-                <button type="submit" class="action-btn">POST YOUR AD</button>
+                <button type="submit" class="action-btn" id="userPostSubmitBtn">POST YOUR AD</button>
             </form>
         </div>
 
@@ -191,23 +188,12 @@
         </div>
     </div>
 
-    <!-- Firebase Script -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyD0C_usDNZkwuZ_6PBuCP424OMIl3Qf6eE",
-          authDomain: "new-ad-9dc83.firebaseapp.com",
-          projectId: "new-ad-9dc83",
-          storageBucket: "new-ad-9dc83.firebasestorage.app",
-          messagingSenderId: "822078837777",
-          appId: "1:822078837777:web:a821551828a4f411330db0",
-          measurementId: "G-LYR2S99GLW"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://yeikgoqgiltcepcruqro.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = localStorage.getItem('personal_current_user') || null;
         let ads = [];
@@ -215,7 +201,6 @@
         let currentPage = 1;
         const adsPerPage = 5;
 
-        // UI Elements
         const landingView = document.getElementById('landingView');
         const searchSection = document.getElementById('searchSection');
         const categoryFilter = document.getElementById('categoryFilter');
@@ -227,26 +212,30 @@
         const adsList = document.getElementById('adsList');
         const paginationContainer = document.getElementById('paginationContainer');
 
-        async function registerUserInFirebase(username) {
+        async function registerUserInSupabase(username) {
             try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                let exists = false;
-                querySnapshot.forEach((docSnap) => {
-                    if(docSnap.data().username === username) exists = true;
-                });
-                if(!exists) {
-                    await addDoc(collection(db, "users"), { username: username });
+                const { data: existingUsers, error: fetchErr } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', username);
+                
+                if (fetchErr) { console.error(fetchErr); return; }
+
+                if (!existingUsers || existingUsers.length === 0) {
+                    await supabase.from('users').insert([{ username: username }]);
                 }
             } catch(e) { console.error(e); }
         }
 
         async function fetchAds() {
             try {
-                const querySnapshot = await getDocs(collection(db, "ads"));
-                ads = [];
-                querySnapshot.forEach((docSnap) => {
-                    ads.push({ firebaseId: docSnap.id, ...docSnap.data() });
-                });
+                const { data, error } = await supabase.from('ads').select('*');
+                if (error) throw error;
+                
+                ads = data.map(item => ({
+                    firebaseId: item.id, // Keeping variable name compatible with existing UI logic
+                    ...item
+                }));
                 filterAds();
             } catch (e) { console.error(e); }
         }
@@ -278,7 +267,6 @@
             filterAds();
         }
 
-        // Event Listeners setup
         document.getElementById('logoBtn').onclick = goHome;
         document.getElementById('browseAdsBtn').onclick = enterMainSite;
         document.getElementById('postAdLandingBtn').onclick = () => {
@@ -296,7 +284,7 @@
             if (username) {
                 currentUser = username;
                 localStorage.setItem('personal_current_user', currentUser);
-                await registerUserInFirebase(currentUser);
+                await registerUserInSupabase(currentUser);
                 closeModals();
                 updateNavbar();
                 alert(`සාර්ථකව Login විය! සාදරයෙන් පිළිගනිමු, ${currentUser}`);
@@ -312,13 +300,17 @@
             const imageInput = document.getElementById('imageFile');
             if (!imageInput.files || !imageInput.files[0]) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න!'); return; }
 
+            const submitBtn = document.getElementById('userPostSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'ප්‍රකාශ කරමින් පවතී...';
+
             const reader = new FileReader();
             reader.onload = async function(event) {
                 const newAd = {
-                    title: document.getElementById('title').value,
-                    description: document.getElementById('description').value,
+                    title: document.getElementById('title').value.trim(),
+                    description: document.getElementById('description').value.trim(),
                     category: document.getElementById('category').value,
-                    sub: `${document.getElementById('location').value}, ${document.getElementById('category').value}`,
+                    sub: `${document.getElementById('location').value.trim()}, ${document.getElementById('category').value}`,
                     price: Number(document.getElementById('price').value).toLocaleString(),
                     imageUrl: event.target.result,
                     contact: contactVal,
@@ -326,15 +318,23 @@
                     views: 0
                 };
                 try {
-                    await addDoc(collection(db, "ads"), newAd);
-                    await registerUserInFirebase(currentUser);
+                    const { error } = await supabase.from('ads').insert([newAd]);
+                    if (error) throw error;
+
+                    await registerUserInSupabase(currentUser);
                     await fetchAds();
                     currentPage = 1;
                     enterMainSite();
                     document.getElementById('adForm').reset();
                     closeModals();
                     alert('ඔබේ දැන්වීම සාර්ථකව පළ විය!');
-                } catch(err) { console.error(err); }
+                } catch(err) { 
+                    console.error(err); 
+                    alert('දැන්වීම් පළ කිරීමේදී දෝෂයක් සිදු විය.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'POST YOUR AD';
+                }
             };
             reader.readAsDataURL(imageInput.files[0]);
         };
@@ -405,7 +405,9 @@
             if (!ad) return;
 
             ad.views = (ad.views || 0) + 1;
-            try { await updateDoc(doc(db, "ads", firebaseId), { views: ad.views }); } catch(e) { console.error(e); }
+            try { 
+                await supabase.from('ads').update({ views: ad.views }).eq('id', firebaseId); 
+            } catch(e) { console.error(e); }
 
             closeModals(); 
             landingView.style.display = 'none'; 
@@ -452,7 +454,8 @@
         async function deleteAd(firebaseId) {
             if(confirm('මෙම දැන්වීම මකා දැමීමට අවශ්‍යද?')) {
                 try {
-                    await deleteDoc(doc(db, "ads", firebaseId));
+                    const { error } = await supabase.from('ads').delete().eq('id', firebaseId);
+                    if (error) throw error;
                     alert('දැන්වීම සාර්ථකව මකා දමන ලදී.');
                     backToList();
                 } catch(e) { console.error(e); }
