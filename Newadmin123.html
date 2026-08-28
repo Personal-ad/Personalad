@@ -2,30 +2,40 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="0FXFCJytz6qsnsFHNOr70sQmoaqCsx8UbkQYnPMoaMo" />
     <title>Admin Dashboard | Sri Lanka Hela Ad</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: #fff; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1, h2 { margin-bottom: 20px; color: #38bdf8; }
-        .card { background: #1e293b; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 4px; }
-        button { background: #38bdf8; color: #000; font-weight: bold; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 14px; }
+        body { background-color: #0f172a; color: #fff; padding: 10px; }
+        .container { max-width: 1000px; margin: 0 auto; width: 100%; }
+        h1, h2 { margin-bottom: 15px; color: #38bdf8; font-size: 20px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 13px; }
+        input, textarea, select { width: 100%; padding: 8px; background: #0f172a; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 13px; }
+        button { background: #38bdf8; color: #000; font-weight: bold; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; min-width: 400px; }
+        th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #334155; font-size: 12px; }
         th { background: #334155; }
-        .del-btn { background: #ef4444; color: #fff; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; border: none; }
-        .edit-btn { background: #10b981; color: #fff; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; border: none; margin-right: 5px; }
+        
+        .del-btn { background: #ef4444; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; }
+        .edit-btn { background: #10b981; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; }
         #adminDashboard { display: none; }
+
+        @media (max-width: 600px) {
+            body { padding: 5px; }
+            .card { padding: 10px; }
+            h1, h2 { font-size: 17px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card" id="adminLoginCard" style="max-width: 400px; margin: 50px auto;">
+        <div class="card" id="adminLoginCard" style="max-width: 380px; margin: 30px auto;">
             <h2><i class="fa-solid fa-lock"></i> Admin Login</h2>
             <form id="adminLoginForm">
                 <div class="form-group"><label>Username</label><input type="text" id="adminUser" required></div>
@@ -35,9 +45,9 @@
         </div>
 
         <div id="adminDashboard">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <h1><i class="fa-solid fa-gauge"></i> Admin Dashboard</h1>
-                <button id="adminLogoutBtn" class="del-btn">Logout</button>
+                <button id="adminLogoutBtn" class="del-btn" style="padding: 6px 12px;">Logout</button>
             </div>
 
             <div class="card">
@@ -53,25 +63,31 @@
                     <div class="form-group"><label>Price (Rs)</label><input type="text" id="admPrice" required value="0"></div>
                     <div class="form-group"><label>Photo (වෙනස් නොකරන්නේ නම් හිස්ව තබන්න)</label><input type="file" id="admImageFile" accept="image/*"></div>
                     <div class="form-group"><label>Contact (10 digits)</label><input type="text" id="admContact" required maxlength="10"></div>
-                    <button type="submit" id="admSubmitBtn">Post Ad</button>
-                    <button type="button" id="admCancelBtn" style="background:#64748b; color:#fff; display:none; margin-left:10px;" onclick="resetAdminForm()">Cancel</button>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="submit" id="admSubmitBtn">Post Ad</button>
+                        <button type="button" id="admCancelBtn" style="background:#64748b; color:#fff; display:none;" onclick="resetAdminForm()">Cancel</button>
+                    </div>
                 </form>
             </div>
 
             <div class="card">
                 <h2>Registered Users</h2>
-                <table>
-                    <thead><tr><th>Username</th><th>Action</th></tr></thead>
-                    <tbody id="usersTableBody"></tbody>
-                </table>
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Username</th><th>Action</th></tr></thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="card">
                 <h2>Manage All Ads</h2>
-                <table>
-                    <thead><tr><th>Title</th><th>Poster</th><th>Price</th><th>Views</th><th>Action</th></tr></thead>
-                    <tbody id="adsTableBody"></tbody>
-                </table>
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Title</th><th>Poster</th><th>Price</th><th>Views</th><th>Action</th></tr></thead>
+                        <tbody id="adsTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -123,7 +139,6 @@
                     }
 
                     const token = 'adm_tok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
-                    // Permanent login for admin as well (100 years expiration)
                     const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
 
                     await db.from('user_sessions').insert([{ user_id: adminId, auth_token: token, expires_at: expiresAt }]);
@@ -171,9 +186,7 @@
         function getOriginalImage(file, cb) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                cb(e.target.result);
-            };
+            reader.onload = (e) => { cb(e.target.result); };
         }
 
         document.getElementById('adminAdForm').onsubmit = (e) => {
