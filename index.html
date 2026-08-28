@@ -312,16 +312,24 @@
             }
         };
 
-        function getOriginalImage(file, cb) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => { cb(e.target.result); };
+        async function uploadImageToStorage(file) {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36.substring(2))}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { data, error } = await db.storage.from('ads-images').upload(filePath, file);
+            if (error) {
+                throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
+            }
+
+            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(filePath);
+            return publicUrlData.publicUrl;
         }
 
         document.getElementById('adForm').onsubmit = async (e) => {
             e.preventDefault();
             const contact = document.getElementById('contact').value.trim();
-            if (contact.length !== 10) { alert('අංකය වැරදියි!'); return; }
+            if (contact.length !== 10) { alert('அංකය වැරදියි (අංක 10ක් විය යුතුය)!'); return; }
             
             const verifiedUser = await verifyDatabaseToken(currentAuthToken);
             if (!verifiedUser) {
@@ -336,7 +344,12 @@
             const editId = document.getElementById('editAdId').value;
             const file = document.getElementById('imageFile').files[0];
 
-            const processSave = async (imageurl) => {
+            try {
+                let imageUrl = null;
+                if (file) {
+                    imageUrl = await uploadImageToStorage(file);
+                }
+
                 const adData = {
                     title: document.getElementById('title').value.trim(),
                     description: document.getElementById('description').value.trim(),
@@ -345,18 +358,18 @@
                     price: document.getElementById('price').value.trim(),
                     contact: contact
                 };
-                if (imageurl) adData.imageurl = imageurl;
+                if (imageUrl) adData.imageurl = imageUrl;
 
                 if (editId) {
                     const { error } = await db.from('ads').update(adData).eq('id', editId);
-                    if (error) { alert('යාවත්කාලීන කිරීමේ දෝෂයක් සිදු විය'); return; }
+                    if (error) { alert('යාවත්කාලීන කිරීමේ දෝෂයක් සිදු විය: ' + error.message); return; }
                     alert('දැන්වීම සාර්ථකව යාවත්කාලීන විය!');
                 } else {
                     adData.poster = verifiedUser;
                     adData.views = 0;
-                    if (!imageurl) { alert('ඡායාරූපයක් දෙන්න'); return; }
+                    if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
                     const { error } = await db.from('ads').insert([adData]);
-                    if (error) { alert('Error inserting ad'); return; }
+                    if (error) { alert('දැන්වීම් දත්ත ඇතුළත් කිරීමේ දෝෂයක්: ' + error.message); return; }
                     alert('දැන්වීම සාර්ථකයි!');
                 }
 
@@ -364,13 +377,8 @@
                 document.getElementById('adForm').reset();
                 closeModals();
                 if (editId) showDetail(editId);
-            };
-
-            if (file) {
-                getOriginalImage(file, processSave);
-            } else {
-                if (!editId) { alert('ඡායාරූපයක් දෙන්න'); return; }
-                processSave(null);
+            } catch (err) {
+                alert(err.message);
             }
         };
 
