@@ -42,14 +42,15 @@
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
         .action-btn { background: #ffc800; color: #000; font-weight: bold; border: none; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        .ad-card { background: white; display: flex; gap: 12px; padding: 10px; border-radius: 4px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; align-items: center; }
+        .ad-card { background: white; display: flex; gap: 12px; padding: 10px; border-radius: 4px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; align-items: center; position: relative; }
+        .ad-card.vip-ad { border-left: 4px solid #f59e0b; background: #fffbeb; }
+        .vip-badge { position: absolute; top: 5px; right: 5px; background: #f59e0b; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 3px; }
         .ad-img { width: 100px; height: 80px; background: #e2e8f0; border-radius: 4px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #888; font-size: 11px; flex-shrink: 0; }
         .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
         .ad-title { font-size: 14px; font-weight: bold; color: #000; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ad-sub { font-size: 12px; color: #666; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ad-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .ad-views { font-size: 11px; color: #00aaf0; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
-        .share-icon-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 3px 6px; border-radius: 4px; font-size: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; }
         .pagination { display: flex; justify-content: center; gap: 6px; margin: 20px 0; flex-wrap: wrap; }
         .page-btn { background: white; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
         .page-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
@@ -404,17 +405,14 @@
 
             paginated.forEach(ad => {
                 const card = document.createElement('div');
-                card.className = 'ad-card';
+                card.className = `ad-card ${ad.is_vip ? 'vip-ad' : ''}`;
                 
-                card.onclick = (e) => {
-                    if (e.target.closest('.share-icon-btn')) return;
+                card.onclick = () => {
                     showDetail(ad.firebaseId);
                 };
 
-                const currentOrigin = window.location.origin + window.location.pathname;
-                const shareLink = `${currentOrigin}?ad=${ad.firebaseId}`;
-
                 card.innerHTML = `
+                    ${ad.is_vip ? '<div class="vip-badge">VIP</div>' : ''}
                     ${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img" loading="lazy">` : `<div class="ad-img">No Image</div>`}
                     <div class="ad-details">
                         <div>
@@ -423,9 +421,6 @@
                         </div>
                         <div class="ad-meta-row">
                             <div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0}</div>
-                            <button class="share-icon-btn" onclick="navigator.clipboard.writeText('${shareLink}'); alert('මෙම දැන්වීමේ ලින්ක් එක Copy විය!');">
-                                <i class="fa-solid fa-share-nodes"></i> Share
-                            </button>
                         </div>
                     </div>`;
                 list.appendChild(card);
