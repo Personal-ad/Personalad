@@ -157,19 +157,52 @@
     <script>
         const db = window.supabase.createClient('https://yeikgoqgiltcepcruqro.supabase.co', 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL');
 
-        let currentUser = localStorage.getItem('personal_current_user') || null;
+        let currentAuthToken = null; 
+        let currentUser = null;
         let ads = [];
         let selectedCategory = 'All';
         let currentPage = 1;
         
         const getAdsPerPage = () => window.innerHeight < 700 ? 5 : 10;
 
-        async function registerUser(username) {
+        async function verifyDatabaseToken(token) {
+            if (!token) return null;
             try {
-                const { data } = await db.from('users').select('*').eq('username', username);
-                if (!data || data.length === 0) {
-                    await db.from('users').insert([{ username }]);
+                const { data, error } = await db.from('user_sessions')
+                    .select('user_id, expires_at, users(username)')
+                    .eq('auth_token', token)
+                    .single();
+                
+                if (error || !data || new Date(data.expires_at) < new Date()) {
+                    return null;
                 }
+                return data.users.username;
+            } catch(e) {
+                return null;
+            }
+        }
+
+        async function handleLoginUser(username) {
+            try {
+                let { data: users } = await db.from('users').select('*').eq('username', username);
+                let userId;
+                if (!users || users.length === 0) {
+                    const { data: newUser } = await db.from('users').insert([{ username }]).select();
+                    userId = newUser[0].id;
+                } else {
+                    userId = users[0].id;
+                }
+
+                const token = 'tok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+                // Permanent login (100 years expiration)
+                const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
+
+                await db.from('user_sessions').insert([{ user_id: userId, auth_token: token, expires_at: expiresAt }]);
+
+                currentAuthToken = token;
+                currentUser = username;
+                updateNavbar();
+                filterAds();
             } catch(e) { console.error(e); }
         }
 
@@ -208,7 +241,15 @@
                     document.getElementById('adForm').reset();
                     document.getElementById('postAdBox').style.display = 'block'; 
                 };
-                document.getElementById('navLogoutBtn').onclick = () => { currentUser = null; localStorage.removeItem('personal_current_user'); updateNavbar(); filterAds(); };
+                document.getElementById('navLogoutBtn').onclick = async () => { 
+                    if (currentAuthToken) {
+                        await db.from('user_sessions').delete().eq('auth_token', currentAuthToken);
+                    }
+                    currentAuthToken = null; 
+                    currentUser = null; 
+                    updateNavbar(); 
+                    filterAds(); 
+                };
             } else {
                 navRight.innerHTML = `<i class="fa-regular fa-user" id="navLoginIcon" style="font-size: 20px; cursor: pointer;"></i>`;
                 document.getElementById('navLoginIcon').onclick = () => { closeModals(); document.getElementById('loginBox').style.display = 'block'; };
@@ -267,12 +308,8 @@
             e.preventDefault();
             const u = document.getElementById('loginUsername').value.trim();
             if (u) {
-                currentUser = u;
-                localStorage.setItem('personal_current_user', u);
-                await registerUser(u);
+                await handleLoginUser(u);
                 closeModals();
-                updateNavbar();
-                filterAds();
                 alert('සාර්ථකව Login විය!');
             }
         };
@@ -283,11 +320,21 @@
             reader.onload = (e) => { cb(e.target.result); };
         }
 
-        document.getElementById('adForm').onsubmit = (e) => {
+        document.getElementById('adForm').onsubmit = async (e) => {
             e.preventDefault();
             const contact = document.getElementById('contact').value.trim();
             if (contact.length !== 10) { alert('අංකය වැරදියි!'); return; }
             
+            const verifiedUser = await verifyDatabaseToken(currentAuthToken);
+            if (!verifiedUser) {
+                alert('ඔබේ සැසි කාලය අවසන් වී ඇත. කරුණාකර නැවත ලොග් වන්න.');
+                currentUser = null;
+                currentAuthToken = null;
+                updateNavbar();
+                closeModals();
+                return;
+            }
+
             const editId = document.getElementById('editAdId').value;
             const file = document.getElementById('imageFile').files[0];
 
@@ -307,12 +354,11 @@
                     if (error) { alert('යාවත්කාලීන කිරීමේ දෝෂයක් සිදු විය'); return; }
                     alert('දැන්වීම සාර්ථකව යාවත්කාලීන විය!');
                 } else {
-                    adData.poster = currentUser;
+                    adData.poster = verifiedUser;
                     adData.views = 0;
                     if (!imageurl) { alert('ඡායාරූපයක් දෙන්න'); return; }
                     const { error } = await db.from('ads').insert([adData]);
                     if (error) { alert('Error inserting ad'); return; }
-                    await registerUser(currentUser);
                     alert('දැන්වීම සාර්ථකයි!');
                 }
 
