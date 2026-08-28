@@ -9,6 +9,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f2f4f5; color: #000; }
         .hero-section { background: linear-gradient(135deg, #00aaf0, #0284c7); color: white; padding: 60px 20px; text-align: center; }
+        .free-notice-badge { display: inline-block; background: #ffc800; color: #000; font-weight: 800; font-size: 14px; padding: 6px 16px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); text-transform: uppercase; letter-spacing: 0.5px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         .hero-section h1 { font-size: 32px; margin-bottom: 15px; font-weight: 800; }
         .hero-section p { font-size: 16px; margin-bottom: 25px; opacity: 0.9; max-width: 600px; margin: 0 auto 25px auto; }
         .hero-btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
@@ -41,10 +43,13 @@
         .action-btn { background: #ffc800; color: #000; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 16px; }
         .ad-card { background: white; display: flex; gap: 15px; padding: 12px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; }
         .ad-img { width: 120px; height: 90px; background: #e2e8f0; border-radius: 4px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; flex-shrink: 0; }
-        .ad-details { flex: 1; }
+        .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .ad-title { font-size: 16px; font-weight: bold; color: #000; margin-bottom: 4px; }
         .ad-sub { font-size: 13px; color: #666; margin-bottom: 6px; }
+        .ad-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .ad-views { font-size: 12px; color: #00aaf0; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+        .share-icon-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; }
+        .share-icon-btn:hover { background: #00aaf0; color: white; border-color: #00aaf0; }
         .pagination { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
         .page-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
         .page-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
@@ -52,7 +57,7 @@
         .back-btn { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 15px; }
         .detail-img-container { width: 100%; max-height: 400px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 20px; }
         .detail-main-img { width: 100%; max-height: 400px; object-fit: contain; }
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .delete-btn { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .edit-btn-user { background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     </style>
@@ -66,6 +71,7 @@
 
     <div id="landingView">
         <div class="hero-section">
+            <div class="free-notice-badge"><i class="fa-solid fa-circle-check"></i> මෙහි දමන කිසිදු දැන්වීමක් සඳහා මුදල් අය කරනු නොලැබේ</div>
             <h1>ඔබේ පෞද්ගලික දැන්වීම් පහසුවෙන් පළ කරන්න</h1>
             <p>විශ්වාසනීය සහ වේගවත්ම Personal Ad වේදිකාව වෙත සාදරයෙන් පිළිගනිමු.</p>
             <div class="hero-btns">
@@ -155,7 +161,8 @@
         let ads = [];
         let selectedCategory = 'All';
         let currentPage = 1;
-        const adsPerPage = 5;
+        
+        const getAdsPerPage = () => window.innerHeight < 700 ? 5 : 10;
 
         async function registerUser(username) {
             try {
@@ -171,6 +178,20 @@
                 const { data, error } = await db.from('ads').select('*');
                 if (error) { console.error("Load Error:", error); return; }
                 ads = (data || []).map(item => ({ firebaseId: item.id, imageUrl: item.imageurl, ...item }));
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                const targetAdId = urlParams.get('ad');
+
+                if (targetAdId) {
+                    showDetail(targetAdId, true);
+                } else {
+                    const savedState = sessionStorage.getItem('view_state');
+                    if (savedState === 'browse') {
+                        showBrowseView();
+                    } else {
+                        document.getElementById('landingView').style.display = 'block';
+                    }
+                }
                 filterAds();
             } catch (e) { console.error(e); }
         }
@@ -199,8 +220,18 @@
             document.getElementById('postAdBox').style.display = 'none';
         }
 
+        function showBrowseView() {
+            sessionStorage.setItem('view_state', 'browse');
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'flex';
+            document.getElementById('categoryFilter').style.display = 'flex';
+            document.getElementById('homeView').style.display = 'block';
+            filterAds();
+        }
+
         document.getElementById('logoBtn').onclick = () => {
-            localStorage.setItem('app_view', 'landing');
+            sessionStorage.removeItem('view_state');
+            window.history.replaceState({}, document.title, window.location.pathname);
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'none';
@@ -209,21 +240,12 @@
         };
 
         document.getElementById('browseAdsBtn').onclick = () => {
-            localStorage.setItem('app_view', 'browse');
-            document.getElementById('landingView').style.display = 'none';
-            document.getElementById('searchSection').style.display = 'flex';
-            document.getElementById('categoryFilter').style.display = 'flex';
-            document.getElementById('homeView').style.display = 'block';
-            filterAds();
+            showBrowseView();
         };
 
         document.getElementById('postAdLandingBtn').onclick = () => {
             if (!currentUser) { document.getElementById('loginBox').style.display = 'block'; return; }
-            localStorage.setItem('app_view', 'browse');
-            document.getElementById('landingView').style.display = 'none';
-            document.getElementById('searchSection').style.display = 'flex';
-            document.getElementById('categoryFilter').style.display = 'flex';
-            document.getElementById('homeView').style.display = 'block';
+            showBrowseView();
             document.getElementById('editAdId').value = '';
             document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න`;
             document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
@@ -233,12 +255,11 @@
 
         document.getElementById('closeLoginBtn').onclick = closeModals;
         document.getElementById('closePostBtn').onclick = closeModals;
+        
         document.getElementById('backToListBtn').onclick = () => {
-            localStorage.setItem('app_view', 'browse');
+            window.history.replaceState({}, document.title, window.location.pathname);
             document.getElementById('detailView').style.display = 'none';
-            document.getElementById('searchSection').style.display = 'flex';
-            document.getElementById('categoryFilter').style.display = 'flex';
-            document.getElementById('homeView').style.display = 'block';
+            showBrowseView();
             fetchAds();
         };
 
@@ -256,13 +277,10 @@
             }
         };
 
-        // පින්තූරයේ සම්පූර්ණ තත්වය (Original High Quality) එලෙසම ලබා දෙන Function එක
         function getOriginalImage(file, cb) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                cb(e.target.result); // කිසිදු අඩුවක් නොකර මුල් ඡායාරූපය ලබා දේ
-            };
+            reader.onload = (e) => { cb(e.target.result); };
         }
 
         document.getElementById('adForm').onsubmit = (e) => {
@@ -336,6 +354,7 @@
             list.innerHTML = ''; pag.innerHTML = '';
             if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center; padding:20px;">දැන්වීම් නැත.</p>'; return; }
             
+            const adsPerPage = getAdsPerPage();
             const totalPages = Math.ceil(filtered.length / adsPerPage);
             if (currentPage > totalPages) currentPage = totalPages;
             const paginated = filtered.slice((currentPage - 1) * adsPerPage, currentPage * adsPerPage);
@@ -343,9 +362,29 @@
             paginated.forEach(ad => {
                 const card = document.createElement('div');
                 card.className = 'ad-card';
-                card.onclick = () => showDetail(ad.firebaseId);
-                // loading="lazy" භාවිතයෙන් පින්තූර වේගයෙන් ලෝඩ් වීම සහ ඩේටා ඉතිරි වීම සිදුවේ
-                card.innerHTML = `${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img" loading="lazy">` : `<div class="ad-img">No Image</div>`}<div class="ad-details"><div class="ad-title">${ad.title}</div><div class="ad-sub">${ad.sub}</div><div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0}</div></div>`;
+                
+                card.onclick = (e) => {
+                    if (e.target.closest('.share-icon-btn')) return;
+                    showDetail(ad.firebaseId);
+                };
+
+                const currentOrigin = window.location.origin + window.location.pathname;
+                const shareLink = `${currentOrigin}?ad=${ad.firebaseId}`;
+
+                card.innerHTML = `
+                    ${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img" loading="lazy">` : `<div class="ad-img">No Image</div>`}
+                    <div class="ad-details">
+                        <div>
+                            <div class="ad-title">${ad.title}</div>
+                            <div class="ad-sub">${ad.sub}</div>
+                        </div>
+                        <div class="ad-meta-row">
+                            <div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0}</div>
+                            <button class="share-icon-btn" onclick="navigator.clipboard.writeText('${shareLink}'); alert('මෙම දැන්වීමේ ලින්ක් එක Copy විය!');">
+                                <i class="fa-solid fa-share-nodes"></i> Share
+                            </button>
+                        </div>
+                    </div>`;
                 list.appendChild(card);
             });
 
@@ -360,14 +399,20 @@
             }
         }
 
-        async function showDetail(id) {
+        async function showDetail(id, isDirectLink = false) {
             const ad = ads.find(a => a.firebaseId === id);
-            if (!ad) return;
-            ad.views = (ad.views || 0) + 1;
-            await db.from('ads').update({ views: ad.views }).eq('id', id);
+            if (!ad) {
+                if(isDirectLink) alert('මෙම දැන්වීම හමුවී නැත හෝ මකා දමා ඇත.');
+                return;
+            }
 
-            localStorage.setItem('app_view', 'detail');
-            localStorage.setItem('current_ad_id', id);
+            const newUrl = `${window.location.pathname}?ad=${id}`;
+            window.history.replaceState({path: newUrl}, '', newUrl);
+
+            if (!isDirectLink) {
+                ad.views = (ad.views || 0) + 1;
+                await db.from('ads').update({ views: ad.views }).eq('id', id);
+            }
 
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'none';
@@ -384,7 +429,17 @@
             document.getElementById('detailViewsCount').innerText = ad.views;
 
             const actionContainer = document.getElementById('detailActionContainer');
-            actionContainer.innerHTML = (currentUser && currentUser === ad.poster) ? `<button class="edit-btn-user" id="editAdBtn">සංස්කරණය</button><button class="delete-btn" id="delAdBtn">මකන්න</button>` : '';
+            let buttonsHTML = `<button class="action-btn" id="shareAdBtn" style="background:#0284c7; color:white; width:auto; padding:8px 15px; font-size:14px;"><i class="fa-solid fa-share-nodes"></i> Share Ad</button>`;
+            
+            if (currentUser && currentUser === ad.poster) {
+                buttonsHTML += `<button class="edit-btn-user" id="editAdBtn">සංස්කරණය</button><button class="delete-btn" id="delAdBtn">මකන්න</button>`;
+            }
+            actionContainer.innerHTML = buttonsHTML;
+
+            document.getElementById('shareAdBtn').onclick = () => {
+                navigator.clipboard.writeText(window.location.href);
+                alert('දැන්වීමේ ලින්ක් එක Copy විය! ඔබට එය ඕනෑම අයෙකුට Share කළ හැක.');
+            };
             
             if (currentUser && currentUser === ad.poster) {
                 document.getElementById('editAdBtn').onclick = () => {
@@ -407,6 +462,7 @@
                 document.getElementById('delAdBtn').onclick = async () => {
                     if (confirm('මකා දමන්නද?')) {
                         await db.from('ads').delete().eq('id', id);
+                        window.history.replaceState({}, document.title, window.location.pathname);
                         document.getElementById('backToListBtn').click();
                     }
                 };
@@ -416,26 +472,6 @@
         async function initApp() {
             await fetchAds();
             updateNavbar();
-            
-            const savedView = localStorage.getItem('app_view') || 'landing';
-            if (savedView === 'browse') {
-                document.getElementById('landingView').style.display = 'none';
-                document.getElementById('searchSection').style.display = 'flex';
-                document.getElementById('categoryFilter').style.display = 'flex';
-                document.getElementById('homeView').style.display = 'block';
-            } else if (savedView === 'detail') {
-                const savedAdId = localStorage.getItem('current_ad_id');
-                if (savedAdId && ads.some(a => a.firebaseId === savedAdId)) {
-                    showDetail(savedAdId);
-                } else {
-                    document.getElementById('landingView').style.display = 'none';
-                    document.getElementById('searchSection').style.display = 'flex';
-                    document.getElementById('categoryFilter').style.display = 'flex';
-                    document.getElementById('homeView').style.display = 'block';
-                }
-            } else {
-                document.getElementById('landingView').style.display = 'block';
-            }
         }
 
         initApp();
