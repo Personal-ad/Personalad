@@ -169,15 +169,26 @@
         async function verifyDatabaseToken(token) {
             if (!token) return null;
             try {
-                const { data, error } = await db.from('user_sessions')
-                    .select('user_id, expires_at, users(username)')
+                // Safe query without relying on complex foreign key embedding
+                const { data: sessionData, error: sessErr } = await db.from('user_sessions')
+                    .select('user_id, expires_at')
                     .eq('auth_token', token)
-                    .single();
+                    .maybeSingle();
                 
-                if (error || !data || new Date(data.expires_at) < new Date()) {
+                if (sessErr || !sessionData || new Date(sessionData.expires_at) < new Date()) {
                     return null;
                 }
-                return data.users.username;
+
+                const { data: userData, error: userErr } = await db.from('users')
+                    .select('username')
+                    .eq('id', sessionData.user_id)
+                    .maybeSingle();
+
+                if (userErr || !userData) {
+                    return null;
+                }
+
+                return userData.username;
             } catch(e) {
                 return null;
             }
@@ -314,7 +325,7 @@
 
         async function uploadImageToStorage(file) {
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36.substring(2))}.${fileExt}`;
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
             const filePath = `${fileName}`;
 
             const { data, error } = await db.storage.from('ads-images').upload(filePath, file);
@@ -329,7 +340,7 @@
         document.getElementById('adForm').onsubmit = async (e) => {
             e.preventDefault();
             const contact = document.getElementById('contact').value.trim();
-            if (contact.length !== 10) { alert('அංකය වැරදියි (අංක 10ක් විය යුතුය)!'); return; }
+            if (contact.length !== 10) { alert('අංකය වැරදියි (අංක 10ක් විය යුතුය)!'); return; }
             
             const verifiedUser = await verifyDatabaseToken(currentAuthToken);
             if (!verifiedUser) {
