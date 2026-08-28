@@ -81,29 +81,68 @@
         const db = window.supabase.createClient('https://yeikgoqgiltcepcruqro.supabase.co', 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL');
 
         let ads = [], users = [];
-        let isAdminLoggedIn = false;
+        let adminAuthToken = null; 
 
-        function checkAdminSession() {
-            if (isAdminLoggedIn) {
+        async function checkAdminSession() {
+            if (!adminAuthToken) {
+                document.getElementById('adminLoginCard').style.display = 'block';
+                document.getElementById('adminDashboard').style.display = 'none';
+                return;
+            }
+
+            const { data, error } = await db.from('user_sessions')
+                .select('expires_at, users(username)')
+                .eq('auth_token', adminAuthToken)
+                .single();
+
+            if (error || !data || data.users.username !== 'admin' || new Date(data.expires_at) < new Date()) {
+                adminAuthToken = null;
+                document.getElementById('adminLoginCard').style.display = 'block';
+                document.getElementById('adminDashboard').style.display = 'none';
+            } else {
                 document.getElementById('adminLoginCard').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
                 loadAdminData();
-            } else {
-                document.getElementById('adminLoginCard').style.display = 'block';
-                document.getElementById('adminDashboard').style.display = 'none';
             }
         }
 
-        document.getElementById('adminLoginForm').onsubmit = (e) => {
+        document.getElementById('adminLoginForm').onsubmit = async (e) => {
             e.preventDefault();
-            if (document.getElementById('adminUser').value.trim() === 'admin' && document.getElementById('adminPass').value.trim() === '1234') {
-                isAdminLoggedIn = true;
-                checkAdminSession();
-            } else { alert('වැරදියි!'); }
+            const u = document.getElementById('adminUser').value.trim();
+            const p = document.getElementById('adminPass').value.trim();
+
+            if (u === 'admin' && p === '1234') {
+                try {
+                    let { data: adminUserRecord } = await db.from('users').select('*').eq('username', 'admin');
+                    let adminId;
+                    if (!adminUserRecord || adminUserRecord.length === 0) {
+                        const { data: newAdmin } = await db.from('users').insert([{ username: 'admin' }]).select();
+                        adminId = newAdmin[0].id;
+                    } else {
+                        adminId = adminUserRecord[0].id;
+                    }
+
+                    const token = 'adm_tok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+                    // Permanent login for admin as well (100 years expiration)
+                    const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
+
+                    await db.from('user_sessions').insert([{ user_id: adminId, auth_token: token, expires_at: expiresAt }]);
+                    
+                    adminAuthToken = token;
+                    checkAdminSession();
+                } catch(err) {
+                    alert('Login Error');
+                }
+            } else { 
+                alert('වැරදියි!'); 
+            }
         };
 
-        document.getElementById('adminLogoutBtn').onclick = () => {
-            isAdminLoggedIn = false;
+        document.getElementById('adminLogoutBtn').onclick = async () => {
+            if (adminAuthToken) {
+                await db.from('user_sessions').delete().eq('auth_token', adminAuthToken);
+            }
+            adminAuthToken = null;
             checkAdminSession();
         };
 
