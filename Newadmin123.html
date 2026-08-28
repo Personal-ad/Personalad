@@ -81,7 +81,7 @@
         const db = window.supabase.createClient('https://yeikgoqgiltcepcruqro.supabase.co', 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL');
 
         let ads = [], users = [];
-        let isAdminLoggedIn = localStorage.getItem('admin_logged_in') === 'true';
+        let isAdminLoggedIn = false;
 
         function checkAdminSession() {
             if (isAdminLoggedIn) {
@@ -98,14 +98,12 @@
             e.preventDefault();
             if (document.getElementById('adminUser').value.trim() === 'admin' && document.getElementById('adminPass').value.trim() === '1234') {
                 isAdminLoggedIn = true;
-                localStorage.setItem('admin_logged_in', 'true');
                 checkAdminSession();
             } else { alert('වැරදියි!'); }
         };
 
         document.getElementById('adminLogoutBtn').onclick = () => {
             isAdminLoggedIn = false;
-            localStorage.removeItem('admin_logged_in');
             checkAdminSession();
         };
 
@@ -131,7 +129,6 @@
             adsBody.innerHTML = ads.length === 0 ? `<tr><td colspan="5">Empty</td></tr>` : ads.map(a => `<tr><td>${a.title}</td><td>${a.poster || 'Admin'}</td><td>Rs ${a.price}</td><td>${a.views || 0}</td><td><button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button><button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button><button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button></td></tr>`).join('');
         }
 
-        // මුල් තත්වයේ (High Quality) ඡායාරූප පමණක් ලබා දෙන Function එක
         function getOriginalImage(file, cb) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
