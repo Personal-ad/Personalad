@@ -24,6 +24,7 @@
         
         .del-btn { background: #ef4444; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; }
         .edit-btn { background: #10b981; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; }
+        .vip-toggle-btn { background: #f59e0b; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; }
         #adminDashboard { display: none; }
 
         @media (max-width: 600px) {
@@ -84,7 +85,7 @@
                 <h2>Manage All Ads</h2>
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Title</th><th>Poster</th><th>Price</th><th>Views</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Title</th><th>Poster</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody id="adsTableBody"></tbody>
                     </table>
                 </div>
@@ -97,7 +98,7 @@
         const db = window.supabase.createClient('https://yeikgoqgiltcepcruqro.supabase.co', 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL');
 
         let ads = [], users = [];
-        let adminAuthToken = null; 
+        let adminAuthToken = localStorage.getItem('admin_token') || null; 
 
         async function checkAdminSession() {
             if (!adminAuthToken) {
@@ -111,8 +112,9 @@
                 .eq('auth_token', adminAuthToken)
                 .single();
 
-            if (error || !data || data.users.username !== 'admin' || new Date(data.expires_at) < new Date()) {
+            if (error || !data || !data.users || data.users.username !== 'admin' || new Date(data.expires_at) < new Date()) {
                 adminAuthToken = null;
+                localStorage.removeItem('admin_token');
                 document.getElementById('adminLoginCard').style.display = 'block';
                 document.getElementById('adminDashboard').style.display = 'none';
             } else {
@@ -129,27 +131,36 @@
 
             if (u === 'admin' && p === '1234') {
                 try {
-                    let { data: adminUserRecord } = await db.from('users').select('*').eq('username', 'admin');
+                    let { data: adminUserRecord } = await db.from('users').select('*').eq('username', 'admin').maybeSingle();
                     let adminId;
-                    if (!adminUserRecord || adminUserRecord.length === 0) {
-                        const { data: newAdmin } = await db.from('users').insert([{ username: 'admin' }]).select();
+                    if (!adminUserRecord) {
+                        const { data: newAdmin, error: insErr } = await db.from('users').insert([{ username: 'admin' }]).select();
+                        if (insErr) {
+                            alert('Admin user creation failed: ' + insErr.message);
+                            return;
+                        }
                         adminId = newAdmin[0].id;
                     } else {
-                        adminId = adminUserRecord[0].id;
+                        adminId = adminUserRecord.id;
                     }
 
                     const token = 'adm_tok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
                     const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
 
-                    await db.from('user_sessions').insert([{ user_id: adminId, auth_token: token, expires_at: expiresAt }]);
+                    const { error: sessErr } = await db.from('user_sessions').insert([{ user_id: adminId, auth_token: token, expires_at: expiresAt }]);
+                    if (sessErr) {
+                        alert('Session creation failed: ' + sessErr.message);
+                        return;
+                    }
                     
                     adminAuthToken = token;
+                    localStorage.setItem('admin_token', token);
                     checkAdminSession();
                 } catch(err) {
-                    alert('Login Error');
+                    alert('Login Error: ' + err.message);
                 }
             } else { 
-                alert('වැරදියි!'); 
+                alert('පරිශීලක නාමය හෝ මුරපදය වැරදියි!'); 
             }
         };
 
@@ -158,6 +169,7 @@
                 await db.from('user_sessions').delete().eq('auth_token', adminAuthToken);
             }
             adminAuthToken = null;
+            localStorage.removeItem('admin_token');
             checkAdminSession();
         };
 
@@ -180,7 +192,18 @@
             userBody.innerHTML = users.length === 0 ? `<tr><td colspan="2">Empty</td></tr>` : users.map(u => `<tr><td>${u.username}</td><td><button class="del-btn" onclick="deleteUser('${u.firebaseId}')">Delete</button></td></tr>`).join('');
 
             const adsBody = document.getElementById('adsTableBody');
-            adsBody.innerHTML = ads.length === 0 ? `<tr><td colspan="5">Empty</td></tr>` : ads.map(a => `<tr><td>${a.title}</td><td>${a.poster || 'Admin'}</td><td>Rs ${a.price}</td><td>${a.views || 0}</td><td><button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button><button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button><button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button></td></tr>`).join('');
+            adsBody.innerHTML = ads.length === 0 ? `<tr><td colspan="5">Empty</td></tr>` : ads.map(a => `<tr>
+                <td>${a.title}</td>
+                <td>${a.poster || 'Admin'}</td>
+                <td>Rs ${a.price}</td>
+                <td>${a.is_vip ? '<span style="color:#f59e0b; font-weight:bold;">VIP</span>' : 'Normal'}</td>
+                <td>
+                    <button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button>
+                    <button class="vip-toggle-btn" onclick="toggleVip('${a.firebaseId}', ${!!a.is_vip})">${a.is_vip ? 'Un-VIP' : 'Make VIP'}</button>
+                    <button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button>
+                    <button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button>
+                </td>
+            </tr>`).join('');
         }
 
         function getOriginalImage(file, cb) {
@@ -210,14 +233,15 @@
 
                 if (editId) {
                     const { error } = await db.from('ads').update(adData).eq('id', editId);
-                    if (error) { alert('දෝෂයක් සිදු විය'); return; }
+                    if (error) { alert('දෝෂයක් සිදු විය: ' + error.message); return; }
                     alert('දැන්වීම සාර්ථකව යාවත්කාලීන විය!');
                 } else {
                     adData.poster = 'Admin';
                     adData.views = 0;
+                    adData.is_vip = false;
                     if (!imageurl) { alert('ඡායාරූපයක් තෝරන්න'); return; }
                     const { error } = await db.from('ads').insert([adData]);
-                    if (error) { alert('දෝෂයක් සිදු විය'); return; }
+                    if (error) { alert('දෝෂයක් සිදු විය: ' + error.message); return; }
                     alert('දැන්වීම සාර්ථකව එකතු විය!');
                 }
                 
@@ -257,6 +281,16 @@
             document.getElementById('admFormHeading').innerText = 'Admin Post Ad';
             document.getElementById('admSubmitBtn').innerText = 'Post Ad';
             document.getElementById('admCancelBtn').style.display = 'none';
+        };
+
+        window.toggleVip = async (id, currentStatus) => {
+            const newStatus = !currentStatus;
+            const { error } = await db.from('ads').update({ is_vip: newStatus }).eq('id', id);
+            if (error) {
+                alert('VIP කිරීමේදී දෝෂයක් සිදු විය: ' + error.message);
+            } else {
+                loadAdminData();
+            }
         };
 
         window.editViews = async (id, currentViews) => {
