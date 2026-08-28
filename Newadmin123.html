@@ -206,13 +206,21 @@
             </tr>`).join('');
         }
 
-        function getOriginalImage(file, cb) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => { cb(e.target.result); };
+        async function uploadImageToStorage(file) {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `adm_${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { data, error } = await db.storage.from('ads-images').upload(filePath, file);
+            if (error) {
+                throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
+            }
+
+            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(filePath);
+            return publicUrlData.publicUrl;
         }
 
-        document.getElementById('adminAdForm').onsubmit = (e) => {
+        document.getElementById('adminAdForm').onsubmit = async (e) => {
             e.preventDefault();
             const contact = document.getElementById('admContact').value.trim();
             if (contact.length !== 10) { alert('දුරකථන අංකය වැරදියි!'); return; }
@@ -220,7 +228,12 @@
             const editId = document.getElementById('admEditId').value;
             const file = document.getElementById('admImageFile').files[0];
 
-            const processAdminSave = async (imageurl) => {
+            try {
+                let imageUrl = null;
+                if (file) {
+                    imageUrl = await uploadImageToStorage(file);
+                }
+
                 const adData = {
                     title: document.getElementById('admTitle').value.trim(),
                     description: document.getElementById('admDesc').value.trim(),
@@ -229,7 +242,7 @@
                     price: document.getElementById('admPrice').value.trim(),
                     contact: contact
                 };
-                if (imageurl) adData.imageurl = imageurl;
+                if (imageUrl) adData.imageurl = imageUrl;
 
                 if (editId) {
                     const { error } = await db.from('ads').update(adData).eq('id', editId);
@@ -239,7 +252,7 @@
                     adData.poster = 'Admin';
                     adData.views = 0;
                     adData.is_vip = false;
-                    if (!imageurl) { alert('ඡායාරූපයක් තෝරන්න'); return; }
+                    if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
                     const { error } = await db.from('ads').insert([adData]);
                     if (error) { alert('දෝෂයක් සිදු විය: ' + error.message); return; }
                     alert('දැන්වීම සාර්ථකව එකතු විය!');
@@ -247,13 +260,8 @@
                 
                 resetAdminForm();
                 await loadAdminData();
-            };
-
-            if (file) {
-                getOriginalImage(file, processAdminSave);
-            } else {
-                if (!editId) { alert('ඡායාරූපයක් තෝරන්න'); return; }
-                processAdminSave(null);
+            } catch (err) {
+                alert(err.message);
             }
         };
 
