@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="0FXFCJytz6qsnsFHNOr70sQmoaqCsx8UbkQYnPMoaMo" />
-    <title>Admin Dashboard | Sri Lanka Hela Ad</title>
+    <title>Admin Dashboard | Personal Ad</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: #fff; padding: 10px; }
-        .container { max-width: 1000px; margin: 0 auto; width: 100%; }
+        body { background-color: #0f172a; color: #fff; padding: 10px; display: flex; flex-direction: column; min-height: 100vh; }
+        .container { max-width: 1000px; margin: 0 auto; width: 100%; flex: 1; }
         h1, h2 { margin-bottom: 15px; color: #38bdf8; font-size: 20px; }
         .card { background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .form-group { margin-bottom: 12px; }
@@ -18,20 +17,18 @@
         button { background: #38bdf8; color: #000; font-weight: bold; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 13px; }
         
         .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; margin-top: 5px; min-width: 400px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; min-width: 500px; }
         th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #334155; font-size: 12px; }
         th { background: #334155; }
         
+        tr.vip-row { background-color: rgba(245, 158, 11, 0.15); border-left: 4px solid #f59e0b; }
+
         .del-btn { background: #ef4444; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; }
         .edit-btn { background: #10b981; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; }
-        .vip-toggle-btn { background: #f59e0b; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; }
+        .vip-toggle-btn { background: #f59e0b; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; font-weight: bold; }
         #adminDashboard { display: none; }
-
-        @media (max-width: 600px) {
-            body { padding: 5px; }
-            .card { padding: 10px; }
-            h1, h2 { font-size: 17px; }
-        }
+        
+        .footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 15px; font-size: 12px; margin-top: auto; border-top: 1px solid #334155; }
     </style>
 </head>
 <body>
@@ -62,17 +59,20 @@
                     </div>
                     <div class="form-group"><label>Location</label><input type="text" id="admLocation" required></div>
                     <div class="form-group"><label>Price (Rs)</label><input type="text" id="admPrice" required value="0"></div>
-                    <div class="form-group"><label>Photo (වෙනස් නොකරන්නේ නම් හිස්ව තබන්න)</label><input type="file" id="admImageFile" accept="image/*"></div>
+                    <div class="form-group"><label>Photo</label><input type="file" id="admImageFile" accept="image/*"></div>
                     <div class="form-group"><label>Contact (10 digits)</label><input type="text" id="admContact" required maxlength="10"></div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <button type="submit" id="admSubmitBtn">Post Ad</button>
-                        <button type="button" id="admCancelBtn" style="background:#64748b; color:#fff; display:none;" onclick="resetAdminForm()">Cancel</button>
+                        <button type="button" id="admCancelBtn" style="background:#64748b; color:#fff; display:none;" onclick="resetAdminForm(true)">Cancel</button>
                     </div>
                 </form>
             </div>
 
             <div class="card">
-                <h2>Registered Users</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                    <h2>Registered Users</h2>
+                    <input type="text" id="searchUserInp" placeholder="Search user by name..." style="max-width: 250px; padding: 6px 10px;">
+                </div>
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Username</th><th>Action</th></tr></thead>
@@ -82,16 +82,23 @@
             </div>
 
             <div class="card">
-                <h2>Manage All Ads</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                    <h2>Manage All Ads</h2>
+                    <input type="text" id="searchAdInp" placeholder="Search ads by title/location..." style="max-width: 250px; padding: 6px 10px;">
+                </div>
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Title</th><th>Poster</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Title & Photo Info</th><th>Stats (Likes/Views)</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody id="adsTableBody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 Personal Ad. Admin Panel.</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -100,6 +107,22 @@
         let ads = [], users = [];
         let adminAuthToken = localStorage.getItem('admin_token') || null; 
 
+        function timeAgo(dateString) {
+            if (!dateString) return 'recently';
+            const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " mins ago";
+            return "just now";
+        }
+
         async function checkAdminSession() {
             if (!adminAuthToken) {
                 document.getElementById('adminLoginCard').style.display = 'block';
@@ -107,10 +130,7 @@
                 return;
             }
 
-            const { data, error } = await db.from('user_sessions')
-                .select('expires_at, users(username)')
-                .eq('auth_token', adminAuthToken)
-                .single();
+            const { data, error } = await db.from('user_sessions').select('expires_at, users(username)').eq('auth_token', adminAuthToken).maybeSingle();
 
             if (error || !data || !data.users || data.users.username !== 'admin' || new Date(data.expires_at) < new Date()) {
                 adminAuthToken = null;
@@ -134,11 +154,7 @@
                     let { data: adminUserRecord } = await db.from('users').select('*').eq('username', 'admin').maybeSingle();
                     let adminId;
                     if (!adminUserRecord) {
-                        const { data: newAdmin, error: insErr } = await db.from('users').insert([{ username: 'admin' }]).select();
-                        if (insErr) {
-                            alert('Admin user creation failed: ' + insErr.message);
-                            return;
-                        }
+                        const { data: newAdmin } = await db.from('users').insert([{ username: 'admin' }]).select();
                         adminId = newAdmin[0].id;
                     } else {
                         adminId = adminUserRecord.id;
@@ -146,28 +162,19 @@
 
                     const token = 'adm_tok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
                     const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
-
-                    const { error: sessErr } = await db.from('user_sessions').insert([{ user_id: adminId, auth_token: token, expires_at: expiresAt }]);
-                    if (sessErr) {
-                        alert('Session creation failed: ' + sessErr.message);
-                        return;
-                    }
+                    await db.from('user_sessions').insert([{ user_id: adminId, auth_token: token, expires_at: expiresAt }]);
                     
                     adminAuthToken = token;
                     localStorage.setItem('admin_token', token);
                     checkAdminSession();
-                } catch(err) {
-                    alert('Login Error: ' + err.message);
-                }
+                } catch(err) { alert('Login Error: ' + err.message); }
             } else { 
                 alert('පරිශීලක නාමය හෝ මුරපදය වැරදියි!'); 
             }
         };
 
         document.getElementById('adminLogoutBtn').onclick = async () => {
-            if (adminAuthToken) {
-                await db.from('user_sessions').delete().eq('auth_token', adminAuthToken);
-            }
+            if (adminAuthToken) await db.from('user_sessions').delete().eq('auth_token', adminAuthToken);
             adminAuthToken = null;
             localStorage.removeItem('admin_token');
             checkAdminSession();
@@ -175,48 +182,69 @@
 
         async function loadAdminData() {
             try {
-                const { data: adsData, error: adsErr } = await db.from('ads').select('*');
-                if (adsErr) { console.error("Load Ads Error:", adsErr); }
-                else { ads = (adsData || []).map(item => ({ firebaseId: item.id, imageUrl: item.imageurl, ...item })); }
+                const { data: adsData } = await db.from('ads').select('*').order('created_at', { ascending: false, nullsFirst: false });
+                ads = (adsData || []).map(item => ({ 
+                    firebaseId: item.id, 
+                    imageUrl: item.imageurl || item.imageUrl || '', 
+                    likes: item.likes || 0, 
+                    views: item.views || 0,
+                    is_vip: item.is_vip || false,
+                    created_at: item.created_at || item.inserted_at || new Date().toISOString(),
+                    ...item 
+                }));
 
-                const { data: usersData, error: usersErr } = await db.from('users').select('*');
-                if (usersErr) { console.error("Load Users Error:", usersErr); }
-                else { users = (usersData || []).map(item => ({ firebaseId: item.id, ...item })); }
+                const { data: usersData } = await db.from('users').select('*');
+                users = (usersData || []).map(item => ({ firebaseId: item.id, ...item }));
 
                 renderTables();
             } catch (e) { console.error(e); }
         }
 
         function renderTables() {
+            const userQuery = document.getElementById('searchUserInp').value.toLowerCase();
+            const filteredUsers = users.filter(u => u.username.toLowerCase().includes(userQuery));
+
             const userBody = document.getElementById('usersTableBody');
-            userBody.innerHTML = users.length === 0 ? `<tr><td colspan="2">Empty</td></tr>` : users.map(u => `<tr><td>${u.username}</td><td><button class="del-btn" onclick="deleteUser('${u.firebaseId}')">Delete</button></td></tr>`).join('');
+            userBody.innerHTML = filteredUsers.length === 0 ? `<tr><td colspan="2">No users found</td></tr>` : filteredUsers.map(u => `<tr><td>${u.username}</td><td><button class="del-btn" onclick="deleteUser('${u.firebaseId}')">Delete</button></td></tr>`).join('');
+
+            const adQuery = document.getElementById('searchAdInp').value.toLowerCase();
+            const filteredAds = ads.filter(a => a.title.toLowerCase().includes(adQuery) || a.sub.toLowerCase().includes(adQuery));
 
             const adsBody = document.getElementById('adsTableBody');
-            adsBody.innerHTML = ads.length === 0 ? `<tr><td colspan="5">Empty</td></tr>` : ads.map(a => `<tr>
-                <td>${a.title}</td>
-                <td>${a.poster || 'Admin'}</td>
-                <td>Rs ${a.price}</td>
-                <td>${a.is_vip ? '<span style="color:#f59e0b; font-weight:bold;">VIP</span>' : 'Normal'}</td>
-                <td>
-                    <button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button>
-                    <button class="vip-toggle-btn" onclick="toggleVip('${a.firebaseId}', ${!!a.is_vip})">${a.is_vip ? 'Un-VIP' : 'Make VIP'}</button>
-                    <button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button>
-                    <button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button>
-                </td>
-            </tr>`).join('');
+            adsBody.innerHTML = filteredAds.length === 0 ? `<tr><td colspan="4">No ads found</td></tr>` : filteredAds.map(a => {
+                const timeStr = timeAgo(a.created_at);
+                return `<tr class="${a.is_vip ? 'vip-row' : ''}">
+                    <td>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            ${a.imageUrl ? `<img src="${a.imageUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">` : `<div style="width:40px; height:40px; background:#334155; display:flex; align-items:center; justify-content:center; font-size:9px; border-radius:4px;">No Pic</div>`}
+                            <div>
+                                <strong>${a.title}</strong><br>
+                                <span style="font-size:10px; color:#94a3b8;">${timeStr} | Poster: ${a.poster || 'Admin'}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${a.likes} | <i class="fa-solid fa-eye" style="color:#38bdf8;"></i> ${a.views || 0}</td>
+                    <td>${a.is_vip ? '<span style="color:#f59e0b; font-weight:bold;"><i class="fa-solid fa-crown"></i> VIP</span>' : 'Normal'}</td>
+                    <td>
+                        <button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button>
+                        <button class="vip-toggle-btn" onclick="toggleVip('${a.firebaseId}', ${!!a.is_vip})">${a.is_vip ? 'Un-VIP' : 'Make VIP'}</button>
+                        <button class="edit-btn" style="background:#f43f5e;" onclick="editLikes('${a.firebaseId}', ${a.likes})">Likes</button>
+                        <button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button>
+                        <button class="del-btn" onclick="deleteAd('${a.firebaseId}')">Delete</button>
+                    </td>
+                </tr>`;
+            }).join('');
         }
+
+        document.getElementById('searchUserInp').onkeyup = renderTables;
+        document.getElementById('searchAdInp').onkeyup = renderTables;
 
         async function uploadImageToStorage(file) {
             const fileExt = file.name.split('.').pop();
             const fileName = `adm_${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            const { data, error } = await db.storage.from('ads-images').upload(filePath, file);
-            if (error) {
-                throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
-            }
-
-            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(filePath);
+            const { error } = await db.storage.from('ads-images').upload(fileName, file);
+            if (error) throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
+            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(fileName);
             return publicUrlData.publicUrl;
         }
 
@@ -230,9 +258,7 @@
 
             try {
                 let imageUrl = null;
-                if (file) {
-                    imageUrl = await uploadImageToStorage(file);
-                }
+                if (file) imageUrl = await uploadImageToStorage(file);
 
                 const adData = {
                     title: document.getElementById('admTitle').value.trim(),
@@ -245,29 +271,29 @@
                 if (imageUrl) adData.imageurl = imageUrl;
 
                 if (editId) {
-                    const { error } = await db.from('ads').update(adData).eq('id', editId);
-                    if (error) { alert('දෝෂයක් සිදු විය: ' + error.message); return; }
-                    alert('දැන්වීම සාර්ථකව යාවත්කාලීන විය!');
+                    await db.from('ads').update(adData).eq('id', editId);
+                    alert('සාර්ථකව යාවත්කාලීන විය!');
                 } else {
                     adData.poster = 'Admin';
                     adData.views = 0;
-                    adData.is_vip = false;
+                    adData.likes = 0;
+                    adData.is_vip = true;
                     if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
-                    const { error } = await db.from('ads').insert([adData]);
-                    if (error) { alert('දෝෂයක් සිදු විය: ' + error.message); return; }
-                    alert('දැන්වීම සාර්ථකව එකතු විය!');
+                    await db.from('ads').insert([adData]);
+                    alert('සාර්ථකව එකතු විය!');
                 }
                 
-                resetAdminForm();
+                resetAdminForm(true);
                 await loadAdminData();
-            } catch (err) {
-                alert(err.message);
-            }
+            } catch (err) { alert(err.message); }
         };
 
         window.prepareEditAd = (id) => {
-            const ad = ads.find(a => a.firebaseId === id);
+            const ad = ads.find(a => a.firebaseId == id);
             if (!ad) return;
+            
+            window.history.pushState({ editing: true }, '', window.location.pathname);
+
             document.getElementById('admEditId').value = ad.firebaseId;
             document.getElementById('admTitle').value = ad.title;
             document.getElementById('admDesc').value = ad.description;
@@ -277,32 +303,38 @@
             document.getElementById('admPrice').value = ad.price;
             document.getElementById('admContact').value = ad.contact;
             document.getElementById('admImageFile').value = '';
-            document.getElementById('admFormHeading').innerText = 'Admin Edit Ad';
+            document.getElementById('admFormHeading').innerText = 'Admin Edit Ad එක සංස්කරණය';
             document.getElementById('admSubmitBtn').innerText = 'Update Ad';
             document.getElementById('admCancelBtn').style.display = 'inline-block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.resetAdminForm = () => {
+        window.resetAdminForm = (goBack = false) => {
             document.getElementById('adminAdForm').reset();
             document.getElementById('admEditId').value = '';
             document.getElementById('admFormHeading').innerText = 'Admin Post Ad';
             document.getElementById('admSubmitBtn').innerText = 'Post Ad';
             document.getElementById('admCancelBtn').style.display = 'none';
+            if (goBack && window.history.state && window.history.state.editing) {
+                window.history.back();
+            }
         };
 
         window.toggleVip = async (id, currentStatus) => {
-            const newStatus = !currentStatus;
-            const { error } = await db.from('ads').update({ is_vip: newStatus }).eq('id', id);
-            if (error) {
-                alert('VIP කිරීමේදී දෝෂයක් සිදු විය: ' + error.message);
-            } else {
+            await db.from('ads').update({ is_vip: !currentStatus }).eq('id', id);
+            loadAdminData();
+        };
+
+        window.editLikes = async (id, currentLikes) => {
+            const l = prompt('නව Likes ගණන ඇතුළත් කරන්න:', currentLikes);
+            if (l !== null && !isNaN(l)) {
+                await db.from('ads').update({ likes: parseInt(l) }).eq('id', id);
                 loadAdminData();
             }
         };
 
         window.editViews = async (id, currentViews) => {
-            const v = prompt('නව Views ගණන:', currentViews);
+            const v = prompt('නව Views ගණන ඇතුළත් කරන්න:', currentViews);
             if (v !== null && !isNaN(v)) {
                 await db.from('ads').update({ views: parseInt(v) }).eq('id', id);
                 loadAdminData();
@@ -321,6 +353,10 @@
                 await db.from('users').delete().eq('id', id);
                 loadAdminData();
             }
+        };
+
+        window.onpopstate = () => {
+            resetAdminForm(false);
         };
 
         checkAdminSession();
