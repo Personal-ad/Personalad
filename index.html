@@ -3,38 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="0FXFCJytz6qsnsFHNOr70sQmoaqCsx8UbkQYnPMoaMo" />
     <title>Personal Ads | Sri Lanka Hela Ad</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f2f4f5; color: #000; overflow-x: hidden; }
-        .hero-section { background: linear-gradient(135deg, #00aaf0, #0284c7); color: white; padding: 40px 15px; text-align: center; }
-        .free-notice-badge { display: inline-block; background: #ffc800; color: #000; font-weight: 800; font-size: 13px; padding: 6px 14px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); text-transform: uppercase; letter-spacing: 0.5px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .hero-section h1 { font-size: 26px; margin-bottom: 12px; font-weight: 800; }
-        .hero-section p { font-size: 14px; margin-bottom: 20px; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .hero-btns { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .hero-btn { background: #ffc800; color: #000; border: none; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        body { background-color: #f2f4f5; color: #000; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        .hero-section { background: linear-gradient(135deg, #00aaf0, #0284c7); color: white; padding: 60px 20px; text-align: center; }
+        .hero-section h1 { font-size: 28px; margin-bottom: 12px; font-weight: 800; }
+        .hero-section p { font-size: 15px; margin-bottom: 25px; opacity: 0.95; max-width: 650px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        
+        .hero-btns { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .hero-btn { background: #ffc800; color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 220px; max-width: 100%; text-align: center; }
         .hero-btn-outline { background: transparent; color: white; border: 2px solid white; }
-        .features-grid { max-width: 900px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
-        .feature-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-bottom: 4px solid #00aaf0; }
-        .feature-card i { font-size: 30px; color: #00aaf0; margin-bottom: 12px; }
-        .feature-card h3 { font-size: 16px; margin-bottom: 8px; color: #0f172a; }
-        .feature-card p { font-size: 13px; color: #64748b; line-height: 1.4; }
+        
         .navbar { background-color: #00aaf0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
         .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .nav-right { display: flex; gap: 8px; font-size: 14px; align-items: center; flex-wrap: wrap; }
         .nav-right span { font-size: 12px; font-weight: bold; background: #0284c7; padding: 4px 6px; border-radius: 4px; }
         .logout-btn { background: #ef4444; border: none; color: white; padding: 4px 6px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+        
         .search-section { background-color: #00aaf0; padding: 0 15px 15px 15px; display: flex; justify-content: center; }
         .search-box { background: white; display: flex; align-items: center; width: 100%; max-width: 800px; border-radius: 4px; padding: 4px 8px; }
         .search-box input { flex: 1; border: none; padding: 8px; font-size: 14px; outline: none; width: 100%; }
         .search-btn { background: #ffc800; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        
         .category-filter { display: flex; justify-content: center; gap: 8px; margin: 15px 0; flex-wrap: wrap; padding: 0 10px; }
         .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; color: #334155; }
         .cat-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
-        .main-container { max-width: 800px; margin: 15px auto; padding: 0 10px; }
+        
+        .main-container { max-width: 800px; margin: 15px auto; padding: 0 10px; flex: 1; width: 100%; }
         .modal-box { background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; border-top: 4px solid #ffc800; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .close-btn { background: none; border: none; font-size: 16px; cursor: pointer; color: #777; }
@@ -42,25 +40,44 @@
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
         .action-btn { background: #ffc800; color: #000; font-weight: bold; border: none; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        .ad-card { background: white; display: flex; gap: 12px; padding: 10px; border-radius: 4px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; align-items: center; position: relative; }
-        .ad-card.vip-ad { border-left: 4px solid #f59e0b; background: #fffbeb; }
-        .vip-badge { position: absolute; top: 5px; right: 5px; background: #f59e0b; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 3px; }
-        .ad-img { width: 100px; height: 80px; background: #e2e8f0; border-radius: 4px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #888; font-size: 11px; flex-shrink: 0; }
-        .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
-        .ad-title { font-size: 14px; font-weight: bold; color: #000; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ad-sub { font-size: 12px; color: #666; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ad-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .ad-views { font-size: 11px; color: #00aaf0; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+        
+        .ad-card { background: white; display: flex; gap: 16px; padding: 14px; border-radius: 8px; margin-bottom: 14px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); cursor: pointer; align-items: center; position: relative; border: 1px solid #cbd5e1; }
+        .ad-card.vip-ad { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b; box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3); }
+        .vip-badge { position: absolute; top: -10px; right: 12px; background: #f59e0b; color: white; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        .ad-img-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 140px; }
+        .ad-img { width: 140px; height: 110px; background: #e2e8f0; border-radius: 6px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; }
+        
+        .ad-stats-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 6px; font-size: 11px; color: #475569; font-weight: 600; }
+        .like-btn-action { background: none; border: none; cursor: pointer; font-size: 13px; color: #94a3b8; display: flex; align-items: center; gap: 3px; transition: color 0.2s; padding: 2px; }
+        .like-btn-action.liked { color: #ef4444; }
+        .like-btn-action:hover { color: #ef4444; }
+
+        .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; height: 110px; }
+        .ad-title { font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .vip-ad .ad-title { color: #92400e; font-size: 17px; }
+        .ad-sub { font-size: 13px; color: #555; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .ad-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 12px; color: #64748b; }
+        .ad-views { font-size: 12px; color: #00aaf0; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        
         .pagination { display: flex; justify-content: center; gap: 6px; margin: 20px 0; flex-wrap: wrap; }
         .page-btn { background: white; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
         .page-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
+        
         .detail-view { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
         .back-btn { background: #64748b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; margin-bottom: 12px; }
-        .detail-img-container { width: 100%; max-height: 300px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 15px; }
-        .detail-main-img { width: 100%; max-height: 300px; object-fit: contain; }
+        .detail-img-container { width: 100%; max-height: 350px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; }
+        .detail-main-img { width: 100%; max-height: 350px; object-fit: contain; }
+        
+        .detail-stats-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #e2e8f0; }
+
         .btn-group { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
         .delete-btn { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         .edit-btn-user { background: #10b981; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        
+        .footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 20px 10px; font-size: 13px; margin-top: auto; }
+        .footer p { margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -72,18 +89,12 @@
 
     <div id="landingView">
         <div class="hero-section">
-            <div class="free-notice-badge"><i class="fa-solid fa-circle-check"></i> මෙහි දමන කිසිදු දැන්වීමක් සඳහා මුදල් අය කරනු නොලැබේ</div>
-            <h1>ඔබේ පෞද්ගලික දැන්වීම් පහසුවෙන් පළ කරන්න</h1>
-            <p>විශ්වාසනීය සහ වේගවත්ම Personal Ad වේදිකාව වෙත සාදරයෙන් පිළිගනිමු.</p>
+            <h1>Welcome to Personal Ad</h1>
+            <p>Welcome to Personal Ad - your premier digital destination for posting and discovering personal advertisements seamlessly.</p>
             <div class="hero-btns">
-                <button class="hero-btn" id="browseAdsBtn">දැන්වීම් නරඹන්න</button>
-                <button class="hero-btn hero-btn-outline" id="postAdLandingBtn">දැන්වීමක් දමන්න</button>
+                <button class="hero-btn" id="browseAdsBtn">Browse Ads</button>
+                <button class="hero-btn hero-btn-outline" id="postAdLandingBtn">Post Your Ad</button>
             </div>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card"><i class="fa-solid fa-bullhorn"></i><h3>පහසු දැන්වීම් පළ කිරීම</h3><p>විනාඩියෙන් ඔබේ දැන්වීම එකතු කරගන්න.</p></div>
-            <div class="feature-card"><i class="fa-solid fa-shield-halved"></i><h3>ආරක්ෂිත සහ විශ්වාසනීය</h3><p>පරිශීලක පාලන පහසුකම් ඇත.</p></div>
-            <div class="feature-card"><i class="fa-solid fa-bolt"></i><h3>ඉක්මන් ප්‍රතිචාර</h3><p>ක්ෂණිකව දහස් ගණනක් වෙත යන්න.</p></div>
         </div>
     </div>
 
@@ -128,7 +139,7 @@
                 </div>
                 <div class="form-group"><label>ස්ථානය</label><input type="text" id="location" required></div>
                 <div class="form-group"><label>මිල (Rs)</label><input type="text" id="price" required></div>
-                <div class="form-group"><label>ඡායාරූපය (වෙනස් නොකරන්නේ නම් හිස්ව තබන්න)</label><input type="file" id="imageFile" accept="image/*"></div>
+                <div class="form-group"><label>ඡායාරූපය</label><input type="file" id="imageFile" accept="image/*"></div>
                 <div class="form-group"><label>දුරකථන අංකය (10 digits)</label><input type="text" id="contact" required maxlength="10"></div>
                 <button type="submit" class="action-btn" id="formSubmitBtn">POST YOUR AD</button>
             </form>
@@ -141,56 +152,88 @@
 
         <div class="detail-view" id="detailView">
             <button class="back-btn" id="backToListBtn"><i class="fa-solid fa-arrow-left"></i> ආපසු</button>
+            
             <div class="detail-img-container" id="detailImgContainer"></div>
+            
+            <div class="detail-stats-bar">
+                <span><i class="fa-solid fa-eye" style="color:#00aaf0;"></i> Views: <strong id="detailViewsCount">0</strong></span>
+                <span><i class="fa-solid fa-heart" style="color:#ef4444;"></i> Likes: <strong id="detailLikesCount">0</strong></span>
+                <span id="detailTimeAgo" style="color:#64748b;">just now</span>
+            </div>
+
             <div class="detail-info-box">
                 <h2 id="detailTitle" style="font-size: 18px; margin-bottom: 6px;"></h2>
                 <div class="detail-meta" id="detailMeta" style="margin-bottom:8px; font-weight:600; font-size: 13px;"></div>
                 <div class="detail-desc" id="detailDesc" style="margin-bottom:8px; background:#f8fafc; padding:8px; font-size: 13px;"></div>
                 <div class="detail-price" id="detailPrice" style="font-size:18px; color:#00aaf0; font-weight:bold; margin-bottom:8px;"></div>
                 <div style="font-size: 13px;">දුරකථන: <strong id="detailContact"></strong></div>
-                <div style="margin: 8px 0; font-size: 13px;">Views: <span id="detailViewsCount" style="color:#00aaf0; font-weight:bold;"></span></div>
                 <div class="btn-group" id="detailActionContainer"></div>
             </div>
         </div>
     </div>
 
+    <footer class="footer">
+        <p>&copy; 2026 Personal Ad. All rights reserved.</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const db = window.supabase.createClient('https://yeikgoqgiltcepcruqro.supabase.co', 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL');
 
-        let currentAuthToken = null; 
+        let currentAuthToken = localStorage.getItem('user_token') || null; 
         let currentUser = null;
         let ads = [];
         let selectedCategory = 'All';
         let currentPage = 1;
         
-        const getAdsPerPage = () => window.innerHeight < 700 ? 5 : 10;
+        // තිරයේ උස (Screen Height) අනුව එක පිටුවකට පෙන්විය යුතු දැන්වීම් ගණන ස්වයංක්‍රීයව වෙනස් කිරීම
+        function getAdsPerPage() {
+            const screenHeight = window.innerHeight;
+            if (screenHeight < 650) return 4;   // කුඩා ෆෝන් සඳහා
+            if (screenHeight < 900) return 6;   // සාමාන්‍ය ෆෝන් සහ ටැබ් සඳහා
+            return 9;                           // විශාල ලැප්ටොප් / පරිගණක සඳහා
+        }
+
+        // Window resize වුනොත් පිටු ප්‍රමාණය ස්වයංක්‍රීයව යාවත්කාලීන කිරීම
+        window.onresize = () => {
+            if (document.getElementById('homeView').style.display !== 'none') {
+                filterAds();
+            }
+        };
+
+        function timeAgo(dateString) {
+            if (!dateString) return 'recently';
+            const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " mins ago";
+            return "just now";
+        }
 
         async function verifyDatabaseToken(token) {
             if (!token) return null;
             try {
-                // Safe query without relying on complex foreign key embedding
-                const { data: sessionData, error: sessErr } = await db.from('user_sessions')
-                    .select('user_id, expires_at')
-                    .eq('auth_token', token)
-                    .maybeSingle();
-                
-                if (sessErr || !sessionData || new Date(sessionData.expires_at) < new Date()) {
-                    return null;
+                const { data: sessionData } = await db.from('user_sessions').select('user_id, expires_at').eq('auth_token', token).maybeSingle();
+                if (!sessionData || new Date(sessionData.expires_at) < new Date()) return null;
+                const { data: userData } = await db.from('users').select('username').eq('id', sessionData.user_id).maybeSingle();
+                return userData ? userData.username : null;
+            } catch(e) { return null; }
+        }
+
+        async function checkInitialAuth() {
+            if (currentAuthToken) {
+                currentUser = await verifyDatabaseToken(currentAuthToken);
+                if (!currentUser) {
+                    localStorage.removeItem('user_token');
+                    currentAuthToken = null;
                 }
-
-                const { data: userData, error: userErr } = await db.from('users')
-                    .select('username')
-                    .eq('id', sessionData.user_id)
-                    .maybeSingle();
-
-                if (userErr || !userData) {
-                    return null;
-                }
-
-                return userData.username;
-            } catch(e) {
-                return null;
             }
         }
 
@@ -207,10 +250,10 @@
 
                 const token = 'tok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
                 const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
-
                 await db.from('user_sessions').insert([{ user_id: userId, auth_token: token, expires_at: expiresAt }]);
 
                 currentAuthToken = token;
+                localStorage.setItem('user_token', token);
                 currentUser = username;
                 updateNavbar();
                 filterAds();
@@ -219,21 +262,30 @@
 
         async function fetchAds() {
             try {
-                const { data, error } = await db.from('ads').select('*');
-                if (error) { console.error("Load Error:", error); return; }
-                ads = (data || []).map(item => ({ firebaseId: item.id, imageUrl: item.imageurl, ...item }));
+                const { data, error } = await db.from('ads').select('*').order('created_at', { ascending: false, nullsFirst: false });
+                if (error) { console.error('Error fetching ads:', error); return; }
+                
+                ads = (data || []).map(item => ({ 
+                    firebaseId: item.id, 
+                    imageUrl: item.imageurl || item.imageUrl || '', 
+                    likes: item.likes || 0,
+                    views: item.views || 0,
+                    is_vip: item.is_vip || false,
+                    created_at: item.created_at || item.inserted_at || new Date().toISOString(),
+                    ...item 
+                }));
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 const targetAdId = urlParams.get('ad');
 
                 if (targetAdId) {
-                    showDetail(targetAdId, true);
+                    showDetail(targetAdId, true, false);
                 } else {
                     const savedState = sessionStorage.getItem('view_state');
                     if (savedState === 'browse') {
-                        showBrowseView();
+                        showBrowseView(false);
                     } else {
-                        document.getElementById('landingView').style.display = 'block';
+                        showLandingView(false);
                     }
                 }
                 filterAds();
@@ -253,13 +305,10 @@
                     document.getElementById('postAdBox').style.display = 'block'; 
                 };
                 document.getElementById('navLogoutBtn').onclick = async () => { 
-                    if (currentAuthToken) {
-                        await db.from('user_sessions').delete().eq('auth_token', currentAuthToken);
-                    }
-                    currentAuthToken = null; 
-                    currentUser = null; 
-                    updateNavbar(); 
-                    filterAds(); 
+                    if (currentAuthToken) await db.from('user_sessions').delete().eq('auth_token', currentAuthToken);
+                    currentAuthToken = null; currentUser = null; 
+                    localStorage.removeItem('user_token');
+                    updateNavbar(); filterAds(); 
                 };
             } else {
                 navRight.innerHTML = `<i class="fa-regular fa-user" id="navLoginIcon" style="font-size: 18px; cursor: pointer;"></i>`;
@@ -272,30 +321,33 @@
             document.getElementById('postAdBox').style.display = 'none';
         }
 
-        function showBrowseView() {
-            sessionStorage.setItem('view_state', 'browse');
-            document.getElementById('landingView').style.display = 'none';
-            document.getElementById('searchSection').style.display = 'flex';
-            document.getElementById('categoryFilter').style.display = 'flex';
-            document.getElementById('homeView').style.display = 'block';
-            filterAds();
-        }
-
-        document.getElementById('logoBtn').onclick = () => {
+        function showLandingView(push = true) {
             sessionStorage.removeItem('view_state');
-            window.history.replaceState({}, document.title, window.location.pathname);
+            if (push) window.history.pushState({ view: 'landing' }, '', window.location.pathname);
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'none';
             document.getElementById('categoryFilter').style.display = 'none';
             document.getElementById('landingView').style.display = 'block';
-        };
+        }
 
-        document.getElementById('browseAdsBtn').onclick = () => { showBrowseView(); };
+        function showBrowseView(push = true) {
+            sessionStorage.setItem('view_state', 'browse');
+            if (push) window.history.pushState({ view: 'browse' }, '', window.location.pathname);
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('searchSection').style.display = 'flex';
+            document.getElementById('categoryFilter').style.display = 'flex';
+            document.getElementById('homeView').style.display = 'block';
+            document.getElementById('detailView').style.display = 'none';
+            filterAds();
+        }
+
+        document.getElementById('logoBtn').onclick = () => showLandingView(true);
+        document.getElementById('browseAdsBtn').onclick = () => showBrowseView(true);
 
         document.getElementById('postAdLandingBtn').onclick = () => {
             if (!currentUser) { document.getElementById('loginBox').style.display = 'block'; return; }
-            showBrowseView();
+            showBrowseView(true);
             document.getElementById('editAdId').value = '';
             document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න`;
             document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
@@ -305,13 +357,7 @@
 
         document.getElementById('closeLoginBtn').onclick = closeModals;
         document.getElementById('closePostBtn').onclick = closeModals;
-        
-        document.getElementById('backToListBtn').onclick = () => {
-            window.history.replaceState({}, document.title, window.location.pathname);
-            document.getElementById('detailView').style.display = 'none';
-            showBrowseView();
-            fetchAds();
-        };
+        document.getElementById('backToListBtn').onclick = () => window.history.back();
 
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -326,14 +372,9 @@
         async function uploadImageToStorage(file) {
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            const { data, error } = await db.storage.from('ads-images').upload(filePath, file);
-            if (error) {
-                throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
-            }
-
-            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(filePath);
+            const { error } = await db.storage.from('ads-images').upload(fileName, file);
+            if (error) throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
+            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(fileName);
             return publicUrlData.publicUrl;
         }
 
@@ -344,11 +385,10 @@
             
             const verifiedUser = await verifyDatabaseToken(currentAuthToken);
             if (!verifiedUser) {
-                alert('ඔබේ සැසි කාලය අවසන් වී ඇත. කරුණාකර නැවත ලොග් වන්න.');
-                currentUser = null;
-                currentAuthToken = null;
-                updateNavbar();
-                closeModals();
+                alert('ඔබේ සැසි කාලය අවසන් වී ඇත.');
+                currentUser = null; currentAuthToken = null;
+                localStorage.removeItem('user_token');
+                updateNavbar(); closeModals();
                 return;
             }
 
@@ -357,9 +397,7 @@
 
             try {
                 let imageUrl = null;
-                if (file) {
-                    imageUrl = await uploadImageToStorage(file);
-                }
+                if (file) imageUrl = await uploadImageToStorage(file);
 
                 const adData = {
                     title: document.getElementById('title').value.trim(),
@@ -372,25 +410,23 @@
                 if (imageUrl) adData.imageurl = imageUrl;
 
                 if (editId) {
-                    const { error } = await db.from('ads').update(adData).eq('id', editId);
-                    if (error) { alert('යාවත්කාලීන කිරීමේ දෝෂයක් සිදු විය: ' + error.message); return; }
-                    alert('දැන්වීම සාර්ථකව යාවත්කාලීන විය!');
+                    await db.from('ads').update(adData).eq('id', editId);
+                    alert('යාවත්කාලීන විය!');
                 } else {
                     adData.poster = verifiedUser;
                     adData.views = 0;
+                    adData.likes = 0;
+                    adData.is_vip = false;
                     if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
-                    const { error } = await db.from('ads').insert([adData]);
-                    if (error) { alert('දැන්වීම් දත්ත ඇතුළත් කිරීමේ දෝෂයක්: ' + error.message); return; }
-                    alert('දැන්වීම සාර්ථකයි!');
+                    await db.from('ads').insert([adData]);
+                    alert('සාර්ථකයි!');
                 }
 
                 await fetchAds();
                 document.getElementById('adForm').reset();
                 closeModals();
-                if (editId) showDetail(editId);
-            } catch (err) {
-                alert(err.message);
-            }
+                if (editId) showDetail(editId, false, false);
+            } catch (err) { alert(err.message); }
         };
 
         document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -407,8 +443,43 @@
 
         function filterAds() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = ads.filter(ad => (selectedCategory === 'All' || ad.category === selectedCategory) && (ad.title.toLowerCase().includes(query) || ad.sub.toLowerCase().includes(query)));
+            const filtered = ads.filter(ad => (selectedCategory === 'All' || ad.category === selectedCategory) && (ad.title.toLowerCase().includes(query) || ad.sub.toLowerCase().includes(query)))
+                               .sort((a, b) => (b.is_vip === true) - (a.is_vip === true));
             displayAds(filtered);
+        }
+
+        async function handleLikeClick(event, adId) {
+            event.stopPropagation();
+            const ad = ads.find(a => a.firebaseId == adId);
+            if (!ad) return;
+
+            let likedAds = JSON.parse(localStorage.getItem('liked_ads') || '{}');
+            let isLiked = likedAds[adId] || false;
+
+            if (isLiked) {
+                ad.likes = Math.max(0, (ad.likes || 0) - 1);
+                likedAds[adId] = false;
+            } else {
+                ad.likes = (ad.likes || 0) + 1;
+                likedAds[adId] = true;
+            }
+
+            localStorage.setItem('liked_ads', JSON.stringify(likedAds));
+
+            const btnEl = document.getElementById(`like-btn-${adId}`);
+            const countEl = document.getElementById(`like-count-${adId}`);
+            if (btnEl && countEl) {
+                countEl.innerText = ad.likes;
+                if (likedAds[adId]) {
+                    btnEl.classList.add('liked');
+                    btnEl.innerHTML = `<i class="fa-solid fa-heart"></i> <span id="like-count-${adId}">${ad.likes}</span>`;
+                } else {
+                    btnEl.classList.remove('liked');
+                    btnEl.innerHTML = `<i class="fa-regular fa-heart"></i> <span id="like-count-${adId}">${ad.likes}</span>`;
+                }
+            }
+
+            await db.from('ads').update({ likes: ad.likes }).eq('id', adId);
         }
 
         function displayAds(filtered) {
@@ -417,6 +488,7 @@
             list.innerHTML = ''; pag.innerHTML = '';
             if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center; padding:20px;">දැන්වීම් නැත.</p>'; return; }
             
+            let likedAds = JSON.parse(localStorage.getItem('liked_ads') || '{}');
             const adsPerPage = getAdsPerPage();
             const totalPages = Math.ceil(filtered.length / adsPerPage);
             if (currentPage > totalPages) currentPage = totalPages;
@@ -425,21 +497,29 @@
             paginated.forEach(ad => {
                 const card = document.createElement('div');
                 card.className = `ad-card ${ad.is_vip ? 'vip-ad' : ''}`;
-                
-                card.onclick = () => {
-                    showDetail(ad.firebaseId);
-                };
+                card.onclick = () => showDetail(ad.firebaseId, false, true);
+
+                const isLiked = likedAds[ad.firebaseId] || false;
+                const timeStr = timeAgo(ad.created_at);
 
                 card.innerHTML = `
-                    ${ad.is_vip ? '<div class="vip-badge">VIP</div>' : ''}
-                    ${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img" loading="lazy">` : `<div class="ad-img">No Image</div>`}
+                    ${ad.is_vip ? '<div class="vip-badge"><i class="fa-solid fa-crown"></i> VIP</div>' : ''}
+                    <div class="ad-img-col">
+                        ${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img" loading="lazy">` : `<div class="ad-img">No Image</div>`}
+                        <div class="ad-stats-bar">
+                            <button class="like-btn-action ${isLiked ? 'liked' : ''}" id="like-btn-${ad.firebaseId}" onclick="handleLikeClick(event, '${ad.firebaseId}')">
+                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> <span id="like-count-${ad.firebaseId}">${ad.likes || 0}</span>
+                            </button>
+                            <span style="font-size:10px; color:#64748b;" title="${ad.created_at}">${timeStr}</span>
+                        </div>
+                    </div>
                     <div class="ad-details">
                         <div>
                             <div class="ad-title">${ad.title}</div>
                             <div class="ad-sub">${ad.sub}</div>
                         </div>
                         <div class="ad-meta-row">
-                            <div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0}</div>
+                            <div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0} views</div>
                         </div>
                     </div>`;
                 list.appendChild(card);
@@ -456,15 +536,13 @@
             }
         }
 
-        async function showDetail(id, isDirectLink = false) {
-            const ad = ads.find(a => a.firebaseId === id);
-            if (!ad) {
-                if(isDirectLink) alert('මෙම දැන්වීම හමුවී නැත හෝ මකා දමා ඇත.');
-                return;
-            }
+        async function showDetail(id, isDirectLink = false, push = true) {
+            const ad = ads.find(a => a.firebaseId == id);
+            if (!ad) { if (isDirectLink) alert('දැන්වීම හමුවී නැත.'); return; }
 
             const newUrl = `${window.location.pathname}?ad=${id}`;
-            window.history.replaceState({path: newUrl}, '', newUrl);
+            if (push) window.history.pushState({ view: 'detail', adId: id }, '', newUrl);
+            else window.history.replaceState({ view: 'detail', adId: id }, '', newUrl);
 
             if (!isDirectLink) {
                 ad.views = (ad.views || 0) + 1;
@@ -483,7 +561,9 @@
             document.getElementById('detailDesc').innerText = ad.description;
             document.getElementById('detailPrice').innerText = `Rs ${ad.price}`;
             document.getElementById('detailContact').innerText = ad.contact;
-            document.getElementById('detailViewsCount').innerText = ad.views;
+            document.getElementById('detailViewsCount').innerText = ad.views || 0;
+            document.getElementById('detailLikesCount').innerText = ad.likes || 0;
+            document.getElementById('detailTimeAgo').innerText = timeAgo(ad.created_at);
 
             const actionContainer = document.getElementById('detailActionContainer');
             let buttonsHTML = `<button class="action-btn" id="shareAdBtn" style="background:#0284c7; color:white; width:auto; padding:6px 12px; font-size:13px;"><i class="fa-solid fa-share-nodes"></i> Share Ad</button>`;
@@ -495,7 +575,7 @@
 
             document.getElementById('shareAdBtn').onclick = () => {
                 navigator.clipboard.writeText(window.location.href);
-                alert('දැන්වීමේ ලින්ක් එක Copy විය!');
+                alert('ලින්ක් එක Copy විය!');
             };
             
             if (currentUser && currentUser === ad.poster) {
@@ -519,14 +599,28 @@
                 document.getElementById('delAdBtn').onclick = async () => {
                     if (confirm('මකා දමන්නද?')) {
                         await db.from('ads').delete().eq('id', id);
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        document.getElementById('backToListBtn').click();
+                        window.history.back();
                     }
                 };
             }
         }
 
+        window.onpopstate = (event) => {
+            closeModals();
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetAdId = urlParams.get('ad');
+
+            if (targetAdId) {
+                showDetail(targetAdId, true, false);
+            } else if (event.state && event.state.view === 'browse') {
+                showBrowseView(false);
+            } else {
+                showLandingView(false);
+            }
+        };
+
         async function initApp() {
+            await checkInitialAuth();
             await fetchAds();
             updateNavbar();
         }
