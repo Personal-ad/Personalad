@@ -2,20 +2,13 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Ads | Sri Lanka Hela Ad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Personal Ads Sri Lanka - Free Classifieds | හෙලා දැන්වීම්</title>
+    <meta name="description" content="ශ්‍රී ලංකාව තුළ නොමිලේ දැන්වීම් පළ කිරීමට සහ බලා ගැනීමට හොඳම තැන්පත්වීම. Post your personal and classified ads for free in Sri Lanka.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f2f4f5; color: #000; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
-        
-        .hero-section { background: linear-gradient(135deg, #00aaf0, #0284c7); color: white; padding: 60px 20px; text-align: center; }
-        .hero-section h1 { font-size: 28px; margin-bottom: 12px; font-weight: 800; }
-        .hero-section p { font-size: 15px; margin-bottom: 25px; opacity: 0.95; max-width: 650px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-        
-        .hero-btns { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .hero-btn { background: #ffc800; color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 220px; max-width: 100%; text-align: center; }
-        .hero-btn-outline { background: transparent; color: white; border: 2px solid white; }
+        body { background-color: #f2f4f5; color: #000; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; -webkit-text-size-adjust: 100%; }
         
         .navbar { background-color: #00aaf0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
         .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
@@ -23,17 +16,36 @@
         .nav-right span { font-size: 12px; font-weight: bold; background: #0284c7; padding: 4px 6px; border-radius: 4px; }
         .logout-btn { background: #ef4444; border: none; color: white; padding: 4px 6px; border-radius: 4px; font-size: 11px; cursor: pointer; }
         
-        .search-section { background-color: #00aaf0; padding: 0 15px 15px 15px; display: flex; justify-content: center; }
+        .search-section { background-color: #00aaf0; padding: 15px; display: flex; justify-content: center; flex-direction: column; align-items: center; width: 100%; }
         .search-box { background: white; display: flex; align-items: center; width: 100%; max-width: 800px; border-radius: 4px; padding: 4px 8px; }
-        .search-box input { flex: 1; border: none; padding: 8px; font-size: 14px; outline: none; width: 100%; }
-        .search-btn { background: #ffc800; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .search-box input { flex: 1; border: none; padding: 8px; font-size: 14px; outline: none; width: 100%; min-width: 0; }
+        .search-btn { background: #ffc800; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; flex-shrink: 0; }
         
+        .highlight-notice {
+            background: #fffbeb;
+            color: #b45309;
+            border: 2px dashed #f59e0b;
+            padding: 10px 15px;
+            border-radius: 6px;
+            max-width: 800px;
+            width: 100%;
+            margin-top: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
         .category-filter { display: flex; justify-content: center; gap: 8px; margin: 15px 0; flex-wrap: wrap; padding: 0 10px; }
         .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; color: #334155; }
         .cat-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
         
         .main-container { max-width: 800px; margin: 15px auto; padding: 0 10px; flex: 1; width: 100%; }
-        .modal-box { background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; border-top: 4px solid #ffc800; }
+        .modal-box { background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; border-top: 4px solid #ffc800; width: 100%; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .close-btn { background: none; border: none; font-size: 16px; cursor: pointer; color: #777; }
         .form-group { margin-bottom: 10px; }
@@ -41,22 +53,36 @@
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
         .action-btn { background: #ffc800; color: #000; font-weight: bold; border: none; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 14px; }
         
-        .ad-card { background: white; display: flex; gap: 16px; padding: 14px; border-radius: 8px; margin-bottom: 14px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); cursor: pointer; align-items: center; position: relative; border: 1px solid #cbd5e1; }
+        /* Ad Card Layout & Full Title Visibility Fixes */
+        .ad-card { background: white; display: flex; gap: 14px; padding: 14px; border-radius: 8px; margin-bottom: 14px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); cursor: pointer; align-items: stretch; position: relative; border: 1px solid #cbd5e1; width: 100%; }
         .ad-card.vip-ad { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b; box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3); }
-        .vip-badge { position: absolute; top: -10px; right: 12px; background: #f59e0b; color: white; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .vip-badge { position: absolute; top: -10px; right: 12px; background: #f59e0b; color: white; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 2; }
         
-        .ad-img-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 140px; }
-        .ad-img { width: 140px; height: 110px; background: #e2e8f0; border-radius: 6px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; }
+        .ad-img-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 120px; justify-content: space-between; }
+        .ad-img { width: 120px; height: 100px; background: #e2e8f0; border-radius: 6px; object-fit: cover; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; }
         
         .ad-stats-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 6px; font-size: 11px; color: #475569; font-weight: 600; }
         .like-btn-action { background: none; border: none; cursor: pointer; font-size: 13px; color: #94a3b8; display: flex; align-items: center; gap: 3px; transition: color 0.2s; padding: 2px; }
         .like-btn-action.liked { color: #ef4444; }
         .like-btn-action:hover { color: #ef4444; }
 
-        .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; height: 110px; }
-        .ad-title { font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .vip-ad .ad-title { color: #92400e; font-size: 17px; }
-        .ad-sub { font-size: 13px; color: #555; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Full Title Visible Styling - Allowing multi-line wrapping without clipping */
+        .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+        .ad-title { 
+            font-size: 15px; 
+            font-weight: bold; 
+            color: #0f172a; 
+            margin-bottom: 4px; 
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* පේළි 2ක් දක්වා සම්පූර්ණයෙන් පෙන්වයි */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+        .vip-ad .ad-title { color: #92400e; font-size: 16px; }
+        .ad-sub { font-size: 12px; color: #555; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
         
         .ad-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 12px; color: #64748b; }
         .ad-views { font-size: 12px; color: #00aaf0; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
@@ -65,19 +91,41 @@
         .page-btn { background: white; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
         .page-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
         
-        .detail-view { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
+        .detail-view { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; width: 100%; }
         .back-btn { background: #64748b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; margin-bottom: 12px; }
         .detail-img-container { width: 100%; max-height: 350px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; }
         .detail-main-img { width: 100%; max-height: 350px; object-fit: contain; }
         
-        .detail-stats-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #e2e8f0; }
+        .detail-stats-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 12px; border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 6px; }
 
         .btn-group { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
         .delete-btn { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         .edit-btn-user { background: #10b981; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         
+        .seo-content-box {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 25px;
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.6;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .seo-content-box h3 { font-size: 14px; color: #0f172a; margin-bottom: 6px; }
+
         .footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 20px 10px; font-size: 13px; margin-top: auto; }
         .footer p { margin-bottom: 5px; }
+
+        @media (max-width: 480px) {
+            .ad-card { padding: 10px; gap: 10px; }
+            .ad-img-col { width: 100px; }
+            .ad-img { width: 100px; height: 90px; }
+            .ad-title { font-size: 14px; }
+            .vip-ad .ad-title { font-size: 14px; }
+            .ad-sub { font-size: 11px; }
+        }
     </style>
 </head>
 <body>
@@ -87,25 +135,18 @@
         <div class="nav-right" id="navRight"></div>
     </div>
 
-    <div id="landingView">
-        <div class="hero-section">
-            <h1>Welcome to Personal Ad</h1>
-            <p>Welcome to Personal Ad - your premier digital destination for posting and discovering personal advertisements seamlessly.</p>
-            <div class="hero-btns">
-                <button class="hero-btn" id="browseAdsBtn">Browse Ads</button>
-                <button class="hero-btn hero-btn-outline" id="postAdLandingBtn">Post Your Ad</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="search-section" id="searchSection" style="display: none;">
+    <div class="search-section" id="searchSection">
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="What are you looking for?">
             <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
+        <div class="highlight-notice">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 16px;"></i>
+            <span>මෙහි දමන කිසිදු දැන්වීමක් සඳහා කිසිදු මුදලක් අය කරගනු නොලැබේ.</span>
+        </div>
     </div>
 
-    <div class="category-filter" id="categoryFilter" style="display: none;">
+    <div class="category-filter" id="categoryFilter">
         <button class="cat-btn active" data-cat="All">සියල්ල</button>
         <button class="cat-btn" data-cat="Boys">Boys</button>
         <button class="cat-btn" data-cat="Girls">Girls</button>
@@ -145,9 +186,14 @@
             </form>
         </div>
 
-        <div id="homeView" style="display: none;">
+        <div id="homeView">
             <div id="adsList"></div>
             <div class="pagination" id="paginationContainer"></div>
+            
+            <div class="seo-content-box" id="seoContentBox">
+                <h3>Personal Ads & Classifieds in Sri Lanka</h3>
+                <p>Welcome to Sri Lanka's trusted platform to post free personal ads, classifieds, and listings. Whether you are looking for Boys, Girls, Shemale, or Personal categories, you can easily browse or post your advertisements completely free of charge. අපගේ වෙබ් අඩවිය හරහා ඔබට කිසිදු මුදලක් අය කිරීමකින් තොරව ඉතා ඉක්මනින් සහ පහසුවෙන් ඔබේ දැන්වීම් පළ කරගත හැක.</p>
+            </div>
         </div>
 
         <div class="detail-view" id="detailView">
@@ -162,9 +208,9 @@
             </div>
 
             <div class="detail-info-box">
-                <h2 id="detailTitle" style="font-size: 18px; margin-bottom: 6px;"></h2>
+                <h2 id="detailTitle" style="font-size: 18px; margin-bottom: 6px; word-break: break-word;"></h2>
                 <div class="detail-meta" id="detailMeta" style="margin-bottom:8px; font-weight:600; font-size: 13px;"></div>
-                <div class="detail-desc" id="detailDesc" style="margin-bottom:8px; background:#f8fafc; padding:8px; font-size: 13px;"></div>
+                <div class="detail-desc" id="detailDesc" style="margin-bottom:8px; background:#f8fafc; padding:8px; font-size: 13px; word-break: break-word;"></div>
                 <div class="detail-price" id="detailPrice" style="font-size:18px; color:#00aaf0; font-weight:bold; margin-bottom:8px;"></div>
                 <div style="font-size: 13px;">දුරකථන: <strong id="detailContact"></strong></div>
                 <div class="btn-group" id="detailActionContainer"></div>
@@ -180,21 +226,18 @@
     <script>
         const db = window.supabase.createClient('https://yeikgoqgiltcepcruqro.supabase.co', 'sb_publishable_d6lTY6i01EMhWm5fOKwZtQ_2HU_sorL');
 
-        let currentAuthToken = localStorage.getItem('user_token') || null; 
-        let currentUser = null;
+        let currentUser = localStorage.getItem('current_user') || null; 
         let ads = [];
         let selectedCategory = 'All';
         let currentPage = 1;
         
-        // තිරයේ උස (Screen Height) අනුව එක පිටුවකට පෙන්විය යුතු දැන්වීම් ගණන ස්වයංක්‍රීයව වෙනස් කිරීම
         function getAdsPerPage() {
             const screenHeight = window.innerHeight;
-            if (screenHeight < 650) return 4;   // කුඩා ෆෝන් සඳහා
-            if (screenHeight < 900) return 6;   // සාමාන්‍ය ෆෝන් සහ ටැබ් සඳහා
-            return 9;                           // විශාල ලැප්ටොප් / පරිගණක සඳහා
+            if (screenHeight < 650) return 4;
+            if (screenHeight < 900) return 6;
+            return 9;
         }
 
-        // Window resize වුනොත් පිටු ප්‍රමාණය ස්වයංක්‍රීයව යාවත්කාලීන කිරීම
         window.onresize = () => {
             if (document.getElementById('homeView').style.display !== 'none') {
                 filterAds();
@@ -215,49 +258,6 @@
             interval = seconds / 60;
             if (interval > 1) return Math.floor(interval) + " mins ago";
             return "just now";
-        }
-
-        async function verifyDatabaseToken(token) {
-            if (!token) return null;
-            try {
-                const { data: sessionData } = await db.from('user_sessions').select('user_id, expires_at').eq('auth_token', token).maybeSingle();
-                if (!sessionData || new Date(sessionData.expires_at) < new Date()) return null;
-                const { data: userData } = await db.from('users').select('username').eq('id', sessionData.user_id).maybeSingle();
-                return userData ? userData.username : null;
-            } catch(e) { return null; }
-        }
-
-        async function checkInitialAuth() {
-            if (currentAuthToken) {
-                currentUser = await verifyDatabaseToken(currentAuthToken);
-                if (!currentUser) {
-                    localStorage.removeItem('user_token');
-                    currentAuthToken = null;
-                }
-            }
-        }
-
-        async function handleLoginUser(username) {
-            try {
-                let { data: users } = await db.from('users').select('*').eq('username', username);
-                let userId;
-                if (!users || users.length === 0) {
-                    const { data: newUser } = await db.from('users').insert([{ username }]).select();
-                    userId = newUser[0].id;
-                } else {
-                    userId = users[0].id;
-                }
-
-                const token = 'tok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
-                const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
-                await db.from('user_sessions').insert([{ user_id: userId, auth_token: token, expires_at: expiresAt }]);
-
-                currentAuthToken = token;
-                localStorage.setItem('user_token', token);
-                currentUser = username;
-                updateNavbar();
-                filterAds();
-            } catch(e) { console.error(e); }
         }
 
         async function fetchAds() {
@@ -281,12 +281,7 @@
                 if (targetAdId) {
                     showDetail(targetAdId, true, false);
                 } else {
-                    const savedState = sessionStorage.getItem('view_state');
-                    if (savedState === 'browse') {
-                        showBrowseView(false);
-                    } else {
-                        showLandingView(false);
-                    }
+                    showHomeView(false);
                 }
                 filterAds();
             } catch (e) { console.error(e); }
@@ -304,15 +299,14 @@
                     document.getElementById('adForm').reset();
                     document.getElementById('postAdBox').style.display = 'block'; 
                 };
-                document.getElementById('navLogoutBtn').onclick = async () => { 
-                    if (currentAuthToken) await db.from('user_sessions').delete().eq('auth_token', currentAuthToken);
-                    currentAuthToken = null; currentUser = null; 
-                    localStorage.removeItem('user_token');
+                document.getElementById('navLogoutBtn').onclick = () => { 
+                    currentUser = null; 
+                    localStorage.removeItem('current_user');
                     updateNavbar(); filterAds(); 
                 };
             } else {
-                navRight.innerHTML = `<i class="fa-regular fa-user" id="navLoginIcon" style="font-size: 18px; cursor: pointer;"></i>`;
-                document.getElementById('navLoginIcon').onclick = () => { closeModals(); document.getElementById('loginBox').style.display = 'block'; };
+                navRight.innerHTML = `<button class="action-btn" id="navLoginBtn" style="padding:4px 10px; font-size:12px; width:auto;"><i class="fa-solid fa-right-to-bracket"></i> Login / Post Ad</button>`;
+                document.getElementById('navLoginBtn').onclick = () => { closeModals(); document.getElementById('loginBox').style.display = 'block'; };
             }
         }
 
@@ -321,51 +315,36 @@
             document.getElementById('postAdBox').style.display = 'none';
         }
 
-        function showLandingView(push = true) {
-            sessionStorage.removeItem('view_state');
-            if (push) window.history.pushState({ view: 'landing' }, '', window.location.pathname);
-            document.getElementById('detailView').style.display = 'none';
-            document.getElementById('homeView').style.display = 'none';
-            document.getElementById('searchSection').style.display = 'none';
-            document.getElementById('categoryFilter').style.display = 'none';
-            document.getElementById('landingView').style.display = 'block';
-        }
-
-        function showBrowseView(push = true) {
-            sessionStorage.setItem('view_state', 'browse');
-            if (push) window.history.pushState({ view: 'browse' }, '', window.location.pathname);
-            document.getElementById('landingView').style.display = 'none';
+        function showHomeView(push = true) {
+            if (push) window.history.pushState({ view: 'home' }, '', window.location.pathname);
             document.getElementById('searchSection').style.display = 'flex';
             document.getElementById('categoryFilter').style.display = 'flex';
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('detailView').style.display = 'none';
+            document.getElementById('seoContentBox').style.display = 'block';
             filterAds();
         }
 
-        document.getElementById('logoBtn').onclick = () => showLandingView(true);
-        document.getElementById('browseAdsBtn').onclick = () => showBrowseView(true);
-
-        document.getElementById('postAdLandingBtn').onclick = () => {
-            if (!currentUser) { document.getElementById('loginBox').style.display = 'block'; return; }
-            showBrowseView(true);
-            document.getElementById('editAdId').value = '';
-            document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න`;
-            document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
-            document.getElementById('adForm').reset();
-            document.getElementById('postAdBox').style.display = 'block';
-        };
-
+        document.getElementById('logoBtn').onclick = () => showHomeView(true);
         document.getElementById('closeLoginBtn').onclick = closeModals;
         document.getElementById('closePostBtn').onclick = closeModals;
         document.getElementById('backToListBtn').onclick = () => window.history.back();
 
-        document.getElementById('loginForm').onsubmit = async (e) => {
+        document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
             const u = document.getElementById('loginUsername').value.trim();
             if (u) {
-                await handleLoginUser(u);
+                currentUser = u;
+                localStorage.setItem('current_user', u);
+                updateNavbar();
                 closeModals();
                 alert('සාර්ථකව Login විය!');
+                
+                document.getElementById('editAdId').value = '';
+                document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න`;
+                document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
+                document.getElementById('adForm').reset();
+                document.getElementById('postAdBox').style.display = 'block';
             }
         };
 
@@ -383,12 +362,10 @@
             const contact = document.getElementById('contact').value.trim();
             if (contact.length !== 10) { alert('අංකය වැරදියි (අංක 10ක් විය යුතුය)!'); return; }
             
-            const verifiedUser = await verifyDatabaseToken(currentAuthToken);
-            if (!verifiedUser) {
-                alert('ඔබේ සැසි කාලය අවසන් වී ඇත.');
-                currentUser = null; currentAuthToken = null;
-                localStorage.removeItem('user_token');
-                updateNavbar(); closeModals();
+            if (!currentUser) {
+                alert('කරුණාකර පළමුව Login වන්න.');
+                closeModals();
+                document.getElementById('loginBox').style.display = 'block';
                 return;
             }
 
@@ -413,13 +390,13 @@
                     await db.from('ads').update(adData).eq('id', editId);
                     alert('යාවත්කාලීන විය!');
                 } else {
-                    adData.poster = verifiedUser;
+                    adData.poster = currentUser;
                     adData.views = 0;
                     adData.likes = 0;
                     adData.is_vip = false;
                     if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
                     await db.from('ads').insert([adData]);
-                    alert('සාර්ථකයි!');
+                    alert('සාර්ථකයි! මුදල් අය කරනු නොලැබේ.');
                 }
 
                 await fetchAds();
@@ -515,8 +492,8 @@
                     </div>
                     <div class="ad-details">
                         <div>
-                            <div class="ad-title">${ad.title}</div>
-                            <div class="ad-sub">${ad.sub}</div>
+                            <div class="ad-title" title="${ad.title}">${ad.title}</div>
+                            <div class="ad-sub" title="${ad.sub}">${ad.sub}</div>
                         </div>
                         <div class="ad-meta-row">
                             <div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0} views</div>
@@ -549,10 +526,10 @@
                 await db.from('ads').update({ views: ad.views }).eq('id', id);
             }
 
-            document.getElementById('landingView').style.display = 'none';
             document.getElementById('searchSection').style.display = 'none';
             document.getElementById('categoryFilter').style.display = 'none';
             document.getElementById('homeView').style.display = 'none';
+            document.getElementById('seoContentBox').style.display = 'none';
             document.getElementById('detailView').style.display = 'block';
 
             document.getElementById('detailImgContainer').innerHTML = `<img src="${ad.imageUrl}" class="detail-main-img">`;
@@ -612,15 +589,12 @@
 
             if (targetAdId) {
                 showDetail(targetAdId, true, false);
-            } else if (event.state && event.state.view === 'browse') {
-                showBrowseView(false);
             } else {
-                showLandingView(false);
+                showHomeView(false);
             }
         };
 
         async function initApp() {
-            await checkInitialAuth();
             await fetchAds();
             updateNavbar();
         }
