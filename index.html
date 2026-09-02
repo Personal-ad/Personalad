@@ -11,6 +11,24 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f2f4f5; color: #000; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; -webkit-text-size-adjust: 100%; }
         
+        /* Floating / Sticky Mini Header on Scroll */
+        .sticky-mini-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #00aaf0;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none; /* Initially hidden */
+            cursor: pointer;
+        }
+
         .navbar { background-color: #00aaf0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
         .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .nav-right { display: flex; gap: 8px; font-size: 14px; align-items: center; flex-wrap: wrap; }
@@ -220,6 +238,11 @@
 </head>
 <body>
 
+    <!-- Scroll කර විට ඉහළින් පාවී එන නම පමණක් ඇති කොටස -->
+    <div class="sticky-mini-header" id="stickyMiniHeader">
+        <i class="fa-solid fa-user-circle"></i> Personal Ad
+    </div>
+
     <div class="navbar">
         <div class="logo" id="logoBtn"><i class="fa-solid fa-user-circle"></i> Personal Ad</div>
         <div class="nav-right" id="navRight"></div>
@@ -355,6 +378,20 @@
             if (screenHeight < 900) return 6;
             return 9;
         }
+
+        // Scroll කිරීමේදී නම පමණක් පෙන්වන Header එක පාලනය කිරීම
+        window.onscroll = () => {
+            const miniHeader = document.getElementById('stickyMiniHeader');
+            if (window.scrollY > 80) {
+                miniHeader.style.display = 'block';
+            } else {
+                miniHeader.style.display = 'none';
+            }
+        };
+        
+        document.getElementById('stickyMiniHeader').onclick = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
 
         let lastWidth = window.innerWidth;
         window.onresize = () => {
