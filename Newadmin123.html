@@ -48,6 +48,31 @@
                 <button id="adminLogoutBtn" class="del-btn" style="padding: 6px 12px;">Logout</button>
             </div>
 
+            <div class="card" style="border: 2px solid #38bdf8;">
+                <h2><i class="fa-solid fa-dharmachakra"></i> Control Spin Wheel Prize</h2>
+                <form id="wheelControlForm">
+                    <div class="form-group">
+                        <label>Select the mandatory prize that should drop when a user spins the wheel:</label>
+                        <select id="forcedPrizeSelect">
+                            <option value="Random">Random (Cash and emojis randomly)</option>
+                            <option value="Special Emoji Prize">🌟 Special Emoji Prize (Randomly switches to another emoji after one of 4 emojis is won)</option>
+                            <option value="🚀 Bonus">🚀 Bonus (Emoji)</option>
+                            <option value="💎 VIP">💎 VIP (Emoji)</option>
+                            <option value="🔥 Mega">🔥 Mega (Emoji)</option>
+                            <option value="👑 Lucky">👑 Lucky (Emoji)</option>
+                            <option value="Rs. 100">Rs. 100</option>
+                            <option value="Rs. 200">Rs. 200</option>
+                            <option value="Rs. 500">Rs. 500</option>
+                            <option value="Rs. 1000">Rs. 1000</option>
+                            <option value="Rs. 2000">Rs. 2000</option>
+                            <option value="Rs. 5000">Rs. 5000</option>
+                            <option value="Rs. 10000">Rs. 10000</option>
+                        </select>
+                    </div>
+                    <button type="submit" style="background: #10b981; color: #fff;">Save Wheel Settings</button>
+                </form>
+            </div>
+
             <div class="card">
                 <h2 id="admFormHeading">Admin Post Ad</h2>
                 <form id="adminAdForm">
@@ -144,7 +169,7 @@
                 localStorage.setItem('is_admin_logged', 'true');
                 checkAdminSession();
             } else { 
-                alert('පරිශීලක නාමය හෝ මුරපදය වැරදියි!'); 
+                alert('Invalid username or password!'); 
             }
         };
 
@@ -170,13 +195,38 @@
                 const { data: usersData } = await db.from('users').select('*');
                 users = (usersData || []).map(item => ({ firebaseId: item.id, ...item }));
 
+                const { data: wheelData, error: wheelError } = await db.from('wheel_settings').select('*').limit(1);
+                if (!wheelError && wheelData && wheelData.length > 0) {
+                    const savedPrize = wheelData[0].forced_prize;
+                    if (savedPrize) {
+                        document.getElementById('forcedPrizeSelect').value = savedPrize;
+                    }
+                }
+
                 renderTables();
             } catch (e) { console.error(e); }
         }
 
+        document.getElementById('wheelControlForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const selectedPrize = document.getElementById('forcedPrizeSelect').value;
+            try {
+                const { data } = await db.from('wheel_settings').select('*');
+                if (data && data.length > 0) {
+                    await db.from('wheel_settings').update({ forced_prize: selectedPrize }).eq('id', data[0].id);
+                } else {
+                    await db.from('wheel_settings').insert([{ forced_prize: selectedPrize }]);
+                }
+                alert('Spin Wheel prize updated successfully!');
+                await loadAdminData();
+            } catch (err) {
+                alert('An error occurred: ' + err.message);
+            }
+        };
+
         function renderTables() {
             const userQuery = document.getElementById('searchUserInp').value.toLowerCase();
-            const filteredUsers = users.filter(u => u.username.toLowerCase().includes(userQuery));
+            const filteredUsers = users.filter(u => u.username && u.username.toLowerCase().includes(userQuery));
 
             const userBody = document.getElementById('usersTableBody');
             userBody.innerHTML = filteredUsers.length === 0 ? `<tr><td colspan="2">No users found</td></tr>` : filteredUsers.map(u => `<tr><td>${u.username}</td><td><button class="del-btn" onclick="deleteUser('${u.firebaseId}')">Delete</button></td></tr>`).join('');
@@ -216,16 +266,16 @@
         async function uploadImageToStorage(file) {
             const fileExt = file.name.split('.').pop();
             const fileName = `adm_${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const { error } = await db.storage.from('ads-images').upload(fileName, file);
-            if (error) throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
-            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(fileName);
+            const { error } = await db.storage.from('ADS-IMAGES').upload(fileName, file);
+            if (error) throw new Error('Failed to upload image: ' + error.message);
+            const { data: publicUrlData } = db.storage.from('ADS-IMAGES').getPublicUrl(fileName);
             return publicUrlData.publicUrl;
         }
 
         document.getElementById('adminAdForm').onsubmit = async (e) => {
             e.preventDefault();
             const contact = document.getElementById('admContact').value.trim();
-            if (contact.length !== 10) { alert('දුරකථන අංකය වැරදියි!'); return; }
+            if (contact.length !== 10) { alert('Invalid contact number!'); return; }
             
             const editId = document.getElementById('admEditId').value;
             const file = document.getElementById('admImageFile').files[0];
@@ -246,15 +296,15 @@
 
                 if (editId) {
                     await db.from('ads').update(adData).eq('id', editId);
-                    alert('සාර්ථකව යාවත්කාලීන විය!');
+                    alert('Successfully updated!');
                 } else {
                     adData.poster = 'Admin';
                     adData.views = 0;
                     adData.likes = 0;
                     adData.is_vip = true;
-                    if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
+                    if (!imageUrl) { alert('Please select an image'); return; }
                     await db.from('ads').insert([adData]);
-                    alert('සාර්ථකව එකතු විය!');
+                    alert('Successfully added!');
                 }
                 
                 resetAdminForm(true);
@@ -276,8 +326,8 @@
             document.getElementById('admLocation').value = parts[0] ? parts[0].trim() : '';
             document.getElementById('admPrice').value = ad.price;
             document.getElementById('admContact').value = ad.contact;
-            document.getElementById('admImageFile').value = '';
-            document.getElementById('admFormHeading').innerText = 'Admin Edit Ad එක සංස්කරණය';
+            document.getElementById('admImageFile').value = ``;
+            document.getElementById('admFormHeading').innerText = 'Admin Edit Ad';
             document.getElementById('admSubmitBtn').innerText = 'Update Ad';
             document.getElementById('admCancelBtn').style.display = 'inline-block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -300,7 +350,7 @@
         };
 
         window.editLikes = async (id, currentLikes) => {
-            const l = prompt('නව Likes ගණන ඇතුළත් කරන්න:', currentLikes);
+            const l = prompt('Enter new like count:', currentLikes);
             if (l !== null && !isNaN(l)) {
                 await db.from('ads').update({ likes: parseInt(l) }).eq('id', id);
                 loadAdminData();
@@ -308,7 +358,7 @@
         };
 
         window.editViews = async (id, currentViews) => {
-            const v = prompt('නව Views ගණන ඇතුළත් කරන්න:', currentViews);
+            const v = prompt('Enter new view count:', currentViews);
             if (v !== null && !isNaN(v)) {
                 await db.from('ads').update({ views: parseInt(v) }).eq('id', id);
                 loadAdminData();
@@ -316,14 +366,14 @@
         };
 
         window.deleteAd = async (id) => {
-            if (confirm('මෙම දැන්වීම මකා දමන්නද?')) {
+            if (confirm('Are you sure you want to delete this ad?')) {
                 await db.from('ads').delete().eq('id', id);
                 loadAdminData();
             }
         };
 
         window.deleteUser = async (id) => {
-            if (confirm('මෙම පරිශීලකයා මකා දමන්නද?')) {
+            if (confirm('Are you sure you want to delete this user?')) {
                 await db.from('users').delete().eq('id', id);
                 loadAdminData();
             }
