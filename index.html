@@ -356,9 +356,13 @@
             return 9;
         }
 
+        let lastWidth = window.innerWidth;
         window.onresize = () => {
-            if (document.getElementById('homeView').style.display !== 'none') {
-                filterAds();
+            if (window.innerWidth !== lastWidth) {
+                lastWidth = window.innerWidth;
+                if (document.getElementById('homeView').style.display !== 'none') {
+                    filterAds();
+                }
             }
         };
 
@@ -533,7 +537,7 @@
                     adData.views = 0;
                     adData.likes = 0;
                     adData.is_vip = false;
-                    adData.is_featured = false; // Normal Ad by default
+                    adData.is_featured = false;
                     adData.price = '0'; 
                     if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
                     await db.from('ads').insert([adData]);
