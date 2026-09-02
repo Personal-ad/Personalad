@@ -315,7 +315,7 @@
                     adData.views = 0;
                     adData.likes = 0;
                     adData.is_vip = false;
-                    adData.is_featured = false; // Set to normal ad by default
+                    adData.is_featured = false;
                     if (!imageUrl) { alert('Please select an image'); return; }
                     await db.from('ads').insert([adData]);
                     alert('Successfully added!');
