@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Personal Ads Sri Lanka - Free Classifieds | personl Ad</title>
+    <title>Personal Ads Sri Lanka - Free Classifieds | Personal Ad</title>
     <meta name="description" content="hela-ads-lanaka-personal ad best Free Sri lanka">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -44,6 +44,22 @@
         .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; color: #334155; }
         .cat-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
         
+        .cat-btn.earn-money-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: 1px solid #b45309;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+            animation: pulseEarnBtn 2s infinite alternate;
+        }
+        .cat-btn.earn-money-btn.active {
+            background: #b45309;
+            border-color: #92400e;
+        }
+        @keyframes pulseEarnBtn {
+            0% { transform: scale(1); box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4); }
+            100% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.8); }
+        }
+        
         .main-container { max-width: 800px; margin: 15px auto; padding: 0 10px; flex: 1; width: 100%; }
         .modal-box { background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; border-top: 4px solid #ffc800; width: 100%; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -53,7 +69,6 @@
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
         .action-btn { background: #ffc800; color: #000; font-weight: bold; border: none; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 14px; }
         
-        /* Ad Card Layout & Full Title Visibility Fixes */
         .ad-card { background: white; display: flex; gap: 14px; padding: 14px; border-radius: 8px; margin-bottom: 14px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); cursor: pointer; align-items: stretch; position: relative; border: 1px solid #cbd5e1; width: 100%; }
         .ad-card.vip-ad { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b; box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3); }
         .vip-badge { position: absolute; top: -10px; right: 12px; background: #f59e0b; color: white; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 2; }
@@ -66,7 +81,6 @@
         .like-btn-action.liked { color: #ef4444; }
         .like-btn-action:hover { color: #ef4444; }
 
-        /* Full Title Visible Styling - Allowing multi-line wrapping without clipping */
         .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
         .ad-title { 
             font-size: 15px; 
@@ -74,7 +88,7 @@
             color: #0f172a; 
             margin-bottom: 4px; 
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* පේළි 2ක් දක්වා සම්පූර්ණයෙන් පෙන්වයි */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -118,14 +132,85 @@
         .footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 20px 10px; font-size: 13px; margin-top: auto; }
         .footer p { margin-bottom: 5px; }
 
-        @media (max-width: 480px) {
-            .ad-card { padding: 10px; gap: 10px; }
-            .ad-img-col { width: 100px; }
-            .ad-img { width: 100px; height: 90px; }
-            .ad-title { font-size: 14px; }
-            .vip-ad .ad-title { font-size: 14px; }
-            .ad-sub { font-size: 11px; }
+        #earnMoneyView { display: none; width: 100%; }
+        .wheel-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #05070a;
+            background-image: radial-gradient(at 10% 10%, #1a1d29 0px, transparent 50%), radial-gradient(at 90% 90%, #11131a 0px, transparent 50%);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 80vh;
         }
+        .ad-bar-wheel {
+            width: 100%;
+            background: linear-gradient(90deg, #ff007f, #ff7b00, #7928ca, #ff007f);
+            background-size: 300% 300%;
+            animation: gradientMove 3s ease infinite, pulseGlow 1.5s infinite alternate;
+            color: #ffffff;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 35px rgba(255, 0, 127, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        .ad-bar-wheel span {
+            background: #ffffff;
+            color: #ff007f;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.4);
+            animation: bounceBadge 1s infinite alternate;
+        }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 4px 20px rgba(255, 0, 127, 0.5); } 100% { box-shadow: 0 6px 40px rgba(255, 0, 127, 1); } }
+        @keyframes bounceBadge { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
+        
+        .wheel-container-box { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .wheel-title {
+            font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; text-align: center;
+            background: linear-gradient(135deg, #fff 25%, #a5b4fc 50%, #fff 75%);
+            background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        
+        .wheel-container { position: relative; width: 280px; height: 280px; }
+        .wheel {
+            width: 100%; height: 100%; border-radius: 50%; position: relative; background: #11131a;
+            border: 6px solid #1e293b; box-shadow: 0 0 25px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.05), 0 0 0 8px #334155;
+            overflow: hidden; transition: transform 5s cubic-bezier(0.15, 0.85, 0.15, 1);
+            background: conic-gradient(
+                #4f46e5 0deg 36deg, #7c3aed 36deg 72deg, #db2777 72deg 108deg, #ea580c 108deg 144deg, #ca8a04 144deg 180deg,
+                #16a34a 180deg 216deg, #0891b2 216deg 252deg, #0284c7 252deg 288deg, #4338ca 288deg 324deg, #6d28d9 324deg 360deg
+            );
+        }
+        .label-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+        .number-label { position: absolute; width: 100%; height: 100%; text-align: center; font-size: 11px; font-weight: 700; color: #ffffff; padding-top: 18px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .center-pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 35px; height: 35px; background: #05070a; border-radius: 50%; z-index: 10; box-shadow: 0 0 0 4px rgba(255,255,255,0.15), 0 0 12px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; }
+        .center-pin::after { content: ''; width: 12px; height: 12px; background: linear-gradient(135deg, #fff, #cbd5e1); border-radius: 50%; }
+        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 24px solid #ef4444; z-index: 11; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.5)); }
+        
+        .result-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 10px 20px; border-radius: 50px; min-height: 48px; width: 100%; max-width: 280px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        #resultText { font-size: 14px; font-weight: 700; color: #4ade80; text-align: center; }
+        .wheel-btn { background: #4f46e5; color: white; border: none; padding: 14px 24px; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3); width: 100%; max-width: 280px; }
+        .wheel-btn:hover { background: #6366f1; transform: translateY(-2px); box-shadow: 0 12px 22px rgba(79, 70, 229, 0.5); }
+        .wheel-btn:disabled { background: #4b5563; box-shadow: none; cursor: not-allowed; opacity: 0.7; transform: none; }
     </style>
 </head>
 <body>
@@ -152,9 +237,33 @@
         <button class="cat-btn" data-cat="Girls">Girls</button>
         <button class="cat-btn" data-cat="Shemale">Shemale</button>
         <button class="cat-btn" data-cat="Personal">Personal</button>
+        <button class="cat-btn earn-money-btn" data-cat="Earn Money"><i class="fa-solid fa-sack-dollar"></i> Earn Money</button>
     </div>
 
     <div class="main-container">
+        <div id="earnMoneyView">
+            <button class="back-btn" id="backFromEarnBtn" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> ආපසු</button>
+            <div class="wheel-body">
+                <div class="ad-bar-wheel">
+                    <span>Sponsored 🚀</span> Spin & Win Daily Cash Prizes! Unlimited Plays! 🔥
+                </div>
+                <div class="wheel-container-box">
+                    <h1 class="wheel-title">Lucky Money Wheel</h1>
+                    <div class="wheel-container">
+                        <div class="pointer"></div>
+                        <div class="wheel" id="wheel">
+                            <div class="label-container" id="labels"></div>
+                            <div class="center-pin"></div>
+                        </div>
+                    </div>
+                    <div class="result-panel">
+                        <div id="resultText">Spin anytime! 🎉</div>
+                    </div>
+                    <button class="wheel-btn" id="startBtn">SPIN</button>
+                </div>
+            </div>
+        </div>
+
         <div class="modal-box" id="loginBox">
             <div class="modal-header">
                 <h3><i class="fa-solid fa-right-to-bracket"></i> Login</h3>
@@ -176,10 +285,14 @@
                 <div class="form-group"><label>ශීර්ෂය</label><input type="text" id="title" required></div>
                 <div class="form-group"><label>විස්තරය</label><textarea id="description" rows="3" required></textarea></div>
                 <div class="form-group"><label>ප්‍රවර්ගය</label>
-                    <select id="category"><option value="Boys">Boys</option><option value="Girls">Girls</option><option value="Shemale">Shemale</option><option value="Personal">Personal</option></select>
+                    <select id="category">
+                        <option value="Boys">Boys</option>
+                        <option value="Girls">Girls</option>
+                        <option value="Shemale">Shemale</option>
+                        <option value="Personal">Personal</option>
+                    </select>
                 </div>
                 <div class="form-group"><label>ස්ථානය</label><input type="text" id="location" required></div>
-                <div class="form-group"><label>මිල (Rs)</label><input type="text" id="price" required></div>
                 <div class="form-group"><label>ඡායාරූපය</label><input type="file" id="imageFile" accept="image/*"></div>
                 <div class="form-group"><label>දුරකථන අංකය (10 digits)</label><input type="text" id="contact" required maxlength="10"></div>
                 <button type="submit" class="action-btn" id="formSubmitBtn">POST YOUR AD</button>
@@ -192,7 +305,7 @@
             
             <div class="seo-content-box" id="seoContentBox">
                 <h3>Personal Ads & Classifieds in Sri Lanka</h3>
-                <p>Welcome to Sri Lanka's trusted platform to post free personal ads, classifieds, and listings. Whether you are looking for Boys, Girls, Shemale, or Personal categories, you can easily browse or post your advertisements completely free of charge. අපගේ වෙබ් අඩවිය හරහා ඔබට කිසිදු මුදලක් අය කිරීමකින් තොරව ඉතා ඉක්මනින් සහ පහසුවෙන් ඔබේ දැන්වීම් පළ කරගත හැක.</p>
+                <p>Welcome to Sri Lanka's trusted platform to post free personal ads, classifieds, and listings. Whether you are looking for Boys, Girls, Shemale, or Personal categories, you can easily browse or post your advertisements completely free of charge. Through our platform, you can quickly and easily publish your advertisements without any charges or fees.</p>
             </div>
         </div>
 
@@ -211,7 +324,7 @@
                 <h2 id="detailTitle" style="font-size: 18px; margin-bottom: 6px; word-break: break-word;"></h2>
                 <div class="detail-meta" id="detailMeta" style="margin-bottom:8px; font-weight:600; font-size: 13px;"></div>
                 <div class="detail-desc" id="detailDesc" style="margin-bottom:8px; background:#f8fafc; padding:8px; font-size: 13px; word-break: break-word;"></div>
-                <div class="detail-price" id="detailPrice" style="font-size:18px; color:#00aaf0; font-weight:bold; margin-bottom:8px;"></div>
+                <div class="detail-price" id="detailPrice" style="font-size:18px; color:#00aaf0; font-weight:bold; margin-bottom:8px; display:none;"></div>
                 <div style="font-size: 13px;">දුරකථන: <strong id="detailContact"></strong></div>
                 <div class="btn-group" id="detailActionContainer"></div>
             </div>
@@ -277,8 +390,11 @@
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 const targetAdId = urlParams.get('ad');
+                const viewParam = urlParams.get('view');
 
-                if (targetAdId) {
+                if (viewParam === 'earn-money') {
+                    showEarnMoneyView(false);
+                } else if (targetAdId) {
                     showDetail(targetAdId, true, false);
                 } else {
                     showHomeView(false);
@@ -321,21 +437,39 @@
             document.getElementById('categoryFilter').style.display = 'flex';
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('detailView').style.display = 'none';
+            document.getElementById('earnMoneyView').style.display = 'none';
             document.getElementById('seoContentBox').style.display = 'block';
             filterAds();
+        }
+
+        function showEarnMoneyView(push = true) {
+            if (push) window.history.pushState({ view: 'earn-money' }, '', `${window.location.pathname}?view=earn-money`);
+            document.getElementById('searchSection').style.display = 'none';
+            document.getElementById('categoryFilter').style.display = 'none';
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'none';
+            document.getElementById('seoContentBox').style.display = 'none';
+            document.getElementById('earnMoneyView').style.display = 'block';
+            closeModals();
         }
 
         document.getElementById('logoBtn').onclick = () => showHomeView(true);
         document.getElementById('closeLoginBtn').onclick = closeModals;
         document.getElementById('closePostBtn').onclick = closeModals;
         document.getElementById('backToListBtn').onclick = () => window.history.back();
+        document.getElementById('backFromEarnBtn').onclick = () => window.history.back();
 
-        document.getElementById('loginForm').onsubmit = (e) => {
+        document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const u = document.getElementById('loginUsername').value.trim();
             if (u) {
                 currentUser = u;
                 localStorage.setItem('current_user', u);
+                
+                try {
+                    await db.from('users').upsert([{ username: u }], { onConflict: 'username' });
+                } catch(err) { console.log(err); }
+
                 updateNavbar();
                 closeModals();
                 alert('සාර්ථකව Login විය!');
@@ -351,9 +485,9 @@
         async function uploadImageToStorage(file) {
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const { error } = await db.storage.from('ads-images').upload(fileName, file);
+            const { error } = await db.storage.from('ADS-IMAGES').upload(fileName, file);
             if (error) throw new Error('පින්තූරය අප්‌ಲೋඩ් කිරීම අසාර්ථක විය: ' + error.message);
-            const { data: publicUrlData } = db.storage.from('ads-images').getPublicUrl(fileName);
+            const { data: publicUrlData } = db.storage.from('ADS-IMAGES').getPublicUrl(fileName);
             return publicUrlData.publicUrl;
         }
 
@@ -381,7 +515,6 @@
                     description: document.getElementById('description').value.trim(),
                     category: document.getElementById('category').value,
                     sub: `${document.getElementById('location').value.trim()}, ${document.getElementById('category').value}`,
-                    price: document.getElementById('price').value.trim(),
                     contact: contact
                 };
                 if (imageUrl) adData.imageurl = imageUrl;
@@ -394,6 +527,7 @@
                     adData.views = 0;
                     adData.likes = 0;
                     adData.is_vip = false;
+                    adData.price = '0'; 
                     if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
                     await db.from('ads').insert([adData]);
                     alert('සාර්ථකයි! මුදල් අය කරනු නොලැබේ.');
@@ -408,7 +542,14 @@
 
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.onclick = function() {
-                selectedCategory = this.getAttribute('data-cat');
+                const cat = this.getAttribute('data-cat');
+                if (cat === 'Earn Money') {
+                    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    showEarnMoneyView(true);
+                    return;
+                }
+                selectedCategory = cat;
                 currentPage = 1;
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
@@ -530,13 +671,22 @@
             document.getElementById('categoryFilter').style.display = 'none';
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('seoContentBox').style.display = 'none';
+            document.getElementById('earnMoneyView').style.display = 'none';
             document.getElementById('detailView').style.display = 'block';
 
             document.getElementById('detailImgContainer').innerHTML = `<img src="${ad.imageUrl}" class="detail-main-img">`;
             document.getElementById('detailTitle').innerText = ad.title;
             document.getElementById('detailMeta').innerText = ad.sub;
             document.getElementById('detailDesc').innerText = ad.description;
-            document.getElementById('detailPrice').innerText = `Rs ${ad.price}`;
+            
+            const priceEl = document.getElementById('detailPrice');
+            if (ad.price && ad.price !== '0' && ad.price !== '') {
+                priceEl.innerText = `Rs ${ad.price}`;
+                priceEl.style.display = 'block';
+            } else {
+                priceEl.style.display = 'none';
+            }
+
             document.getElementById('detailContact').innerText = ad.contact;
             document.getElementById('detailViewsCount').innerText = ad.views || 0;
             document.getElementById('detailLikesCount').innerText = ad.likes || 0;
@@ -563,7 +713,6 @@
                     document.getElementById('category').value = ad.category;
                     const parts = ad.sub.split(',');
                     document.getElementById('location').value = parts[0] ? parts[0].trim() : '';
-                    document.getElementById('price').value = ad.price;
                     document.getElementById('contact').value = ad.contact;
                     document.getElementById('imageFile').value = '';
                     document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> දැන්වීම සංස්කරණය කරන්න`;
@@ -582,15 +731,148 @@
             }
         }
 
-        window.onpopstate = (event) => {
+        const wheel = document.getElementById('wheel');
+        const startBtn = document.getElementById('startBtn');
+        const resultText = document.getElementById('resultText');
+        const labelsContainer = document.getElementById('labels');
+
+        let accumulatedDegrees = 0;
+        let isSpinning = false;
+
+        const wheelData = [
+            { value: "Rs. 100", startAngle: 0, endAngle: 36 },
+            { value: "Rs. 200", startAngle: 36, endAngle: 72 },
+            { value: "Rs. 500", startAngle: 72, endAngle: 108 },
+            { value: "Rs. 1000", startAngle: 108, endAngle: 144 },
+            { value: "Rs. 2000", startAngle: 144, endAngle: 180 },
+            { value: "🚀 Bonus", startAngle: 180, endAngle: 216 },
+            { value: "💎 VIP", startAngle: 216, endAngle: 252 },
+            { value: "🔥 Mega", startAngle: 252, endAngle: 288 },
+            { value: "👑 Lucky", startAngle: 288, endAngle: 324 },
+            { value: "Rs. 10000", startAngle: 324, endAngle: 360 }
+        ];
+
+        function setupLabels() {
+            labelsContainer.innerHTML = '';
+            wheelData.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'number-label';
+                const centerAngle = item.startAngle + 18;
+                div.style.transform = `rotate(${centerAngle}deg)`;
+
+                const span = document.createElement('span');
+                span.textContent = item.value;
+                span.style.display = 'inline-block';
+                span.style.transform = `rotate(-90deg)`;
+
+                div.appendChild(span);
+                labelsContainer.appendChild(div);
+            });
+        }
+        setupLabels();
+
+        startBtn.onclick = async () => {
+            if (isSpinning) return;
+            isSpinning = true;
+            startBtn.disabled = true;
+            resultText.textContent = "Spinning...";
+            resultText.style.color = "#a5b4fc";
+
+            let targetValue = null;
+            let wheelSettingId = null;
+            try {
+                const { data } = await db.from('wheel_settings').select('*').limit(1);
+                if (data && data.length > 0) {
+                    targetValue = data[0].forced_prize; 
+                    wheelSettingId = data[0].id;
+                }
+            } catch(err) {
+                console.log(err);
+            }
+
+            let targetItem;
+            if (targetValue && targetValue !== 'Random') {
+                if (targetValue === 'Special Emoji Prize') {
+                    const emojiItems = wheelData.filter(item => 
+                        item.value === "🚀 Bonus" || item.value === "💎 VIP" || 
+                        item.value === "🔥 Mega" || item.value === "👑 Lucky"
+                    );
+                    targetItem = emojiItems[Math.floor(Math.random() * emojiItems.length)];
+                } else {
+                    const matchingItems = wheelData.filter(item => item.value === targetValue);
+                    if (matchingItems.length > 0) {
+                        targetItem = matchingItems[Math.floor(Math.random() * matchingItems.length)];
+                    } else {
+                        targetItem = wheelData[Math.floor(Math.random() * wheelData.length)];
+                    }
+                }
+            } else {
+                const randomIndex = Math.floor(Math.random() * wheelData.length);
+                targetItem = wheelData[randomIndex];
+            }
+
+            const exactCenterAngle = targetItem.startAngle + 18;
+            const fullSpins = 360 * 7; 
+            const currentMod = accumulatedDegrees % 360;
+            const targetMod = (360 - exactCenterAngle) % 360;
+            let diff = targetMod - currentMod;
+            if (diff < 0) diff += 360;
+
+            accumulatedDegrees += fullSpins + diff;
+            wheel.style.transform = `rotate(${accumulatedDegrees}deg)`;
+
+            setTimeout(async () => {
+                isSpinning = false;
+                startBtn.disabled = false;
+
+                if (targetValue === 'Special Emoji Prize') {
+                    try {
+                        let availableRandomEmojis = ["🚀 Bonus", "💎 VIP", "🔥 Mega", "👑 Lucky"].filter(e => e !== targetItem.value);
+                        let nextRandomEmoji = availableRandomEmojis[Math.floor(Math.random() * availableRandomEmojis.length)];
+
+                        if (wheelSettingId) {
+                            await db.from('wheel_settings').update({ forced_prize: nextRandomEmoji }).eq('id', wheelSettingId);
+                        } else {
+                            const { data } = await db.from('wheel_settings').select('*').limit(1);
+                            if (data && data.length > 0) {
+                                await db.from('wheel_settings').update({ forced_prize: nextRandomEmoji }).eq('id', data[0].id);
+                            }
+                        }
+                    } catch (err) {
+                        console.log("Failed to auto-update emoji setting:", err);
+                    }
+                }
+
+                if (targetItem.value.includes("Bonus") || targetItem.value.includes("VIP") || targetItem.value.includes("Mega") || targetItem.value.includes("Lucky")) {
+                    resultText.style.color = "#f59e0b";
+                    resultText.textContent = `Special Prize: ${targetItem.value}! 🌟`;
+                } else {
+                    resultText.style.color = "#4ade80";
+                    resultText.textContent = `Won: ${targetItem.value}! 🎉`;
+                }
+            }, 5000);
+        };
+
+        window.onpopstate = () => {
             closeModals();
             const urlParams = new URLSearchParams(window.location.search);
             const targetAdId = urlParams.get('ad');
+            const viewParam = urlParams.get('view');
 
-            if (targetAdId) {
+            if (viewParam === 'earn-money') {
+                showEarnMoneyView(false);
+                document.querySelectorAll('.cat-btn').forEach(b => {
+                    if(b.getAttribute('data-cat') === 'Earn Money') b.classList.add('active');
+                    else b.classList.remove('active');
+                });
+            } else if (targetAdId) {
                 showDetail(targetAdId, true, false);
             } else {
                 showHomeView(false);
+                document.querySelectorAll('.cat-btn').forEach(b => {
+                    if(b.getAttribute('data-cat') === 'All') b.classList.add('active');
+                    else b.classList.remove('active');
+                });
             }
         };
 
