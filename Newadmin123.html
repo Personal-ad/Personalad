@@ -315,7 +315,7 @@
                     adData.views = 0;
                     adData.likes = 0;
                     adData.is_vip = false;
-                    adData.is_featured = true; // Admin දමන දැන්වීම් ස්වයංක්‍රීයව Super VIP ලෙස සැකසීමට හැක
+                    adData.is_featured = false; // Set to normal ad by default
                     if (!imageUrl) { alert('Please select an image'); return; }
                     await db.from('ads').insert([adData]);
                     alert('Successfully added!');
@@ -344,7 +344,6 @@
             document.getElementById('admFormHeading').innerText = 'Admin Edit Ad';
             document.getElementById('admSubmitBtn').innerText = 'Update Ad';
             document.getElementById('admCancelBtn').style.display = 'inline-block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
         window.resetAdminForm = (goBack = false) => {
