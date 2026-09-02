@@ -5,16 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Personal Ads Sri Lanka - Free Classifieds | Personal Ad</title>
     <meta name="description" content="hela-ads-lanaka-personal ad best Free Sri lanka">
-    <!-- Favicon එක මෙතැනට එකතු කර ඇත -->
-    <link rel="icon" -- ads වගුවට is_featured (Super VIP) තීරුව එකතු කිරීම
-ALTER TABLE ads 
-ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE;
-
--- දැනට පවතින දත්ත සඳහා එය false ලෙස සකස් කිරීම (අවශ්‍ය නම්)
-UPDATE ads 
-SET is_featured = FALSE 
-WHERE is_featured IS NULL;
-="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -81,12 +72,10 @@ WHERE is_featured IS NULL;
         
         .ad-card { background: white; display: flex; gap: 14px; padding: 14px; border-radius: 8px; margin-bottom: 14px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); cursor: pointer; align-items: stretch; position: relative; border: 1px solid #cbd5e1; width: 100%; }
         .ad-card.vip-ad { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b; box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3); }
-        
-        /* Super VIP / Featured Ad Design (VIP එකටත් වඩා ඉහළින්) */
         .ad-card.super-vip-ad { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border: 2px solid #e11d48; box-shadow: 0 8px 20px rgba(225, 29, 72, 0.35); }
+        
         .super-vip-badge { position: absolute; top: -10px; right: 12px; background: #e11d48; color: white; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 2; }
         .super-vip-ad .ad-title { color: #9f1239; font-size: 16px; }
-
         .vip-badge { position: absolute; top: -10px; right: 12px; background: #f59e0b; color: white; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 2; }
         
         .ad-img-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 120px; justify-content: space-between; }
@@ -400,7 +389,7 @@ WHERE is_featured IS NULL;
                     likes: item.likes || 0,
                     views: item.views || 0,
                     is_vip: item.is_vip || false,
-                    is_featured: item.is_featured || false, // Super VIP / Featured status
+                    is_featured: item.is_featured || false,
                     created_at: item.created_at || item.inserted_at || new Date().toISOString(),
                     ...item 
                 }));
@@ -544,7 +533,7 @@ WHERE is_featured IS NULL;
                     adData.views = 0;
                     adData.likes = 0;
                     adData.is_vip = false;
-                    adData.is_featured = false;
+                    adData.is_featured = false; // Normal Ad by default
                     adData.price = '0'; 
                     if (!imageUrl) { alert('කරුණාකර ඡායාරූපයක් තෝරන්න'); return; }
                     await db.from('ads').insert([adData]);
@@ -581,7 +570,6 @@ WHERE is_featured IS NULL;
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtered = ads.filter(ad => (selectedCategory === 'All' || ad.category === selectedCategory) && (ad.title.toLowerCase().includes(query) || ad.sub.toLowerCase().includes(query)))
                                .sort((a, b) => {
-                                   // සෝටින් පිළිවෙල: 1. Featured (Super VIP), 2. VIP, 3. අනෙක් ඒවා
                                    if ((b.is_featured === true) !== (a.is_featured === true)) {
                                        return (b.is_featured === true) - (a.is_featured === true);
                                    }
@@ -638,7 +626,6 @@ WHERE is_featured IS NULL;
 
             paginated.forEach(ad => {
                 const card = document.createElement('div');
-                // Super VIP / Featured හෝ VIP හෝ සාමාන්‍ය ලෙස CSS class සැකසීම
                 let cardClass = '';
                 if (ad.is_featured) cardClass = 'super-vip-ad';
                 else if (ad.is_vip) cardClass = 'vip-ad';
