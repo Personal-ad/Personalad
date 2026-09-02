@@ -22,12 +22,14 @@
         th { background: #334155; }
         
         tr.vip-row { background-color: rgba(245, 158, 11, 0.15); border-left: 4px solid #f59e0b; }
+        tr.super-vip-row { background-color: rgba(225, 29, 72, 0.2); border-left: 4px solid #e11d48; }
 
         .del-btn { background: #ef4444; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; }
         .edit-btn { background: #10b981; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; }
         .vip-toggle-btn { background: #f59e0b; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; font-weight: bold; }
-        #adminDashboard { display: none; }
+        .super-vip-toggle-btn { background: #e11d48; color: #fff; padding: 5px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; margin-right: 3px; margin-bottom: 3px; display: inline-block; font-weight: bold; }
         
+        #adminDashboard { display: none; }
         .footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 15px; font-size: 12px; margin-top: auto; border-top: 1px solid #334155; }
     </style>
 </head>
@@ -188,6 +190,7 @@
                     likes: item.likes || 0, 
                     views: item.views || 0,
                     is_vip: item.is_vip || false,
+                    is_featured: item.is_featured || false,
                     created_at: item.created_at || item.inserted_at || new Date().toISOString(),
                     ...item 
                 }));
@@ -237,7 +240,16 @@
             const adsBody = document.getElementById('adsTableBody');
             adsBody.innerHTML = filteredAds.length === 0 ? `<tr><td colspan="4">No ads found</td></tr>` : filteredAds.map(a => {
                 const timeStr = timeAgo(a.created_at);
-                return `<tr class="${a.is_vip ? 'vip-row' : ''}">
+                
+                let rowClass = '';
+                if (a.is_featured) rowClass = 'super-vip-row';
+                else if (a.is_vip) rowClass = 'vip-row';
+
+                let statusBadge = 'Normal';
+                if (a.is_featured) statusBadge = '<span style="color:#e11d48; font-weight:bold;"><i class="fa-solid fa-bolt"></i> Super VIP</span>';
+                else if (a.is_vip) statusBadge = '<span style="color:#f59e0b; font-weight:bold;"><i class="fa-solid fa-crown"></i> VIP</span>';
+
+                return `<tr class="${rowClass}">
                     <td>
                         <div style="display:flex; gap:10px; align-items:center;">
                             ${a.imageUrl ? `<img src="${a.imageUrl}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; flex-shrink:0;">` : `<div style="width:40px; height:40px; background:#334155; display:flex; align-items:center; justify-content:center; font-size:8px; border-radius:4px; flex-shrink:0;">No Pic</div>`}
@@ -248,9 +260,10 @@
                         </div>
                     </td>
                     <td><i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${a.likes} | <i class="fa-solid fa-eye" style="color:#38bdf8;"></i> ${a.views || 0}</td>
-                    <td>${a.is_vip ? '<span style="color:#f59e0b; font-weight:bold;"><i class="fa-solid fa-crown"></i> VIP</span>' : 'Normal'}</td>
+                    <td>${statusBadge}</td>
                     <td>
                         <button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button>
+                        <button class="super-vip-toggle-btn" onclick="toggleFeatured('${a.firebaseId}', ${!!a.is_featured})">${a.is_featured ? 'Un-Super' : 'Super VIP'}</button>
                         <button class="vip-toggle-btn" onclick="toggleVip('${a.firebaseId}', ${!!a.is_vip})">${a.is_vip ? 'Un-VIP' : 'VIP'}</button>
                         <button class="edit-btn" style="background:#f43f5e;" onclick="editLikes('${a.firebaseId}', ${a.likes})">Likes</button>
                         <button class="edit-btn" style="background:#0284c7;" onclick="editViews('${a.firebaseId}', ${a.views || 0})">Views</button>
@@ -301,7 +314,8 @@
                     adData.poster = 'Admin';
                     adData.views = 0;
                     adData.likes = 0;
-                    adData.is_vip = true;
+                    adData.is_vip = false;
+                    adData.is_featured = true; // Admin දමන දැන්වීම් ස්වයංක්‍රීයව Super VIP ලෙස සැකසීමට හැක
                     if (!imageUrl) { alert('Please select an image'); return; }
                     await db.from('ads').insert([adData]);
                     alert('Successfully added!');
@@ -346,6 +360,11 @@
 
         window.toggleVip = async (id, currentStatus) => {
             await db.from('ads').update({ is_vip: !currentStatus }).eq('id', id);
+            loadAdminData();
+        };
+
+        window.toggleFeatured = async (id, currentStatus) => {
+            await db.from('ads').update({ is_featured: !currentStatus }).eq('id', id);
             loadAdminData();
         };
 
