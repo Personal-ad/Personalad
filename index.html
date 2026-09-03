@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Personal Ads Sri Lanka - Free Classifieds | Personal Ad</title>
-    <meta name="description" content="hela-ads-lanaka-personal ad best Free Sri lanka">
+    <title>Personal Ad|Sri Lanka - Free Classifieds & best service</title>
+    <meta name="description" content="Discover Sri Lanka's premier free classified platform. Post and browse personal ads, listings, and community classifieds easily and securely.">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -161,18 +161,22 @@
         .delete-btn { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         .edit-btn-user { background: #10b981; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         
+        /* Professional SEO Content Box */
         .seo-content-box {
-            background: white;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 25px;
-            font-size: 12px;
-            color: #475569;
-            line-height: 1.6;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.7;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
-        .seo-content-box h3 { font-size: 14px; color: #0f172a; margin-bottom: 6px; }
+        .seo-content-box h3 { font-size: 16px; color: #0f172a; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .seo-content-box p { margin-bottom: 10px; }
+        .seo-content-box ul { margin: 10px 0 10px 20px; }
+        .seo-content-box li { margin-bottom: 6px; }
 
         .footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 20px 10px; font-size: 13px; margin-top: auto; }
         .footer p { margin-bottom: 5px; }
@@ -352,9 +356,19 @@
             <div id="adsList"></div>
             <div class="pagination" id="paginationContainer"></div>
             
+            <!-- Professional SEO Content Box -->
             <div class="seo-content-box" id="seoContentBox">
-                <h3>Personal Ads & Classifieds in Sri Lanka</h3>
-                <p>Welcome to Sri Lanka's trusted platform to post free personal ads, classifieds, and listings. Whether you are looking for Boys, Girls, Shemale, or Personal categories, you can easily browse or post your advertisements completely free of charge. Through our platform, you can quickly and easily publish your advertisements without any charges or fees.</p>
+                <h3><i class="fa-solid fa-bullhorn" style="color: #00aaf0;"></i> Sri Lanka's Trusted Free Personal Ads & Classifieds Platform</h3>
+                <p>Welcome to <strong>Personal Ad</strong>, the premier online destination in Sri Lanka for publishing and discovering community classifieds completely free of charge. Whether you are searching for listings in Boys, Girls, Shemale, or Personal categories, our platform offers a seamless, fast, and secure browsing experience designed to connect people instantly.</p>
+                
+                <h3 style="font-size: 14px; margin-top: 15px;"><i class="fa-solid fa-check-circle" style="color: #10b981;"></i> Why Choose Our Platform?</h3>
+                <ul>
+                    <li><strong>100% Free Publishing:</strong> Post your personal advertisements without any hidden fees or service charges.</li>
+                    <li><strong>Targeted Categories:</strong> Easily filter through dedicated sections including Boys, Girls, Shemale, and General Personal ads.</li>
+                    <li><strong>User-Friendly & Fast:</strong> Optimized for lightning-fast performance across mobile phones, tablets, and desktop computers.</li>
+                    <li><strong>Direct Engagement:</strong> Connect directly with advertisers through verified contact options safely.</li>
+                </ul>
+                <p>Start posting your free advertisements today or explore thousands of active listings across Sri Lanka with absolute ease!</p>
             </div>
         </div>
 
@@ -401,7 +415,6 @@
             return num.toString();
         }
 
-        // Views සඳහා ද 1000න් පසු K අකුර ලබා දෙන function එක
         function formatViews(num) {
             if (!num || isNaN(num)) return '0';
             if (num >= 1000) {
@@ -714,7 +727,7 @@
                 const isLiked = likedAds[ad.firebaseId] || false;
                 const timeStr = timeAgo(ad.created_at);
                 const formattedLikes = formatLikes(ad.likes || 0);
-                const formattedViews = formatViews(ad.views || 0); // Views සඳහා K formatting
+                const formattedViews = formatViews(ad.views || 0);
 
                 let badgeHTML = '';
                 if (ad.is_featured) {
@@ -791,7 +804,7 @@
             }
 
             document.getElementById('detailContact').innerText = ad.contact;
-            document.getElementById('detailViewsCount').innerText = formatViews(ad.views || 0); // Detailed view එකේ Views සඳහා K formatting
+            document.getElementById('detailViewsCount').innerText = formatViews(ad.views || 0);
             document.getElementById('detailLikesCount').innerText = formatLikes(ad.likes || 0);
             document.getElementById('detailTimeAgo').innerText = timeAgo(ad.created_at);
 
