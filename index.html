@@ -100,7 +100,6 @@
         
         .ad-stats-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 6px; font-size: 11px; color: #475569; font-weight: 600; }
         
-        /* Highlighted Like Button Style */
         .like-btn-action { 
             background: linear-gradient(135deg, #fff1f2, #ffe4e6); 
             border: 1px solid #fda4af; 
@@ -394,6 +393,14 @@
         let selectedCategory = 'All';
         let currentPage = 1;
         
+        function formatLikes(num) {
+            if (!num || isNaN(num)) return '0';
+            if (num >= 1000) {
+                return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
+            }
+            return num.toString();
+        }
+
         function getAdsPerPage() {
             const screenHeight = window.innerHeight;
             if (screenHeight < 650) return 4;
@@ -661,13 +668,13 @@
             const btnEl = document.getElementById(`like-btn-${adId}`);
             const countEl = document.getElementById(`like-count-${adId}`);
             if (btnEl && countEl) {
-                countEl.innerText = ad.likes;
+                countEl.innerText = formatLikes(ad.likes);
                 if (likedAds[adId]) {
                     btnEl.classList.add('liked');
-                    btnEl.innerHTML = `<i class="fa-solid fa-heart"></i> <span id="like-count-${adId}">${ad.likes}</span>`;
+                    btnEl.innerHTML = `<i class="fa-solid fa-heart"></i> <span id="like-count-${adId}">${formatLikes(ad.likes)}</span>`;
                 } else {
                     btnEl.classList.remove('liked');
-                    btnEl.innerHTML = `<i class="fa-regular fa-heart"></i> <span id="like-count-${adId}">${ad.likes}</span>`;
+                    btnEl.innerHTML = `<i class="fa-regular fa-heart"></i> <span id="like-count-${adId}">${formatLikes(ad.likes)}</span>`;
                 }
             }
 
@@ -697,6 +704,7 @@
 
                 const isLiked = likedAds[ad.firebaseId] || false;
                 const timeStr = timeAgo(ad.created_at);
+                const formattedLikes = formatLikes(ad.likes || 0);
 
                 let badgeHTML = '';
                 if (ad.is_featured) {
@@ -711,7 +719,7 @@
                         ${ad.imageUrl ? `<img src="${ad.imageUrl}" class="ad-img" loading="lazy">` : `<div class="ad-img">No Image</div>`}
                         <div class="ad-stats-bar">
                             <button class="like-btn-action ${isLiked ? 'liked' : ''}" id="like-btn-${ad.firebaseId}" onclick="handleLikeClick(event, '${ad.firebaseId}')">
-                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> <span id="like-count-${ad.firebaseId}">${ad.likes || 0}</span>
+                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> <span id="like-count-${ad.firebaseId}">${formattedLikes}</span>
                             </button>
                             <span style="font-size:10px; color:#64748b;" title="${ad.created_at}">${timeStr}</span>
                         </div>
@@ -774,7 +782,7 @@
 
             document.getElementById('detailContact').innerText = ad.contact;
             document.getElementById('detailViewsCount').innerText = ad.views || 0;
-            document.getElementById('detailLikesCount').innerText = ad.likes || 0;
+            document.getElementById('detailLikesCount').innerText = formatLikes(ad.likes || 0);
             document.getElementById('detailTimeAgo').innerText = timeAgo(ad.created_at);
 
             const actionContainer = document.getElementById('detailActionContainer');
