@@ -158,6 +158,14 @@
         let ads = [], users = [];
         let isAdminLoggedIn = localStorage.getItem('is_admin_logged') === 'true'; 
 
+        function formatLikes(num) {
+            if (!num || isNaN(num)) return '0';
+            if (num >= 1000) {
+                return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
+            }
+            return num.toString();
+        }
+
         window.onscroll = () => {
             const adminMiniHeader = document.getElementById('adminStickyMiniHeader');
             if (window.scrollY > 80) {
@@ -277,6 +285,7 @@
             const adsBody = document.getElementById('adsTableBody');
             adsBody.innerHTML = filteredAds.length === 0 ? `<tr><td colspan="4">No ads found</td></tr>` : filteredAds.map(a => {
                 const timeStr = timeAgo(a.created_at);
+                const formattedLikes = formatLikes(a.likes || 0);
                 
                 let rowClass = '';
                 if (a.is_featured) rowClass = 'super-vip-row';
@@ -296,7 +305,7 @@
                             </div>
                         </div>
                     </td>
-                    <td><i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${a.likes} | <i class="fa-solid fa-eye" style="color:#38bdf8;"></i> ${a.views || 0}</td>
+                    <td><i class="fa-solid fa-heart" style="color:#ef4444;"></i> ${formattedLikes} | <i class="fa-solid fa-eye" style="color:#38bdf8;"></i> ${a.views || 0}</td>
                     <td>${statusBadge}</td>
                     <td>
                         <button class="edit-btn" onclick="prepareEditAd('${a.firebaseId}')">Edit</button>
