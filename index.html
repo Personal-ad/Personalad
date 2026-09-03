@@ -401,6 +401,15 @@
             return num.toString();
         }
 
+        // Views සඳහා ද 1000න් පසු K අකුර ලබා දෙන function එක
+        function formatViews(num) {
+            if (!num || isNaN(num)) return '0';
+            if (num >= 1000) {
+                return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
+            }
+            return num.toString();
+        }
+
         function getAdsPerPage() {
             const screenHeight = window.innerHeight;
             if (screenHeight < 650) return 4;
@@ -705,6 +714,7 @@
                 const isLiked = likedAds[ad.firebaseId] || false;
                 const timeStr = timeAgo(ad.created_at);
                 const formattedLikes = formatLikes(ad.likes || 0);
+                const formattedViews = formatViews(ad.views || 0); // Views සඳහා K formatting
 
                 let badgeHTML = '';
                 if (ad.is_featured) {
@@ -730,7 +740,7 @@
                             <div class="ad-sub" title="${ad.sub}">${ad.sub}</div>
                         </div>
                         <div class="ad-meta-row">
-                            <div class="ad-views"><i class="fa-solid fa-eye"></i> ${ad.views || 0} views</div>
+                            <div class="ad-views"><i class="fa-solid fa-eye"></i> ${formattedViews} views</div>
                         </div>
                     </div>`;
                 list.appendChild(card);
@@ -781,7 +791,7 @@
             }
 
             document.getElementById('detailContact').innerText = ad.contact;
-            document.getElementById('detailViewsCount').innerText = ad.views || 0;
+            document.getElementById('detailViewsCount').innerText = formatViews(ad.views || 0); // Detailed view එකේ Views සඳහා K formatting
             document.getElementById('detailLikesCount').innerText = formatLikes(ad.likes || 0);
             document.getElementById('detailTimeAgo').innerText = timeAgo(ad.created_at);
 
