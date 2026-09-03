@@ -9,7 +9,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #fff; padding: 10px; display: flex; flex-direction: column; min-height: 100vh; -webkit-text-size-adjust: 100%; }
         
-        /* Floating / Sticky Mini Header on Scroll for Admin */
         .sticky-mini-header {
             position: fixed;
             top: 0;
@@ -55,7 +54,6 @@
 </head>
 <body>
 
-    <!-- Admin Scroll Mini Header -->
     <div class="sticky-mini-header" id="adminStickyMiniHeader">
         <i class="fa-solid fa-gauge"></i> Admin Dashboard
     </div>
@@ -160,7 +158,6 @@
         let ads = [], users = [];
         let isAdminLoggedIn = localStorage.getItem('is_admin_logged') === 'true'; 
 
-        // Admin Scroll කිරීමේදී නම පමණක් පෙන්වන Header එක පාලනය කිරීම
         window.onscroll = () => {
             const adminMiniHeader = document.getElementById('adminStickyMiniHeader');
             if (window.scrollY > 80) {
@@ -403,7 +400,7 @@
         };
 
         window.toggleFeatured = async (id, currentStatus) => {
-            await db.from('ads.').update({ is_featured: !currentStatus }).eq('id', id); // fixed typo
+            await db.from('ads').update({ is_featured: !currentStatus }).eq('id', id);
             loadAdminData();
         };
 
