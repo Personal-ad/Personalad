@@ -166,7 +166,6 @@
             return num.toString();
         }
 
-        // Admin panel එකේ Views සඳහා ද K අකුර ලබා දෙන function එක
         function formatViews(num) {
             if (!num || isNaN(num)) return '0';
             if (num >= 1000) {
@@ -295,7 +294,7 @@
             adsBody.innerHTML = filteredAds.length === 0 ? `<tr><td colspan="4">No ads found</td></tr>` : filteredAds.map(a => {
                 const timeStr = timeAgo(a.created_at);
                 const formattedLikes = formatLikes(a.likes || 0);
-                const formattedViews = formatViews(a.views || 0); // Views සඳහා K formatting
+                const formattedViews = formatViews(a.views || 0);
                 
                 let rowClass = '';
                 if (a.is_featured) rowClass = 'super-vip-row';
