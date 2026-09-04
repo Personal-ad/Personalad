@@ -9,22 +9,26 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #fff; padding: 10px; display: flex; flex-direction: column; min-height: 100vh; -webkit-text-size-adjust: 100%; }
         
+        /* Smooth Slide-down Header Animation for Admin */
         .sticky-mini-header {
             position: fixed;
-            top: 0;
+            top: -60px;
             left: 0;
             width: 100%;
             background-color: #1e293b;
             color: #38bdf8;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             z-index: 1000;
-            display: none;
             cursor: pointer;
             border-bottom: 1px solid #334155;
+            transition: top 0.3s ease-in-out;
+        }
+        .sticky-mini-header.visible {
+            top: 0;
         }
 
         .container { max-width: 1000px; margin: 0 auto; width: 100%; flex: 1; }
@@ -81,7 +85,7 @@
                         <label>Select the mandatory prize that should drop when a user spins the wheel:</label>
                         <select id="forcedPrizeSelect">
                             <option value="Random">Random (Cash and emojis randomly)</option>
-                            <option value="Special Emoji Prize">🌟 Special Emoji Prize (Randomly switches to another emoji after one of 4 emojis is won)</option>
+                            <option value="Special Emoji Prize">🌟 Special Emoji Prize (Randomly switches to another emoji)</option>
                             <option value="🚀 Bonus">🚀 Bonus (Emoji)</option>
                             <option value="💎 VIP">💎 VIP (Emoji)</option>
                             <option value="🔥 Mega">🔥 Mega (Emoji)</option>
@@ -160,26 +164,22 @@
 
         function formatLikes(num) {
             if (!num || isNaN(num)) return '0';
-            if (num >= 1000) {
-                return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
-            }
+            if (num >= 1000) return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
             return num.toString();
         }
 
         function formatViews(num) {
             if (!num || isNaN(num)) return '0';
-            if (num >= 1000) {
-                return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
-            }
+            if (num >= 1000) return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
             return num.toString();
         }
 
         window.onscroll = () => {
             const adminMiniHeader = document.getElementById('adminStickyMiniHeader');
             if (window.scrollY > 80) {
-                adminMiniHeader.style.display = 'block';
+                adminMiniHeader.classList.add('visible');
             } else {
-                adminMiniHeader.style.display = 'none';
+                adminMiniHeader.classList.remove('visible');
             }
         };
 
@@ -212,6 +212,7 @@
                 document.getElementById('adminDashboard').style.display = 'block';
                 loadAdminData();
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         document.getElementById('adminLoginForm').onsubmit = (e) => {
@@ -254,9 +255,7 @@
                 const { data: wheelData, error: wheelError } = await db.from('wheel_settings').select('*').limit(1);
                 if (!wheelError && wheelData && wheelData.length > 0) {
                     const savedPrize = wheelData[0].forced_prize;
-                    if (savedPrize) {
-                        document.getElementById('forcedPrizeSelect').value = savedPrize;
-                    }
+                    if (savedPrize) document.getElementById('forcedPrizeSelect').value = savedPrize;
                 }
 
                 renderTables();
@@ -399,6 +398,8 @@
             document.getElementById('admFormHeading').innerText = 'Admin Edit Ad';
             document.getElementById('admSubmitBtn').innerText = 'Update Ad';
             document.getElementById('admCancelBtn').style.display = 'inline-block';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Edit කරන විට උඩට යාම
         };
 
         window.resetAdminForm = (goBack = false) => {
