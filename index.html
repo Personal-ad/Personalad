@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Personal Ad|Sri Lanka - Free Classifieds & best service</title>
+    <title>Personal Ad |Sri Lanka's Trusted Free Personal Ads & Classifieds Platform</title>
     <meta name="description" content="Discover Sri Lanka's premier free classified platform. Post and browse personal ads, listings, and community classifieds easily and securely.">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,20 +13,21 @@
         
         .sticky-mini-header {
             position: fixed;
-            top: 0;
+            top: -60px;
             left: 0;
             width: 100%;
             background-color: #00aaf0;
             color: white;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             z-index: 1000;
-            display: none;
             cursor: pointer;
+            transition: top 0.3s ease-in-out;
         }
+        .sticky-mini-header.visible { top: 0; }
 
         .navbar { background-color: #00aaf0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
         .logo { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
@@ -40,22 +41,9 @@
         .search-btn { background: #ffc800; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; flex-shrink: 0; }
         
         .highlight-notice {
-            background: #fffbeb;
-            color: #b45309;
-            border: 2px dashed #f59e0b;
-            padding: 10px 15px;
-            border-radius: 6px;
-            max-width: 800px;
-            width: 100%;
-            margin-top: 12px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 700;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            background: #fffbeb; color: #b45309; border: 2px dashed #f59e0b; padding: 10px 15px; border-radius: 6px;
+            max-width: 800px; width: 100%; margin-top: 12px; text-align: center; font-size: 13px; font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; gap: 8px;
         }
 
         .category-filter { display: flex; justify-content: center; gap: 8px; margin: 15px 0; flex-wrap: wrap; padding: 0 10px; }
@@ -63,16 +51,10 @@
         .cat-btn.active { background: #00aaf0; color: white; border-color: #00aaf0; }
         
         .cat-btn.earn-money-btn {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            border: 1px solid #b45309;
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
-            animation: pulseEarnBtn 2s infinite alternate;
+            background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: 1px solid #b45309;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4); animation: pulseEarnBtn 2s infinite alternate;
         }
-        .cat-btn.earn-money-btn.active {
-            background: #b45309;
-            border-color: #92400e;
-        }
+        .cat-btn.earn-money-btn.active { background: #b45309; border-color: #92400e; }
         @keyframes pulseEarnBtn {
             0% { transform: scale(1); box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4); }
             100% { transform: scale(1.05); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.8); }
@@ -101,44 +83,15 @@
         .ad-stats-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 6px; font-size: 11px; color: #475569; font-weight: 600; }
         
         .like-btn-action { 
-            background: linear-gradient(135deg, #fff1f2, #ffe4e6); 
-            border: 1px solid #fda4af; 
-            cursor: pointer; 
-            font-size: 12px; 
-            color: #e11d48; 
-            display: flex; 
-            align-items: center; 
-            gap: 4px; 
-            padding: 4px 8px; 
-            border-radius: 20px;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(225, 29, 72, 0.15);
-            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #fff1f2, #ffe4e6); border: 1px solid #fda4af; cursor: pointer; font-size: 12px; color: #e11d48; 
+            display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 20px; font-weight: bold; box-shadow: 0 2px 4px rgba(225, 29, 72, 0.15); transition: all 0.2s ease;
         }
-        .like-btn-action:hover { 
-            background: #ffe4e6;
-            transform: scale(1.05);
-        }
-        .like-btn-action.liked { 
-            background: linear-gradient(135deg, #e11d48, #be123c); 
-            color: #ffffff; 
-            border-color: #9f1239;
-            box-shadow: 0 3px 8px rgba(225, 29, 72, 0.4);
-        }
+        .like-btn-action:hover { background: #ffe4e6; transform: scale(1.05); }
+        .like-btn-action.liked { background: linear-gradient(135deg, #e11d48, #be123c); color: #ffffff; border-color: #9f1239; box-shadow: 0 3px 8px rgba(225, 29, 72, 0.4); }
 
         .ad-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
         .ad-title { 
-            font-size: 15px; 
-            font-weight: bold; 
-            color: #0f172a; 
-            margin-bottom: 4px; 
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            word-break: break-word;
-            line-height: 1.3;
+            font-size: 15px; font-weight: bold; color: #0f172a; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-word; line-height: 1.3;
         }
         .vip-ad .ad-title { color: #92400e; font-size: 16px; }
         .ad-sub { font-size: 12px; color: #555; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
@@ -161,17 +114,8 @@
         .delete-btn { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         .edit-btn-user { background: #10b981; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         
-        /* Professional SEO Content Box */
         .seo-content-box {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            font-size: 13px;
-            color: #334155;
-            line-height: 1.7;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            background: #ffffff; padding: 20px; border-radius: 8px; margin-top: 30px; font-size: 13px; color: #334155; line-height: 1.7; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
         .seo-content-box h3 { font-size: 16px; color: #0f172a; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .seo-content-box p { margin-bottom: 10px; }
@@ -183,48 +127,19 @@
 
         #earnMoneyView { display: none; width: 100%; }
         .wheel-body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #05070a;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; background: #05070a;
             background-image: radial-gradient(at 10% 10%, #1a1d29 0px, transparent 50%), radial-gradient(at 90% 90%, #11131a 0px, transparent 50%);
-            color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            min-height: 80vh;
+            color: #ffffff; padding: 20px; border-radius: 8px; min-height: 80vh;
         }
         .ad-bar-wheel {
-            width: 100%;
-            background: linear-gradient(90deg, #ff007f, #ff7b00, #7928ca, #ff007f);
-            background-size: 300% 300%;
-            animation: gradientMove 3s ease infinite, pulseGlow 1.5s infinite alternate;
-            color: #ffffff;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            box-shadow: 0 6px 35px rgba(255, 0, 127, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            border-bottom: 3px solid rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            border-radius: 6px;
+            width: 100%; background: linear-gradient(90deg, #ff007f, #ff7b00, #7928ca, #ff007f); background-size: 300% 300%;
+            animation: gradientMove 3s ease infinite, pulseGlow 1.5s infinite alternate; color: #ffffff; padding: 15px 20px; text-align: center;
+            font-size: 16px; font-weight: 900; letter-spacing: 1px; box-shadow: 0 6px 35px rgba(255, 0, 127, 0.8); display: flex; justify-content: center;
+            align-items: center; gap: 16px; border-bottom: 3px solid rgba(255, 255, 255, 0.5); text-transform: uppercase; margin-bottom: 20px; border-radius: 6px;
         }
         .ad-bar-wheel span {
-            background: #ffffff;
-            color: #ff007f;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 900;
-            text-transform: uppercase;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.4);
-            animation: bounceBadge 1s infinite alternate;
+            background: #ffffff; color: #ff007f; padding: 4px 12px; border-radius: 30px; font-size: 12px; font-weight: 900; text-transform: uppercase;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.4); animation: bounceBadge 1s infinite alternate;
         }
         @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes pulseGlow { 0% { box-shadow: 0 4px 20px rgba(255, 0, 127, 0.5); } 100% { box-shadow: 0 6px 40px rgba(255, 0, 127, 1); } }
@@ -233,17 +148,16 @@
         .wheel-container-box { display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .wheel-title {
             font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; text-align: center;
-            background: linear-gradient(135deg, #fff 25%, #a5b4fc 50%, #fff 75%);
-            background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background: linear-gradient(135deg, #fff 25%, #a5b4fc 50%, #fff 75%); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: shine 3s linear infinite;
         }
         @keyframes shine { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         
         .wheel-container { position: relative; width: 280px; height: 280px; }
         .wheel {
-            width: 100%; height: 100%; border-radius: 50%; position: relative; background: #11131a;
-            border: 6px solid #1e293b; box-shadow: 0 0 25px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.05), 0 0 0 8px #334155;
-            overflow: hidden; transition: transform 5s cubic-bezier(0.15, 0.85, 0.15, 1);
+            width: 100%; height: 100%; border-radius: 50%; position: relative; background: #11131a; border: 6px solid #1e293b;
+            box-shadow: 0 0 25px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.05), 0 0 0 8px #334155; overflow: hidden;
+            transition: transform 5s cubic-bezier(0.15, 0.85, 0.15, 1);
             background: conic-gradient(
                 #4f46e5 0deg 36deg, #7c3aed 36deg 72deg, #db2777 72deg 108deg, #ea580c 108deg 144deg, #ca8a04 144deg 180deg,
                 #16a34a 180deg 216deg, #0891b2 216deg 252deg, #0284c7 252deg 288deg, #4338ca 288deg 324deg, #6d28d9 324deg 360deg
@@ -356,25 +270,21 @@
             <div id="adsList"></div>
             <div class="pagination" id="paginationContainer"></div>
             
-            <!-- Professional SEO Content Box -->
             <div class="seo-content-box" id="seoContentBox">
                 <h3><i class="fa-solid fa-bullhorn" style="color: #00aaf0;"></i> Sri Lanka's Trusted Free Personal Ads & Classifieds Platform</h3>
-                <p>Welcome to <strong>Personal Ad</strong>, the premier online destination in Sri Lanka for publishing and discovering community classifieds completely free of charge. Whether you are searching for listings in Boys, Girls, Shemale, or Personal categories, our platform offers a seamless, fast, and secure browsing experience designed to connect people instantly.</p>
+                <p>Welcome to <strong>Personal Ad</strong>, the premier online destination in Sri Lanka for publishing and discovering community classifieds completely free of charge.</p>
                 
                 <h3 style="font-size: 14px; margin-top: 15px;"><i class="fa-solid fa-check-circle" style="color: #10b981;"></i> Why Choose Our Platform?</h3>
                 <ul>
-                    <li><strong>100% Free Publishing:</strong> Post your personal advertisements without any hidden fees or service charges.</li>
-                    <li><strong>Targeted Categories:</strong> Easily filter through dedicated sections including Boys, Girls, Shemale, and General Personal ads.</li>
-                    <li><strong>User-Friendly & Fast:</strong> Optimized for lightning-fast performance across mobile phones, tablets, and desktop computers.</li>
-                    <li><strong>Direct Engagement:</strong> Connect directly with advertisers through verified contact options safely.</li>
+                    <li><strong>100% Free Publishing:</strong> Post your personal advertisements without any hidden fees.</li>
+                    <li><strong>Targeted Categories:</strong> Easily filter through dedicated sections including Boys, Girls, Shemale, and Personal.</li>
+                    <li><strong>User-Friendly & Fast:</strong> Optimized for lightning-fast performance across all devices.</li>
                 </ul>
-                <p>Start posting your free advertisements today or explore thousands of active listings across Sri Lanka with absolute ease!</p>
             </div>
         </div>
 
         <div class="detail-view" id="detailView">
             <button class="back-btn" id="backToListBtn"><i class="fa-solid fa-arrow-left"></i> ආපසු</button>
-            
             <div class="detail-img-container" id="detailImgContainer"></div>
             
             <div class="detail-stats-bar">
@@ -409,17 +319,13 @@
         
         function formatLikes(num) {
             if (!num || isNaN(num)) return '0';
-            if (num >= 1000) {
-                return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
-            }
+            if (num >= 1000) return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
             return num.toString();
         }
 
         function formatViews(num) {
             if (!num || isNaN(num)) return '0';
-            if (num >= 1000) {
-                return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
-            }
+            if (num >= 1000) return (num / 1000).toFixed(num % 1000 !== 0 ? 1 : 0) + 'K';
             return num.toString();
         }
 
@@ -433,9 +339,9 @@
         window.onscroll = () => {
             const miniHeader = document.getElementById('stickyMiniHeader');
             if (window.scrollY > 80) {
-                miniHeader.style.display = 'block';
+                miniHeader.classList.add('visible');
             } else {
-                miniHeader.style.display = 'none';
+                miniHeader.classList.remove('visible');
             }
         };
         
@@ -511,6 +417,7 @@
                     document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
                     document.getElementById('adForm').reset();
                     document.getElementById('postAdBox').style.display = 'block'; 
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 };
                 document.getElementById('navLogoutBtn').onclick = () => { 
                     currentUser = null; 
@@ -519,7 +426,11 @@
                 };
             } else {
                 navRight.innerHTML = `<button class="action-btn" id="navLoginBtn" style="padding:4px 10px; font-size:12px; width:auto;"><i class="fa-solid fa-right-to-bracket"></i> Login / Post Ad</button>`;
-                document.getElementById('navLoginBtn').onclick = () => { closeModals(); document.getElementById('loginBox').style.display = 'block'; };
+                document.getElementById('navLoginBtn').onclick = () => { 
+                    closeModals(); 
+                    document.getElementById('loginBox').style.display = 'block'; 
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
             }
         }
 
@@ -536,6 +447,7 @@
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('earnMoneyView').style.display = 'none';
             document.getElementById('seoContentBox').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterAds();
         }
 
@@ -547,6 +459,7 @@
             document.getElementById('detailView').style.display = 'none';
             document.getElementById('seoContentBox').style.display = 'none';
             document.getElementById('earnMoneyView').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             closeModals();
         }
 
@@ -562,20 +475,16 @@
             if (u) {
                 currentUser = u;
                 localStorage.setItem('current_user', u);
-                
-                try {
-                    await db.from('users').upsert([{ username: u }], { onConflict: 'username' });
-                } catch(err) { console.log(err); }
-
+                try { await db.from('users').upsert([{ username: u }], { onConflict: 'username' }); } catch(err) { console.log(err); }
                 updateNavbar();
                 closeModals();
                 alert('සාර්ථකව Login විය!');
-                
                 document.getElementById('editAdId').value = '';
                 document.getElementById('formModalTitle').innerHTML = `<i class="fa-solid fa-circle-plus"></i> නව දැන්වීමක් දමන්න`;
                 document.getElementById('formSubmitBtn').innerText = 'POST YOUR AD';
                 document.getElementById('adForm').reset();
                 document.getElementById('postAdBox').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
 
@@ -592,11 +501,11 @@
             e.preventDefault();
             const contact = document.getElementById('contact').value.trim();
             if (contact.length !== 10) { alert('අංකය වැරදියි (අංක 10ක් විය යුතුය)!'); return; }
-            
             if (!currentUser) {
                 alert('කරුණාකර පළමුව Login වන්න.');
                 closeModals();
                 document.getElementById('loginBox').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
 
@@ -699,7 +608,6 @@
                     btnEl.innerHTML = `<i class="fa-regular fa-heart"></i> <span id="like-count-${adId}">${formatLikes(ad.likes)}</span>`;
                 }
             }
-
             await db.from('ads').update({ likes: ad.likes }).eq('id', adId);
         }
 
@@ -730,11 +638,8 @@
                 const formattedViews = formatViews(ad.views || 0);
 
                 let badgeHTML = '';
-                if (ad.is_featured) {
-                    badgeHTML = '<div class="super-vip-badge"><i class="fa-solid fa-bolt"></i> Super VIP</div>';
-                } else if (ad.is_vip) {
-                    badgeHTML = '<div class="vip-badge"><i class="fa-solid fa-crown"></i> VIP</div>';
-                }
+                if (ad.is_featured) badgeHTML = '<div class="super-vip-badge"><i class="fa-solid fa-bolt"></i> Super VIP</div>';
+                else if (ad.is_vip) badgeHTML = '<div class="vip-badge"><i class="fa-solid fa-crown"></i> VIP</div>';
 
                 card.innerHTML = `
                     ${badgeHTML}
@@ -764,7 +669,11 @@
                     const btn = document.createElement('button');
                     btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
                     btn.innerText = i;
-                    btn.onclick = () => { currentPage = i; displayAds(filtered); };
+                    btn.onclick = () => { 
+                        currentPage = i; 
+                        displayAds(filtered); 
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    };
                     pag.appendChild(btn);
                 }
             }
@@ -789,6 +698,8 @@
             document.getElementById('seoContentBox').style.display = 'none';
             document.getElementById('earnMoneyView').style.display = 'none';
             document.getElementById('detailView').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             document.getElementById('detailImgContainer').innerHTML = `<img src="${ad.imageUrl}" class="detail-main-img">`;
             document.getElementById('detailTitle').innerText = ad.title;
@@ -836,6 +747,7 @@
                     
                     document.getElementById('detailView').style.display = 'none';
                     document.getElementById('postAdBox').style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 };
 
                 document.getElementById('delAdBtn').onclick = async () => {
@@ -895,36 +807,24 @@
             resultText.style.color = "#a5b4fc";
 
             let targetValue = null;
-            let wheelSettingId = null;
             try {
                 const { data } = await db.from('wheel_settings').select('*').limit(1);
                 if (data && data.length > 0) {
                     targetValue = data[0].forced_prize; 
-                    wheelSettingId = data[0].id;
                 }
-            } catch(err) {
-                console.log(err);
-            }
+            } catch(err) { console.log(err); }
 
             let targetItem;
             if (targetValue && targetValue !== 'Random') {
                 if (targetValue === 'Special Emoji Prize') {
-                    const emojiItems = wheelData.filter(item => 
-                        item.value === "🚀 Bonus" || item.value === "💎 VIP" || 
-                        item.value === "🔥 Mega" || item.value === "👑 Lucky"
-                    );
+                    const emojiItems = wheelData.filter(item => item.value.includes("Bonus") || item.value.includes("VIP") || item.value.includes("Mega") || item.value.includes("Lucky"));
                     targetItem = emojiItems[Math.floor(Math.random() * emojiItems.length)];
                 } else {
                     const matchingItems = wheelData.filter(item => item.value === targetValue);
-                    if (matchingItems.length > 0) {
-                        targetItem = matchingItems[Math.floor(Math.random() * matchingItems.length)];
-                    } else {
-                        targetItem = wheelData[Math.floor(Math.random() * wheelData.length)];
-                    }
+                    targetItem = matchingItems.length > 0 ? matchingItems[Math.floor(Math.random() * matchingItems.length)] : wheelData[0];
                 }
             } else {
-                const randomIndex = Math.floor(Math.random() * wheelData.length);
-                targetItem = wheelData[randomIndex];
+                targetItem = wheelData[Math.floor(Math.random() * wheelData.length)];
             }
 
             const exactCenterAngle = targetItem.startAngle + 18;
@@ -940,32 +840,8 @@
             setTimeout(async () => {
                 isSpinning = false;
                 startBtn.disabled = false;
-
-                if (targetValue === 'Special Emoji Prize') {
-                    try {
-                        let availableRandomEmojis = ["🚀 Bonus", "💎 VIP", "🔥 Mega", "👑 Lucky"].filter(e => e !== targetItem.value);
-                        let nextRandomEmoji = availableRandomEmojis[Math.floor(Math.random() * availableRandomEmojis.length)];
-
-                        if (wheelSettingId) {
-                            await db.from('wheel_settings').update({ forced_prize: nextRandomEmoji }).eq('id', wheelSettingId);
-                        } else {
-                            const { data } = await db.from('wheel_settings').select('*').limit(1);
-                            if (data && data.length > 0) {
-                                await db.from('wheel_settings').update({ forced_prize: nextRandomEmoji }).eq('id', data[0].id);
-                            }
-                        }
-                    } catch (err) {
-                        console.log("Failed to auto-update emoji setting:", err);
-                    }
-                }
-
-                if (targetItem.value.includes("Bonus") || targetItem.value.includes("VIP") || targetItem.value.includes("Mega") || targetItem.value.includes("Lucky")) {
-                    resultText.style.color = "#f59e0b";
-                    resultText.textContent = `Special Prize: ${targetItem.value}! 🌟`;
-                } else {
-                    resultText.style.color = "#4ade80";
-                    resultText.textContent = `Won: ${targetItem.value}! 🎉`;
-                }
+                resultText.style.color = "#4ade80";
+                resultText.textContent = `Won: ${targetItem.value}! 🎉`;
             }, 5000);
         };
 
@@ -977,18 +853,10 @@
 
             if (viewParam === 'earn-money') {
                 showEarnMoneyView(false);
-                document.querySelectorAll('.cat-btn').forEach(b => {
-                    if(b.getAttribute('data-cat') === 'Earn Money') b.classList.add('active');
-                    else b.classList.remove('active');
-                });
             } else if (targetAdId) {
                 showDetail(targetAdId, true, false);
             } else {
                 showHomeView(false);
-                document.querySelectorAll('.cat-btn').forEach(b => {
-                    if(b.getAttribute('data-cat') === 'All') b.classList.add('active');
-                    else b.classList.remove('active');
-                });
             }
         };
 
@@ -996,7 +864,6 @@
             await fetchAds();
             updateNavbar();
         }
-
         initApp();
     </script>
 </body>
